@@ -16,9 +16,12 @@
     "cross-env": "^5.2.0",
     "element-ui": "^2.4.11",
     "express": "^4.16.4",
+    "mapbox-gl": "^1.4.0",
+    "node-sass": "^4.12.0",
     "nuxt": "^2.0.0",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
+    "sass-loader": "^8.0.0",
     "sequelize": "^5.19.2"
   },
   "devDependencies": {

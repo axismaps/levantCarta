@@ -1,6 +1,6 @@
 
 module.exports = {
-  mode: 'universal',
+  mode: 'spa',
   /*
   ** Headers of the page
   */
@@ -29,7 +29,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -50,7 +50,9 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
+      // An issue with webpack, see https://github.com/mapbox/mapbox-gl-draw/issues/626 for more information
+      config.node = { fs: 'empty' };
     }
   }
 }

@@ -1,72 +1,66 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        levant-carta
-      </h1>
-      <h2 class="subtitle">
-        My sensational Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+  <div>
+    <the-header /> 
+    <the-sidebar />
+    <!-- <toolbox v-on:draw-init="handleDrawInit" /> -->
+    <mapbox
+      :map-options="{
+        style: 'https://maps.tilehosting.com/styles/basic/style.json?key=2rATmtGk6Jy8BQXXdDMD',
+        style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
+        center: [-43.181587010622025, -22.905508179548036],
+        zoom: 11,
+        }"
+      :geolocate-control="{
+        show: true,
+        position: 'top-right'
+        }"
+      v-on:map-init="handleMapInit"
+      class="map"
+    />
   </div>
 </template>
-
 <script>
-import Logo from '~/components/Logo.vue'
+import Mapbox from '~/components/Mapbox.vue';
+// import Toolbox from '~/components/Toolbox';
+import TheHeader from '~/components/TheHeader';
+import TheSidebar from '~/components/TheSidebar';
 
 export default {
   components: {
-    Logo
+    Mapbox,
+    // Toolbox,
+    TheHeader,
+    TheSidebar
+  },
+  data() {
+    return {
+      map: null,
+      draw: null
+    };
+  },
+  methods: {
+    handleMapInit(map) {
+      console.log('Here is the map:', map);
+      this.map = map;
+      // map.addControl(this.draw, 'top-left');
+
+      // this.$store.commit('newMap', map);
+    },
+    handleDrawInit(draw) {
+      console.log('Here is the draw instance', draw);
+
+      this.draw = draw;
+    }
   }
-}
+};
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.map {
+  margin-top: 60px;
 }
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.mapboxgl-ctrl-top-left {
+  top: 0;
+  left: 330px;
 }
 </style>
