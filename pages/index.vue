@@ -2,7 +2,7 @@
   <div>
     <the-header /> 
     <the-sidebar />
-    <!-- <toolbox v-on:draw-init="handleDrawInit" /> -->
+    <the-toolbox v-on:draw-init="handleDrawInit" />
     <mapbox
       :map-options="{
         style: 'https://maps.tilehosting.com/styles/basic/style.json?key=2rATmtGk6Jy8BQXXdDMD',
@@ -21,14 +21,14 @@
 </template>
 <script>
 import Mapbox from '~/components/Mapbox.vue';
-// import Toolbox from '~/components/Toolbox';
+import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
 
 export default {
   components: {
     Mapbox,
-    // Toolbox,
+    TheToolbox,
     TheHeader,
     TheSidebar
   },
@@ -42,7 +42,7 @@ export default {
     handleMapInit(map) {
       console.log('Here is the map:', map);
       this.map = map;
-      // map.addControl(this.draw, 'top-left');
+      map.addControl(this.draw, 'top-left');
 
       // this.$store.commit('newMap', map);
     },
