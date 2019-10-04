@@ -1,6 +1,6 @@
-# levant-carta
+# levantCarta
 
-> My sensational Nuxt.js project
+> A web-based application that lets teams who don't know GIS create their own imagineRio projects for their own cities
 
 ## Build Setup
 
