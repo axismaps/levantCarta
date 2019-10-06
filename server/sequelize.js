@@ -2,9 +2,9 @@ const Sequelize = require('sequelize');
 const UserModel = require('./models/user');
 
 // Connect to postgres
-const sequelize = new Sequelize('postgres://postgres:@localhost:5432/postgres')
+const sequelize = new Sequelize('postgres://username:Dummy123@postgres:5432/levantcarta-store')
 
-// Test Connection 
+// Test Connection
 sequelize
     .authenticate()
     .then(() => {
