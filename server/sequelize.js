@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 const UserModel = require('./models/user');
 
 // Connect to postgres
-const sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@postgres:5432/${process.env.POSTGRES_DB}`)
+// const sequelize = new Sequelize(`postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@postgres:5432/${process.env.POSTGRES_DB}`)
+const sequelize = new Sequelize('postgres://postgres:@localhost:5432/postgres');
 
 // Test Connection
 sequelize
