@@ -43,7 +43,7 @@ export default {};
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: flex-end;
   box-shadow: 0px 1px 3px rgb(206, 206, 206);
 }
 .title {
