@@ -19,4 +19,20 @@ $ yarn start
 $ yarn generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+## Tests
+
+```bash 
+$ yarn test
+```
+
+## Components documentation
+
+Using [Vue Styleguidist](https://vue-styleguidist.github.io/) to generate component documentation
+
+```bash 
+#  start style guide dev server localhost:6060
+$ yarn styleguide
+```
+
+
+For detailed explanation on how nuxt work, check out [Nuxt.js docs](https://nuxtjs.org).
