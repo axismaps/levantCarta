@@ -10,13 +10,23 @@ export default {
     return {};
   },
   props: {
+    /**
+     * Mapbox acess token
+     */
     accessToken: {
-      type: String,
+      type: String
     },
+    /**
+     * Mapbox API options.
+     * More at https://docs.mapbox.com/mapbox-gl-js/api/#map
+     */
     mapOptions: {
       type: Object,
       required: true
     },
+    /**
+     * Navigation control
+     */
     navControl: {
       type: Object,
       default: () => {
@@ -26,6 +36,9 @@ export default {
         };
       }
     },
+    /**
+     * Geolocate control
+     */
     geolocateControl: {
       type: Object,
       default: () => {
@@ -36,6 +49,9 @@ export default {
         };
       }
     },
+    /**
+     * Scale control
+     */
     scaleControl: {
       type: Object,
       default: () => {
@@ -46,6 +62,9 @@ export default {
         };
       }
     },
+    /**
+     * Fullscreen control
+     */
     fullscreenControl: {
       type: Object,
       default: () => {
@@ -79,154 +98,258 @@ export default {
       //New Mapbox Instance
       const map = new mapboxgl.Map(this.mapOptions);
 
-      //Emit init event passing map object
+      /**
+       * Mapbox instance created event.
+       * @type {object}
+       */
       this.$emit('map-init', map);
 
       return map;
     },
     registerEvents(map) {
-      //Map Loaded
       map.on('load', () => {
+        /**
+         * Mapbox instance complete load event.
+         * @type {object}
+         */
         this.$emit('map-load', map);
       });
 
-      //Map Mouse Move
       map.on('mousemove', e => {
+        /**
+         * Map Mouse Move.
+         * @type {object}
+         */
         this.$emit('map-mousemove', map, e);
       });
 
-      //Map Clicked
       map.on('click', e => {
+        /**
+         * Map clicked.
+         * @type {object}
+         */
         this.$emit('map-click', map, e);
       });
 
-      //Map Context Menu
       map.on('contextmenu', e => {
+        /**
+         * Map Context Menu
+         * @type {object}
+         */
         this.$emit('map-contextmenu', map, e);
       });
 
-      //Map Resized
       map.on('resize', () => {
+        /**
+         * Map resized
+         * @type {object}
+         */
         this.$emit('map-resize', map);
       });
 
-      //Map Webgl Context Lost
       map.on('resize', e => {
+        /**
+         * Map Webgl Context Lost
+         * @type {object}
+         */
         this.$emit('map-webglcontextlost', map, e);
       });
 
-      //Map Webgl Context Restored
       map.on('resize', e => {
+        /**
+         * Map Webgl Context Restored
+         * @type {object}
+         */
         this.$emit('map-webglcontextrestored', map, e);
       });
 
-      //Map Removed
       map.on('remove', () => {
+        /**
+         * Map removed
+         * @type {object}
+         */
         this.$emit('map-remove', map);
       });
 
-      //Map Source Data Loading
       map.on('sourcedataloading', e => {
+        /**
+         * Map Source Data Loading
+         * @type {object}
+         */
         this.$emit('map-sourcedataloading', map, e);
       });
 
-      //Map Touch Start
       map.on('touchstart', e => {
+        /**
+         * Map Touch Start
+         * @type {object}
+         */
         this.$emit('map-touchstart', map, e);
       });
 
-      //Map Move Start
       map.on('movestart', e => {
+        /**
+         * Map Move Start
+         * @type {object}
+         */
         this.$emit('map-movestart', map, e);
       });
 
-      //Map Touch Move
       map.on('movestart', e => {
+        /**
+         * Map Touch Move
+         * @type {object}
+         */
         this.$emit('map-movestart', map, e);
       });
 
-      //Map Move
-      // map.on('move', e => {
-      //   this.$emit('map-move', map, e);
-      // });
+      map.on('move', e => {
+        /**
+         * Map  Move
+         * @type {object}
+         */
+        this.$emit('map-move', map, e);
+      });
 
-      //Map Move End
       map.on('moveend', e => {
+        /**
+         * Map Move end
+         * @type {object}
+         */
         this.$emit('map-moveend', map, e);
       });
 
-      //Map Error
       map.on('error', e => {
+        /**
+         * Map Error
+         * @type {object}
+         */
         this.$emit('map-error', map, e);
       });
 
-      //Map Data
       map.on('data', e => {
+        /**
+         * Map Data
+         * @type {object}
+         */
+
         this.$emit('map-data', map, e);
       });
 
-      //Map Style Data
       map.on('styledata', e => {
+        /**
+         * Map Style Data
+         * @type {object}
+         */
+
         this.$emit('map-styledata', map, e);
       });
 
-      //Map Mouse Up
       map.on('mouseup', e => {
+        /**
+         * Map Mouse Up
+         * @type {object}
+         */
+
         this.$emit('map-mouseup', map, e);
       });
 
-      //Map Touch Cancel
       map.on('touchcancel', e => {
+        /**
+         * Map Touch Cancel
+         * @type {object}
+         */
+
         this.$emit('map-touchcancel', map, e);
       });
 
-      //Map Source Data
       map.on('sourcedata', e => {
+        /**
+         * Map Source Data
+         * @type {object}
+         */
+
         this.$emit('map-sourcedata', map, e);
       });
 
-      //Map Data Loading
       map.on('dataloading', e => {
+        /**
+         * Map Data Loading
+         * @type {object}
+         */
+
         this.$emit('map-dataloading', map, e);
       });
 
-      //Map Style Data Loading
       map.on('styledataloading', e => {
+        /**
+         * Map Style Data Loading
+         * @type {object}
+         */
+
         this.$emit('map-styledataloading', map, e);
       });
 
-      //Map Double Click
       map.on('dblclick', e => {
+        /**
+         * Map Double Click
+         * @type {object}
+         */
+
         this.$emit('map-dblclick', map, e);
       });
 
-      //Map Render
       map.on('render', () => {
+        /**
+         * Map Render
+         * @type {object}
+         */
+
         this.$emit('map-render', map);
       });
 
-      //Map Mouse Out
       map.on('mouseout', e => {
+        /**
+         * Map Mouse Out
+         * @type {object}
+         */
+
         this.$emit('map-mouseout', map, e);
       });
 
-      //Map Mouse Down
       map.on('mousedown', e => {
+        /**
+         * Map Mouse Down
+         * @type {object}
+         */
+
         this.$emit('map-mousedown', map, e);
       });
 
-      //Map Touch End
       map.on('touchend', e => {
+        /**
+         * Map Touch End
+         * @type {object}
+         */
+
         this.$emit('map-touchend', map, e);
       });
 
-      //Map Zoom Start
       map.on('zoomstart', e => {
+        /**
+         * Map Zoom Start
+         * @type {object}
+         */
+
         this.$emit('map-zoomstart', map, e);
       });
 
-      //Map Zoom End
       map.on('zoomend', e => {
+        /**
+         * Map Zoom End
+         * @type {object}
+         */
+
         this.$emit('map-zoomend', map, e);
       });
 
@@ -235,63 +358,95 @@ export default {
       //   this.$emit('map-zoom', map, e);
       // });
 
-      //Map Box Zoom Cancel
       map.on('boxzoomcancel', e => {
+        /**
+         * Map Box Zoom Cancel
+         * @type {object}
+         */
         this.$emit('map-boxzoomcancel', map, e);
       });
 
-      //Map Box Zoom End
       map.on('boxzoomend', e => {
         this.$emit('map-boxzoomend', map, e);
       });
 
-      //Map Box Zoom Start
       map.on('boxzoomstart', e => {
+        /**
+         * Map Box Zoom Start
+         * @type {object}
+         */
         this.$emit('map-boxzoomstart', map, e);
       });
 
-      //Map Rotate Start
       map.on('rotatestart', e => {
+        /**
+         * Map Rotate Start
+         * @type {object}
+         */
         this.$emit('map-rotatestart', map, e);
       });
 
-      //Map Rotate
       map.on('rotate', e => {
+        /**
+         * Map Rotate
+         * @type {object}
+         */
         this.$emit('map-rotate', map, e);
       });
 
-      //Map Rotate End
       map.on('rotateend', e => {
+        /**
+         * Map Rotate End
+         * @type {object}
+         */
         this.$emit('map-rotateend', map, e);
       });
 
-      //Map Drag End
       map.on('dragend', e => {
+        /**
+         * Map Drag End
+         * @type {object}
+         */
         this.$emit('map-dragend', map, e);
       });
 
-      //Map Drag
       map.on('drag', e => {
+        /**
+         * Map Drag
+         * @type {object}
+         */
         this.$emit('map-drag', map, e);
       });
 
-      //Map Drag
       map.on('dragstart', e => {
+        /**
+         * Map Drag Start
+         * @type {object}
+         */
         this.$emit('map-dragstart', map, e);
       });
 
-      //Map Pitch
       map.on('pitch', e => {
+        /**
+         * Map Pitch
+         * @type {object}
+         */
         this.$emit('map-pitch', map, e);
       });
 
-      //Map Pitch Start
       map.on('pitchstart', e => {
+        /**
+         * Map Pitch Start
+         * @type {object}
+         */
         this.$emit('map-pitchstart', map, e);
       });
 
-      //Map Pitch End
       map.on('pitchend', e => {
+        /**
+         * Map Pitch End
+         * @type {object}
+         */
         this.$emit('map-pitchend', map, e);
       });
     },

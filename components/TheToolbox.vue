@@ -3,11 +3,18 @@
 </template>
 
 <script>
+/**
+ * Mapboxdraw toolbox
+ */
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
 export default {
   mounted() {
-      const draw = this.drawInit();
-      this.$emit('draw-init', draw)
+    const draw = this.drawInit();
+    /**
+     * MapboxDraw instance created event.
+     * @type {object}
+     */
+    this.$emit('draw-init', draw);
   },
   methods: {
     drawInit() {
