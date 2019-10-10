@@ -25,7 +25,7 @@ $ yarn generate
 $ yarn test
 ```
 
-## Components documentation
+## Components Documentation 
 
 Using [Vue Styleguidist](https://vue-styleguidist.github.io/) to generate component documentation
 
@@ -33,6 +33,8 @@ Using [Vue Styleguidist](https://vue-styleguidist.github.io/) to generate compon
 #  start style guide dev server localhost:6060
 $ yarn styleguide
 ```
+## Frontend Style Guide
 
+https://vuejs.org/v2/style-guide/
 
 For detailed explanation on how nuxt work, check out [Nuxt.js docs](https://nuxtjs.org).
