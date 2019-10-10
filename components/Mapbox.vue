@@ -337,8 +337,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-@import url('https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css');
+<style scoped>
 #map {
   width: 100%;
   height: 100vh;
