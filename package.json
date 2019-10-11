@@ -29,6 +29,7 @@
     "sequelize": "^5.19.2"
   },
   "devDependencies": {
+    "@nuxtjs/style-resources": "^1.0.0",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-jest": "^24.1.0",
     "eslint-config-prettier": "^4.1.0",

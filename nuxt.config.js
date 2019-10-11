@@ -1,4 +1,3 @@
-
 module.exports = {
   mode: 'spa',
   /*
@@ -25,7 +24,8 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    'element-ui/lib/theme-chalk/index.css'
+    'element-ui/lib/theme-chalk/index.css',
+    'assets/style.scss'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -43,7 +43,13 @@ module.exports = {
   */
   modules: [
     '@nuxtjs/pwa',
+    ['@nuxtjs/style-resources'],
   ],
+  styleResources: {
+    scss: [
+      'assets/style.scss',
+    ]
+  },
   /*
   ** Build configuration
   */
