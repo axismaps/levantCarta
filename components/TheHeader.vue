@@ -6,20 +6,13 @@
 export default {};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .header {
-  height: 60px;
+  min-height: $header-size;
   width: 100%;
-  position: fixed;
   z-index: 6;
-  top: 0;
-  left: 0;
   background-color: rgb(255, 255, 255);
-  overflow-x: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
   box-shadow: 0px 1px 3px rgb(206, 206, 206)
 }
 </style>

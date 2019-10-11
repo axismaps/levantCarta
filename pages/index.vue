@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <the-header /> 
-    <the-sidebar />
-    <the-toolbox v-on:draw-init="handleDrawInit" />
+  <div class="container">
+    <the-header class="header" />
+    <div class="sidebar">
+      <the-sidebar />
+      <the-toolbox class="toolbox" v-on:draw-init="handleDrawInit" />
+    </div>
     <mapbox
       :map-options="{
         style: 'https://maps.tilehosting.com/styles/basic/style.json?key=2rATmtGk6Jy8BQXXdDMD',
@@ -55,12 +57,34 @@ export default {
 };
 </script>
 
-<style>
-.map {
-  margin-top: 60px;
+<style lang="scss" scoped>
+.container {
+  display: grid;
+  grid-template-columns: 60px repeat(4, 1fr);
+  grid-template-rows: repeat(5, fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
 }
+
+.map {
+  grid-area: 2 / 1 / 6 / 6;
+  height: calc(100vh - #{$header-size});
+}
+.sidebar {
+  display:flex;
+  height: 100%;
+  z-index: 5;
+  grid-area: 2 / 1 / 6 / 2;
+  .toolbox {
+    margin: 25px 15px;
+  }
+}
+.header {
+  grid-area: 1 / 1 / 2 / 6;
+}
+
 .mapboxgl-ctrl-top-left {
   top: 0;
-  left: 330px;
+  left: 360px;
 }
 </style>

@@ -8,20 +8,22 @@
     </div>
     <div class="controls">
       <div class="control">
-        <el-badge is-dot class="item"><h5>Name</h5></el-badge>
-        <el-input size="medium" placeholder="Please Input" v-model="input1"></el-input>
+        <el-badge is-dot class="item">
+          <h5>Name</h5>
+        </el-badge>
+        <el-input size="medium" placeholder="Please Input"></el-input>
       </div>
       <div class="control">
         <h5>Mapped</h5>
-        <el-input size="medium" placeholder="Please Input" v-model="input1"></el-input>
+        <el-input size="medium" placeholder="Please Input"></el-input>
       </div>
       <div class="control">
         <h5>Type</h5>
-        <el-input size="medium" placeholder="Please Input" v-model="input1"></el-input>
+        <el-input size="medium" placeholder="Please Input"></el-input>
       </div>
       <div class="control">
         <h5>Tags</h5>
-        <el-input size="medium" placeholder="Please Input" v-model="input1"></el-input>
+        <el-input size="medium" placeholder="Please Input"></el-input>
       </div>
     </div>
   </div>
@@ -33,17 +35,10 @@ export default {};
 
 <style  lang="scss" scoped>
 .sidebar {
-  height: 100%;
-  width: 320px;
-  position: fixed;
-  top: 60px;
-  z-index: 5;
+  min-width: 340px;
   background-color: rgb(255, 255, 255);
-  left: 0;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   box-shadow: 0px 1px 3px rgb(206, 206, 206);
 }
 .title {
