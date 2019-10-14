@@ -2,8 +2,13 @@
   <div class="container">
     <the-header class="header" />
     <div class="sidebar">
-      <the-sidebar />
-      <the-toolbox class="toolbox" v-on:draw-init="handleDrawInit" />
+      <the-sidebar v-show="showSidebar" />
+      <the-toolbox
+        class="toolbox"
+        :showSidebar="showSidebar"
+        v-on:draw-init="handleDrawInit"
+        v-on:toggle-sidebar="handleTogglesidebar"
+      />
     </div>
     <mapbox
       :map-options="{
@@ -36,6 +41,7 @@ export default {
   },
   data() {
     return {
+      showSidebar: true,
       map: null,
       draw: null
     };
@@ -52,6 +58,10 @@ export default {
       console.log('Here is the draw instance', draw);
 
       this.draw = draw;
+    },
+    handleTogglesidebar() {
+      console.log('sidebar');
+      this.showSidebar = !this.showSidebar;
     }
   }
 };
@@ -71,7 +81,7 @@ export default {
   height: calc(100vh - #{$header-size});
 }
 .sidebar {
-  display:flex;
+  display: flex;
   height: 100%;
   z-index: 5;
   grid-area: 2 / 1 / 6 / 2;

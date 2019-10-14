@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-arrow-left"></el-button>
+      <el-button v-if="showSidebar" size="small" icon="el-icon-arrow-left" @click="toggleSidebar" />
+      <el-button v-else size="small" icon="el-icon-arrow-right" @click="toggleSidebar" />
     </div>
     <div class="btn-group el-button-group">
       <el-button size="small" icon="el-icon-position"></el-button>
@@ -31,6 +32,12 @@
  */
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
 export default {
+  props: {
+    showSidebar: {
+      type: Boolean,
+      default: true
+    }
+  },
   mounted() {
     const draw = this.drawInit();
     /**
@@ -43,6 +50,9 @@ export default {
     drawInit() {
       const Draw = new MapboxDraw();
       return Draw;
+    },
+    toggleSidebar() {
+      this.$emit('toggle-sidebar');
     }
   }
 };
