@@ -35,7 +35,7 @@ export default {};
 
 <style  lang="scss" scoped>
 .sidebar {
-  min-width: 340px;
+  min-width: $sidebar-width;
   background-color: rgb(255, 255, 255);
   display: flex;
   flex-direction: column;

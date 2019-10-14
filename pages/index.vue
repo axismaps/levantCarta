@@ -78,7 +78,7 @@ export default {
 
 .map {
   grid-area: 2 / 1 / 6 / 6;
-  height: calc(100vh - #{$header-size});
+  height: calc(100vh - #{$header-height});
 }
 .sidebar {
   display: flex;
