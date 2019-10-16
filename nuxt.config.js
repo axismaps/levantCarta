@@ -60,6 +60,15 @@ module.exports = {
     extend(config, ctx) {
       // An issue with webpack, see https://github.com/mapbox/mapbox-gl-draw/issues/626 for more information
       config.node = { fs: 'empty' };
+
+      const svgRule = config.module.rules.find(rule => rule.test.test('.svg'));
+
+      svgRule.test = /\.(png|jpe?g|gif|webp)$/;
+
+      config.module.rules.push({
+        test: /\.svg$/,
+        loader: 'vue-svg-loader',
+      });
     }
   }
 }
