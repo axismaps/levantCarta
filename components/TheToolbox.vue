@@ -5,23 +5,17 @@
       <el-button v-else size="small" icon="el-icon-arrow-right" @click="toggleSidebar" />
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-position"></el-button>
+      <el-button size="small" icon="el-icon-position" @click="anableDirectSelectMode"></el-button>
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-edit"></el-button>
-      <el-button size="small" icon="el-icon-share"></el-button>
-      <el-button size="small" icon="el-icon-delete"></el-button>
+      <el-button size="small" icon="el-icon-add-location" @click="anableDrawPointMode" />
+      <el-button size="small" icon="el-icon-share" @click="anableDrawLineMode"  />
+      <el-button size="small" @click="anableDrawPolygonMode" :disabled="false">
+        <square-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-edit"></el-button>
-      <el-button size="small" icon="el-icon-full-screen"></el-button>
-    </div>
-    <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-copy-document"></el-button>
-    </div>
-    <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-refresh-left"></el-button>
-      <el-button size="small" icon="el-icon-delete"></el-button>
+      <el-button size="small" icon="el-icon-delete" @click="trash" />
     </div>
   </div>
 </template>
@@ -31,12 +25,22 @@
  * Mapboxdraw toolbox
  */
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
+import squareIcon from '@/assets/icons/square.svg';
+
 export default {
+  components: {
+    squareIcon
+  },
   props: {
     showSidebar: {
       type: Boolean,
       default: true
     }
+  },
+  data() {
+    return {
+      draw: null
+    };
   },
   mounted() {
     const draw = this.drawInit();
@@ -45,6 +49,7 @@ export default {
      * @type {object}
      */
     this.$emit('draw-init', draw);
+    this.draw = draw;
   },
   methods: {
     drawInit() {
@@ -53,6 +58,24 @@ export default {
     },
     toggleSidebar() {
       this.$emit('toggle-sidebar');
+    },
+    anableDirectSelectMode() {
+      console.log(this.draw.getAll());
+    },
+    anableDrawPointMode() {
+      this.draw.changeMode('draw_point');
+    },
+    anableDrawLineMode() {
+      // console.log('draw');
+      // this.draw.add({ type: 'Point', coordinates: [0, 0] });
+      // console.log(this.draw.deleteAll().getAll())
+      this.draw.changeMode('draw_line_string');
+    },
+    anableDrawPolygonMode() {
+      this.draw.changeMode('draw_polygon');
+    },
+    trash() {
+      this.draw.trash();
     }
   }
 };

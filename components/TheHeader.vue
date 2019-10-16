@@ -1,6 +1,7 @@
 <template>
   <div class="header">
     <el-select id="layer-dropdown" v-model="layer" placeholder="Select">
+      <i slot="prefix" class="el-input__icon el-icon-document-copy"></i>
       <el-option
         v-for="item in layerOptions"
         :key="item.value"
@@ -49,48 +50,28 @@ export default {
       basemap: '',
       basemapOptions: [
         {
-          value: 'Option1',
-          label: 'Option1'
+          value: 'osm',
+          label: 'OSM'
         },
         {
-          value: 'Option2',
-          label: 'Option2'
+          value: 'satellite',
+          label: 'Satellite'
         },
-        {
-          value: 'Option3',
-          label: 'Option3'
-        },
-        {
-          value: 'Option4',
-          label: 'Option4'
-        },
-        {
-          value: 'Option5',
-          label: 'Option5'
-        }
       ],
       layerYear: null,
       layerOpacity: 100,
       layerOptions: [
         {
-          value: 'Option1',
-          label: 'Option1'
+          value: 'roads',
+          label: 'Roads'
         },
         {
-          value: 'Option2',
-          label: 'Option2'
+          value: 'buildings',
+          label: 'Buildings'
         },
         {
-          value: 'Option3',
-          label: 'Option3'
-        },
-        {
-          value: 'Option4',
-          label: 'Option4'
-        },
-        {
-          value: 'Option5',
-          label: 'Option5'
+          value: 'points',
+          label: 'Points'
         }
       ],
       layer: ''

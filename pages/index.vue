@@ -50,7 +50,7 @@ export default {
     handleMapInit(map) {
       console.log('Here is the map:', map);
       this.map = map;
-      map.addControl(this.draw, 'top-left');
+      map.addControl(this.draw);
 
       // this.$store.commit('newMap', map);
     },
@@ -91,10 +91,5 @@ export default {
 }
 .header {
   grid-area: 1 / 1 / 2 / 6;
-}
-
-.mapboxgl-ctrl-top-left {
-  top: 0;
-  left: 360px;
 }
 </style>
