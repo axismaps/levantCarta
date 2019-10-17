@@ -8,10 +8,14 @@
       <el-button size="small" icon="el-icon-position" @click="anableDirectSelectMode"></el-button>
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-add-location" @click="anableDrawPointMode" />
-      <el-button size="small" icon="el-icon-share" @click="anableDrawLineMode"  />
+      <el-button size="small" @click="anableDrawPointMode">
+        <point-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
+      <el-button size="small" @click="anableDrawLineMode">
+        <line-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
       <el-button size="small" @click="anableDrawPolygonMode" :disabled="false">
-        <square-icon viewBox="0 0 22 22" class="img-responsive" />
+        <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
     <div class="btn-group el-button-group">
@@ -26,10 +30,16 @@
  */
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
 import squareIcon from '@/assets/icons/square.svg';
+import polygonIcon from '@/assets/icons/drawPolygonIcon.svg';
+import lineIcon from '@/assets/icons/drawLineIcon.svg';
+import pointIcon from '@/assets/icons/drawPointIcon.svg';
 
 export default {
   components: {
-    squareIcon
+    squareIcon,
+    polygonIcon,
+    lineIcon,
+    pointIcon
   },
   props: {
     showSidebar: {
