@@ -1,13 +1,13 @@
 <template>
   <div class="header">
-    <el-select id="layer-dropdown" v-model="layer" placeholder="Select">
+    <el-select
+      id="layer-dropdown"
+      @change="handleLayerSelect"
+      v-model="activeLayer"
+      placeholder="Select"
+    >
       <i slot="prefix" class="el-input__icon el-icon-document-copy"></i>
-      <el-option
-        v-for="item in layerOptions"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      ></el-option>
+      <el-option v-for="item in layers" :key="item._id" :label="item.name" :value="item._id"></el-option>
     </el-select>
 
     <div class="connection">
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
@@ -56,26 +58,23 @@ export default {
         {
           value: 'satellite',
           label: 'Satellite'
-        },
+        }
       ],
       layerYear: null,
       layerOpacity: 100,
-      layerOptions: [
-        {
-          value: 'roads',
-          label: 'Roads'
-        },
-        {
-          value: 'buildings',
-          label: 'Buildings'
-        },
-        {
-          value: 'points',
-          label: 'Points'
-        }
-      ],
-      layer: ''
+      activeLayer: ''
     };
+  },
+  computed: {
+    ...mapGetters({
+      layers: 'layers/items',
+    })
+  },
+  methods: {
+    ...mapActions('layers', ['setCurrentItem']),
+    handleLayerSelect(layerId) {
+      this.setCurrentItem(layerId);
+    }
   }
 };
 </script>

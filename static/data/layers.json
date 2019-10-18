@@ -1,0 +1,17 @@
+[
+  {
+    "_id": 1,
+    "name": "Points",
+    "type": "Point"
+  },
+  {
+    "_id": 2,
+    "name": "Roads",
+    "type": "LineString"
+  },
+  {
+    "_id": 3,
+    "name": "Buildings",
+    "type": "Polygon"
+  }
+]

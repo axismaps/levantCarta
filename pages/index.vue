@@ -27,6 +27,8 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import axios from 'axios';
 import Mapbox from '~/components/Mapbox.vue';
 import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
@@ -46,7 +48,18 @@ export default {
       draw: null
     };
   },
+  async fetch(context) {
+    const { data } = await axios.get('/data/layers.json');
+    context.store.dispatch('layers/setItems', data);
+  },
+  computed: {
+    ...mapGetters({
+      layers: 'layers/items',
+      activeLayer: 'layers/currentItem'
+    })
+  },
   methods: {
+    ...mapActions('layers', ['setItems']),
     handleMapInit(map) {
       console.log('Here is the map:', map);
       this.map = map;
@@ -56,11 +69,9 @@ export default {
     },
     handleDrawInit(draw) {
       console.log('Here is the draw instance', draw);
-
       this.draw = draw;
     },
     handleTogglesidebar() {
-      console.log('sidebar');
       this.showSidebar = !this.showSidebar;
     }
   }

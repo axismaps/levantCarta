@@ -8,13 +8,13 @@
       <el-button size="small" icon="el-icon-position" @click="anableDirectSelectMode"></el-button>
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" @click="anableDrawPointMode">
+      <el-button size="small" @click="anableDrawPointMode" :disabled="activeLayer.type !== 'Point'">
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button size="small" @click="anableDrawLineMode">
+      <el-button size="small" @click="anableDrawLineMode" :disabled="activeLayer.type !== 'LineString'">
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button size="small" @click="anableDrawPolygonMode" :disabled="false">
+      <el-button size="small" @click="anableDrawPolygonMode" :disabled="activeLayer.type !== 'Polygon'">
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
@@ -28,6 +28,7 @@
 /**
  * Mapboxdraw toolbox
  */
+import { mapActions, mapGetters } from 'vuex';
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
 import squareIcon from '@/assets/icons/square.svg';
 import polygonIcon from '@/assets/icons/drawPolygonIcon.svg';
@@ -60,6 +61,12 @@ export default {
      */
     this.$emit('draw-init', draw);
     this.draw = draw;
+  },
+  computed: {
+    ...mapGetters({
+      layers: 'layers/items',
+      activeLayer: 'layers/currentItem'
+    })
   },
   methods: {
     drawInit() {
