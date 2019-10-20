@@ -2,7 +2,7 @@
   <div class="container">
     <the-header class="header" />
     <div class="sidebar">
-      <the-sidebar v-show="showSidebar" />
+      <the-sidebar v-show="showSidebar" @addNewFeature="handleAddNewFeature" />
       <the-toolbox
         class="toolbox"
         :showSidebar="showSidebar"
@@ -33,6 +33,7 @@ import Mapbox from '~/components/Mapbox.vue';
 import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
+import { log } from 'util';
 
 export default {
   components: {
@@ -73,6 +74,25 @@ export default {
     },
     handleTogglesidebar() {
       this.showSidebar = !this.showSidebar;
+    },
+    handleAddNewFeature() {
+      const activeLayerType = this.activeLayer.type;
+      switch (activeLayerType) {
+        case 'Point':
+          console.log('draw point');
+          this.draw.changeMode('draw_point');
+          break;
+        case 'LineString':
+          this.draw.changeMode('draw_line_string');
+          console.log('draw line');
+          break;
+        case 'Polygon':
+          this.draw.changeMode('draw_polygon');
+          console.log('draw polygon');
+          break;
+        default:
+          break;
+      }
     }
   }
 };
