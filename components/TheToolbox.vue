@@ -11,15 +11,31 @@
       <el-button size="small" @click="anableDrawPointMode" :disabled="activeLayer.type !== 'Point'">
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button size="small" @click="anableDrawLineMode" :disabled="activeLayer.type !== 'LineString'">
+      <el-button
+        size="small"
+        @click="anableDrawLineMode"
+        :disabled="activeLayer.type !== 'LineString'"
+      >
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button size="small" @click="anableDrawPolygonMode" :disabled="activeLayer.type !== 'Polygon'">
+      <el-button
+        size="small"
+        @click="anableDrawPolygonMode"
+        :disabled="activeLayer.type !== 'Polygon'"
+      >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
+
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-delete" @click="trash" />
+      <el-popover  placement="right" width="190" v-model="confirmDeleteVisibily">
+        <p>Are you sure to delete  <br> this feature?</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="confirmDeleteVisibily = false">cancel</el-button>
+          <el-button type="primary" size="mini" @click="trash">confirm</el-button>
+        </div>
+        <el-button slot="reference" size="small" icon="el-icon-delete"  />
+      </el-popover>
     </div>
   </div>
 </template>
@@ -50,7 +66,8 @@ export default {
   },
   data() {
     return {
-      draw: null
+      draw: null,
+      confirmDeleteVisibily: false
     };
   },
   mounted() {
@@ -92,6 +109,8 @@ export default {
       this.draw.changeMode('draw_polygon');
     },
     trash() {
+      console.log('trash');
+      this.confirmDeleteVisibily = false;
       this.draw.trash();
     }
   }
