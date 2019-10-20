@@ -1,36 +1,29 @@
 <template>
   <div class="sidebar">
     <div class="title">
-      <p>Edit Feature</p>
-      <p class="close">
-        <i class="el-icon-close"></i>
-      </p>
+      <el-input placeholder="Search..." v-model="searchbox" class="input-with-select">
+        <el-button slot="append" icon="el-icon-search"></el-button>
+      </el-input>
     </div>
     <div class="controls">
-      <div class="control">
-        <el-badge is-dot class="item">
-          <h5>Name</h5>
-        </el-badge>
-        <el-input size="medium" placeholder="Please Input"></el-input>
-      </div>
-      <div class="control">
-        <h5>Mapped</h5>
-        <el-input size="medium" placeholder="Please Input"></el-input>
-      </div>
-      <div class="control">
-        <h5>Type</h5>
-        <el-input size="medium" placeholder="Please Input"></el-input>
-      </div>
-      <div class="control">
-        <h5>Tags</h5>
-        <el-input size="medium" placeholder="Please Input"></el-input>
-      </div>
+      <el-button type="success" icon="el-icon-plus" @click="addNewFeature">Add new feature</el-button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      searchbox: ''
+    }
+  },
+  methods: {
+    addNewFeature() {
+      this.$emit('addNewFeature')
+    }
+  },
+};
 </script>
 
 <style  lang="scss" scoped>
@@ -43,7 +36,7 @@ export default {};
 }
 .title {
   position: relative;
-  padding: 25px 0px;
+  padding: 30px 20px;
   text-align: center;
   width: 100%;
   background-color: #edf2f7;
@@ -57,6 +50,10 @@ export default {};
 .controls {
   padding: 20px;
   text-align: start;
+  .el-button {
+    width: 100%;
+    height: 56px;
+  }
   .control {
     padding-bottom: 20px;
     .el-input {
