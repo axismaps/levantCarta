@@ -411,7 +411,6 @@ export default {
         this.$emit('map-zoomend', map, e);
       });
 
-      Map Zoom
       map.on('zoom', e => {
         this.$emit('map-zoom', map, e);
       });
