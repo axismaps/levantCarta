@@ -115,6 +115,64 @@ export default {
         this.$emit('map-load', map);
       });
 
+      //Draw Events
+      map.on('draw.create', e => {
+        /**
+         * Draw feature create
+         */
+        this.$emit('draw-create', e);
+        this.$store.dispatch('changes/applyChange', e);
+      });
+      map.on('draw.update', e => {
+        /**
+         * Draw feature update
+         */
+        this.$emit('draw-update', e);
+        this.$store.dispatch('changes/applyChange', e);
+      });
+      map.on('draw.delete', e => {
+        /**
+         * Draw feature delete
+         */
+        this.$emit('draw-delete', e);
+      });
+      map.on('draw.combine', e => {
+        /**
+         * Draw feature combine
+         */
+        this.$emit('draw-combine', e);
+      });
+      map.on('draw.uncombine', e => {
+        /**
+         * Draw feature uncombine
+         */
+        this.$emit('draw-uncombine', e);
+      });
+      map.on('draw.selectionchange', e => {
+        /**
+         * Draw selection change
+         */
+        this.$emit('draw-selectionchange', e);
+      });
+      map.on('draw.modechange', e => {
+        /**
+         * Draw mode change
+         */
+        this.$emit('draw-modechange', e);
+      });
+      map.on('draw.render', e => {
+        /**
+         * Draw render
+         */
+        this.$emit('draw-render', e);
+      });
+      map.on('draw.actionable', e => {
+        /**
+         * Draw action anable
+         */
+        this.$emit('draw-actionable', e);
+      });
+
       map.on('mousemove', e => {
         /**
          * Map Mouse Move.
@@ -353,10 +411,10 @@ export default {
         this.$emit('map-zoomend', map, e);
       });
 
-      //Map Zoom
-      // map.on('zoom', e => {
-      //   this.$emit('map-zoom', map, e);
-      // });
+      Map Zoom
+      map.on('zoom', e => {
+        this.$emit('map-zoom', map, e);
+      });
 
       map.on('boxzoomcancel', e => {
         /**
@@ -501,5 +559,4 @@ export default {
   padding: 0px;
   margin: 0px;
 }
-
 </style>

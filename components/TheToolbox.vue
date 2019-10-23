@@ -28,13 +28,18 @@
     </div>
 
     <div class="btn-group el-button-group">
-      <el-popover  placement="right" width="190" v-model="confirmDeleteVisibily">
-        <p>Are you sure to delete  <br> this feature?</p>
+      <el-button slot="reference" size="small" @click="undoDrawAction" icon="el-icon-refresh-left" />
+
+      <el-popover placement="right" width="190" v-model="confirmDeleteVisibily">
+        <p>
+          Are you sure to delete
+          <br />this feature?
+        </p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="confirmDeleteVisibily = false">cancel</el-button>
           <el-button type="primary" size="mini" @click="trash">confirm</el-button>
         </div>
-        <el-button slot="reference" size="small" icon="el-icon-delete"  />
+        <el-button slot="reference" size="small" icon="el-icon-delete" />
       </el-popover>
     </div>
   </div>
@@ -86,6 +91,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions({
+      undoDrawAction: 'changes/undoChange'
+    }),
     drawInit() {
       const Draw = new MapboxDraw();
       return Draw;
@@ -109,6 +117,7 @@ export default {
       this.draw.changeMode('draw_polygon');
     },
     trash() {
+      //TODO: emit the change here
       console.log('trash');
       this.confirmDeleteVisibily = false;
       this.draw.trash();
