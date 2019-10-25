@@ -15,7 +15,6 @@
       <i class="el-icon-connection"></i>
       <i class="el-icon-minus"></i>
     </div>
-
     <el-date-picker
       id="year-stepper"
       v-model="layerYear"
@@ -25,20 +24,20 @@
     ></el-date-picker>
 
     <div class="basemap-dropdown">
-      <el-select id="basemap-dropdown" v-model="basemap" placeholder="Select">
-        <el-option
-          v-for="item in basemapOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
+      <el-select
+        id="basemap-dropdown"
+        @change="handleOverlaySelect"
+        v-model="basemap"
+        placeholder="Select"
+      >
+        <el-option v-for="item in overlays" :key="item.id" :label="item.name" :value="item.id"></el-option>
       </el-select>
       <el-button icon="el-icon-view"></el-button>
     </div>
 
     <div id="opacity-slider" class="layerOpacityController">
       <p>{{layerOpacity}}%</p>
-      <el-slider v-model="layerOpacity"></el-slider>
+      <el-slider v-model="layerOpacity" v-on:change="handleSetOverlayOpacity"></el-slider>
     </div>
   </div>
 </template>
@@ -50,16 +49,6 @@ export default {
   data() {
     return {
       basemap: '',
-      basemapOptions: [
-        {
-          value: 'osm',
-          label: 'OSM'
-        },
-        {
-          value: 'satellite',
-          label: 'Satellite'
-        }
-      ],
       layerYear: null,
       layerOpacity: 100,
       activeLayer: ''
@@ -68,13 +57,29 @@ export default {
   computed: {
     ...mapGetters({
       layers: 'layers/items',
+      overlays: 'overlays/items'
     })
   },
   methods: {
-    ...mapActions('layers', ['setCurrentItem']),
+    ...mapActions({
+      setActiveLayer: 'layers/setCurrentItem',
+      setActiveOverlay: 'overlays/setCurrentItem'
+    }),
     handleLayerSelect(layerId) {
-      this.setCurrentItem(layerId);
+      this.setActiveLayer(layerId);
+    },
+    handleOverlaySelect(overlayId) {
+      this.$emit('set-active-overlay', overlayId);
+    },
+    handleSetOverlayOpacity(opacity) {
+      console.log(opacity)
+      this.$emit('set-overlay-opacity', opacity);
     }
+  },
+  created() {
+    const activeLayerId = this.layers[0]._id; // set first layer as active 
+    this.activeLayer = activeLayerId;
+    this.setActiveLayer(activeLayerId);
   }
 };
 </script>

@@ -1,8 +1,12 @@
 <template>
   <div class="container">
-    <the-header class="header" />
+    <the-header
+      class="header"
+      v-on:set-active-overlay="handleSetActiveOverlay"
+      v-on:set-overlay-opacity="handleSetOverlayOpacity"
+    />
     <div class="sidebar">
-      <the-sidebar v-show="showSidebar" @addNewFeature="handleAddNewFeature" />
+      <the-sidebar v-show="showSidebar" @add-new-feature="handleAddNewFeature" />
       <the-toolbox
         class="toolbox"
         :showSidebar="showSidebar"
@@ -11,8 +15,8 @@
       />
     </div>
     <mapbox
+      v-if="draw"
       :map-options="{
-        style: 'https://maps.tilehosting.com/styles/basic/style.json?key=2rATmtGk6Jy8BQXXdDMD',
         style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
         center: [-43.181587010622025, -22.905508179548036],
         zoom: 11,
@@ -33,7 +37,6 @@ import Mapbox from '~/components/Mapbox.vue';
 import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
-import { log } from 'util';
 
 export default {
   components: {
@@ -50,23 +53,27 @@ export default {
     };
   },
   async fetch(context) {
-    const { data } = await axios.get('/data/layers.json');
-    context.store.dispatch('layers/setItems', data);
+    const { data: layers } = await axios.get('/data/layers.json');
+    const { data: overlays } = await axios.get('/data/overlays.json');
+    context.store.dispatch('overlays/setItems', overlays);
+    context.store.dispatch('layers/setItems', layers);
   },
   computed: {
     ...mapGetters({
       layers: 'layers/items',
-      activeLayer: 'layers/currentItem'
+      activeLayer: 'layers/currentItem',
+      overlays: 'overlays/items',
+      activeOverlay: 'overlays/currentItem'
     })
   },
   methods: {
-    ...mapActions('layers', ['setItems']),
+    ...mapActions({
+      setActiveOverlay: 'overlays/setCurrentItem'
+    }),
     handleMapInit(map) {
       console.log('Here is the map:', map);
-      this.map = map;
       map.addControl(this.draw);
-
-      // this.$store.commit('newMap', map);
+      this.map = map;
     },
     handleDrawInit(draw) {
       console.log('Here is the draw instance', draw);
@@ -74,6 +81,25 @@ export default {
     },
     handleTogglesidebar() {
       this.showSidebar = !this.showSidebar;
+    },
+    handleSetActiveOverlay(overlayId) {
+      console.log(overlayId);
+      const overlay = this.overlays.filter(
+        overlay => overlay.id === overlayId
+      )[0];
+      console.log(overlay);
+      this.map.addLayer(overlay);
+      this.map.moveLayer(overlayId);
+      this.setActiveOverlay(overlayId);
+      console.log(this.map.getStyle().layers);
+    },
+    handleSetOverlayOpacity(opacity) {
+      console.log('opacity sss', opacity);
+      this.map.setPaintProperty(
+        this.activeOverlay.id,
+        'raster-opacity',
+        opacity / 100
+      );
     },
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.type;
