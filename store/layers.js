@@ -1,9 +1,8 @@
-import axios from 'axios';
-
 export const state = () => ({
     items: [],
     isLoading: false,
-    currentItem: {}
+    currentItem: {},
+    currentYear: '1800'
 })
 
 export const mutations = {
@@ -23,22 +22,22 @@ export const mutations = {
     },
     SET_CURRENT_ITEM(state, item) {
         state.currentItem = item
+    },
+    SET_CURRENT_YEAR(state, year) {
+        state.currentYear = year
     }
-
 }
 /** async actions */
 export const actions = {
-    async nuxtServerInit({ commit }, nuxtContext) {
-        const { data } = await axios.get('/data/layers.json')
-        commit('SET_ITEMS', data)
-
-    },
     setItems({ commit }, items) {
         commit('SET_ITEMS', items)
     },
     setCurrentItem({ commit, state }, itemId) {
-        const currentItem = state.items.filter(item => item._id === itemId)
-        commit('SET_CURRENT_ITEM', currentItem[0])
+        const currentItem = state.items.filter(item => item._id === itemId)[0]
+        commit('SET_CURRENT_ITEM', currentItem)
+    },
+    setCurrentYear({ commit }, year) {
+        commit('SET_CURRENT_YEAR', year)
     }
 }
 
@@ -48,5 +47,8 @@ export const getters = {
     },
     currentItem(state) {
         return state.currentItem
+    },
+    currentYear(state) {
+        return state.currentYear
     }
 }

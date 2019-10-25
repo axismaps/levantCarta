@@ -5,8 +5,7 @@ export const state = () => ({
 
 export const mutations = {
     PUSH_CHANGE(state, change) {
-        //target is a map object instance, it needs to be deleted to free memory
-        delete change.target;
+        console.log('change: ', change)
         state.changes.push(change)
     },
     POP_CHANGE(state) {
@@ -19,22 +18,32 @@ export const mutations = {
 }
 
 export const actions = {
-    applyChange({ commit }, change) {
-        commit('PUSH_CHANGE', change)
+    applyChange({ commit, rootState }, change) {
+        const currentLayer = rootState.layers.currentItem._id //this probably is going to change when we connect the backend 
+        const currentYear = rootState.layers.currentYear
+        
+        delete change.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory 
+
+        // Todo: find the property by its id and update it 
+        // . 
+        // .
+        // .
+
+        commit('PUSH_CHANGE', { ...change, layer: currentLayer, year: currentYear })
     },
     undoChange({ commit, state }) {
         commit('POP_CHANGE')
         const { pendingUndoChange } = state
-        
+
         if (!pendingUndoChange) console.log('There is nothing more to undo') //just return
-        
+
         console.log('undo action', pendingUndoChange)
-       
+
         //TODO: Undo action here
         // .
         // .
         // .
-       
+
         commit('CLEAR_PENDING_CHANGE')
     }
 }

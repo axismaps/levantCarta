@@ -94,7 +94,7 @@ export default {
       console.log(this.map.getStyle().layers);
     },
     handleSetOverlayOpacity(opacity) {
-      console.log('opacity sss', opacity);
+      console.log('opacity: ', opacity);
       this.map.setPaintProperty(
         this.activeOverlay.id,
         'raster-opacity',

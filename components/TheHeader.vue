@@ -19,10 +19,11 @@
       id="year-stepper"
       v-model="layerYear"
       type="year"
-      default-value="2010"
+      format="yyyy"
+      value-format="yyyy"
       placeholder="Pick a year"
+      v-on:change="handleSetYearCurrentYear"
     ></el-date-picker>
-
     <div class="basemap-dropdown">
       <el-select
         id="basemap-dropdown"
@@ -57,13 +58,14 @@ export default {
   computed: {
     ...mapGetters({
       layers: 'layers/items',
+      currentYear: 'layers/currentYear',
       overlays: 'overlays/items'
     })
   },
   methods: {
     ...mapActions({
       setActiveLayer: 'layers/setCurrentItem',
-      setActiveOverlay: 'overlays/setCurrentItem'
+      setCurrentYear: 'layers/setCurrentYear'
     }),
     handleLayerSelect(layerId) {
       this.setActiveLayer(layerId);
@@ -72,14 +74,17 @@ export default {
       this.$emit('set-active-overlay', overlayId);
     },
     handleSetOverlayOpacity(opacity) {
-      console.log(opacity)
       this.$emit('set-overlay-opacity', opacity);
+    },
+    handleSetYearCurrentYear(year) {
+      this.setCurrentYear(year)
     }
   },
   created() {
-    const activeLayerId = this.layers[0]._id; // set first layer as active 
+    const activeLayerId = this.layers[0]._id; // set first layer as active
     this.activeLayer = activeLayerId;
     this.setActiveLayer(activeLayerId);
+    this.layerYear = this.currentYear;
   }
 };
 </script>
