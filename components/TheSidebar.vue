@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     addNewFeature() {
-      this.$emit('addNewFeature')
+      this.$emit('add-new-feature')
     }
   },
 };

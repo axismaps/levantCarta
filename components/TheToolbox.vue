@@ -108,9 +108,6 @@ export default {
       this.draw.changeMode('draw_point');
     },
     anableDrawLineMode() {
-      // console.log('draw');
-      // this.draw.add({ type: 'Point', coordinates: [0, 0] });
-      // console.log(this.draw.deleteAll().getAll())
       this.draw.changeMode('draw_line_string');
     },
     anableDrawPolygonMode() {
