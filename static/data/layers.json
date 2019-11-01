@@ -2,16 +2,34 @@
   {
     "_id": 1,
     "name": "Points",
-    "type": "Point"
+    "geometryType": "Point",
+    "layerTypes": [
+      "type1",
+      "type2",
+      "type3"
+    ],
+    "features": []
   },
   {
     "_id": 2,
     "name": "Roads",
-    "type": "LineString"
+    "geometryType": "LineString",
+    "layerTypes": [
+      "type1",
+      "type2",
+      "type3"
+    ],
+    "features": []
   },
   {
     "_id": 3,
     "name": "Buildings",
-    "type": "Polygon"
+    "geometryType": "Polygon",
+    "layerTypes": [
+      "type1",
+      "type2",
+      "type3"
+    ],
+    "features": []
   }
 ]

@@ -68,7 +68,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      setActiveOverlay: 'overlays/setCurrentItem'
+      setActiveOverlay: 'overlays/setCurrentItem',
+      updateDrawMode: 'updateDrawMode',
+      setDraw: 'setDraw'
     }),
     handleMapInit(map) {
       console.log('Here is the map:', map);
@@ -78,6 +80,7 @@ export default {
     handleDrawInit(draw) {
       console.log('Here is the draw instance', draw);
       this.draw = draw;
+      this.setDraw(draw);
     },
     handleTogglesidebar() {
       this.showSidebar = !this.showSidebar;
@@ -102,19 +105,19 @@ export default {
       );
     },
     handleAddNewFeature() {
-      const activeLayerType = this.activeLayer.type;
+      const activeLayerType = this.activeLayer.geometryType;
       switch (activeLayerType) {
         case 'Point':
-          console.log('draw point');
+          this.updateDrawMode('draw_point');
           this.draw.changeMode('draw_point');
           break;
         case 'LineString':
           this.draw.changeMode('draw_line_string');
-          console.log('draw line');
+          this.updateDrawMode('draw_line_string');
           break;
         case 'Polygon':
           this.draw.changeMode('draw_polygon');
-          console.log('draw polygon');
+          this.updateDrawMode('draw_polygon');
           break;
         default:
           break;

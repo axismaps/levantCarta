@@ -59,7 +59,8 @@ export default {
     ...mapGetters({
       layers: 'layers/items',
       currentYear: 'layers/currentYear',
-      overlays: 'overlays/items'
+      overlays: 'overlays/items',
+      editionStatus: 'isEditionInProgress'
     })
   },
   methods: {
@@ -77,7 +78,7 @@ export default {
       this.$emit('set-overlay-opacity', opacity);
     },
     handleSetYearCurrentYear(year) {
-      this.setCurrentYear(year)
+      this.setCurrentYear(year);
     }
   },
   created() {

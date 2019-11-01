@@ -4,7 +4,9 @@
 
 <script>
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
+import { mapActions, mapGetters } from 'vuex';
 // import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
+
 export default {
   data() {
     return {};
@@ -86,6 +88,11 @@ export default {
     this.registerEvents(map);
   },
   methods: {
+    ...mapActions({
+      updateDrawMode: 'updateDrawMode',
+      updateSelectedFeature: 'updateSelectedFeature',
+      applyChange: 'changes/applyChange'
+    }),
     mapInit() {
       //Mapbox GL access token
       mapboxgl.accessToken = this.accessToken;
@@ -121,14 +128,14 @@ export default {
          * Draw feature create
          */
         this.$emit('draw-create', e);
-        this.$store.dispatch('changes/applyChange', e);
+        this.applyChange(e);
       });
       map.on('draw.update', e => {
         /**
          * Draw feature update
          */
         this.$emit('draw-update', e);
-        this.$store.dispatch('changes/applyChange', e);
+        this.applyChange(e);
       });
       map.on('draw.delete', e => {
         /**
@@ -152,12 +159,14 @@ export default {
         /**
          * Draw selection change
          */
+        this.updateSelectedFeature(e.features);
         this.$emit('draw-selectionchange', e);
       });
       map.on('draw.modechange', e => {
         /**
          * Draw mode change
          */
+        this.updateDrawMode(e.mode);
         this.$emit('draw-modechange', e);
       });
       map.on('draw.render', e => {
@@ -173,339 +182,339 @@ export default {
         this.$emit('draw-actionable', e);
       });
 
-      map.on('mousemove', e => {
-        /**
-         * Map Mouse Move.
-         * @type {object}
-         */
-        this.$emit('map-mousemove', map, e);
-      });
+      // map.on('mousemove', e => {
+      //   /**
+      //    * Map Mouse Move.
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-mousemove', map, e);
+      // });
 
-      map.on('click', e => {
-        /**
-         * Map clicked.
-         * @type {object}
-         */
-        this.$emit('map-click', map, e);
-      });
+      // map.on('click', e => {
+      //   /**
+      //    * Map clicked.
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-click', map, e);
+      // });
 
-      map.on('contextmenu', e => {
-        /**
-         * Map Context Menu
-         * @type {object}
-         */
-        this.$emit('map-contextmenu', map, e);
-      });
+      // map.on('contextmenu', e => {
+      //   /**
+      //    * Map Context Menu
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-contextmenu', map, e);
+      // });
 
-      map.on('resize', () => {
-        /**
-         * Map resized
-         * @type {object}
-         */
-        this.$emit('map-resize', map);
-      });
+      // map.on('resize', () => {
+      //   /**
+      //    * Map resized
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-resize', map);
+      // });
 
-      map.on('resize', e => {
-        /**
-         * Map Webgl Context Lost
-         * @type {object}
-         */
-        this.$emit('map-webglcontextlost', map, e);
-      });
+      // map.on('resize', e => {
+      //   /**
+      //    * Map Webgl Context Lost
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-webglcontextlost', map, e);
+      // });
 
-      map.on('resize', e => {
-        /**
-         * Map Webgl Context Restored
-         * @type {object}
-         */
-        this.$emit('map-webglcontextrestored', map, e);
-      });
+      // map.on('resize', e => {
+      //   /**
+      //    * Map Webgl Context Restored
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-webglcontextrestored', map, e);
+      // });
 
-      map.on('remove', () => {
-        /**
-         * Map removed
-         * @type {object}
-         */
-        this.$emit('map-remove', map);
-      });
+      // map.on('remove', () => {
+      //   /**
+      //    * Map removed
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-remove', map);
+      // });
 
-      map.on('sourcedataloading', e => {
-        /**
-         * Map Source Data Loading
-         * @type {object}
-         */
-        this.$emit('map-sourcedataloading', map, e);
-      });
+      // map.on('sourcedataloading', e => {
+      //   /**
+      //    * Map Source Data Loading
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-sourcedataloading', map, e);
+      // });
 
-      map.on('touchstart', e => {
-        /**
-         * Map Touch Start
-         * @type {object}
-         */
-        this.$emit('map-touchstart', map, e);
-      });
+      // map.on('touchstart', e => {
+      //   /**
+      //    * Map Touch Start
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-touchstart', map, e);
+      // });
 
-      map.on('movestart', e => {
-        /**
-         * Map Move Start
-         * @type {object}
-         */
-        this.$emit('map-movestart', map, e);
-      });
+      // map.on('movestart', e => {
+      //   /**
+      //    * Map Move Start
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-movestart', map, e);
+      // });
 
-      map.on('movestart', e => {
-        /**
-         * Map Touch Move
-         * @type {object}
-         */
-        this.$emit('map-movestart', map, e);
-      });
+      // map.on('movestart', e => {
+      //   /**
+      //    * Map Touch Move
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-movestart', map, e);
+      // });
 
-      map.on('move', e => {
-        /**
-         * Map  Move
-         * @type {object}
-         */
-        this.$emit('map-move', map, e);
-      });
+      // map.on('move', e => {
+      //   /**
+      //    * Map  Move
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-move', map, e);
+      // });
 
-      map.on('moveend', e => {
-        /**
-         * Map Move end
-         * @type {object}
-         */
-        this.$emit('map-moveend', map, e);
-      });
+      // map.on('moveend', e => {
+      //   /**
+      //    * Map Move end
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-moveend', map, e);
+      // });
 
-      map.on('error', e => {
-        /**
-         * Map Error
-         * @type {object}
-         */
-        this.$emit('map-error', map, e);
-      });
+      // map.on('error', e => {
+      //   /**
+      //    * Map Error
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-error', map, e);
+      // });
 
-      map.on('data', e => {
-        /**
-         * Map Data
-         * @type {object}
-         */
+      // map.on('data', e => {
+      //   /**
+      //    * Map Data
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-data', map, e);
-      });
+      //   this.$emit('map-data', map, e);
+      // });
 
-      map.on('styledata', e => {
-        /**
-         * Map Style Data
-         * @type {object}
-         */
+      // map.on('styledata', e => {
+      //   /**
+      //    * Map Style Data
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-styledata', map, e);
-      });
+      //   this.$emit('map-styledata', map, e);
+      // });
 
-      map.on('mouseup', e => {
-        /**
-         * Map Mouse Up
-         * @type {object}
-         */
+      // map.on('mouseup', e => {
+      //   /**
+      //    * Map Mouse Up
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-mouseup', map, e);
-      });
+      //   this.$emit('map-mouseup', map, e);
+      // });
 
-      map.on('touchcancel', e => {
-        /**
-         * Map Touch Cancel
-         * @type {object}
-         */
+      // map.on('touchcancel', e => {
+      //   /**
+      //    * Map Touch Cancel
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-touchcancel', map, e);
-      });
+      //   this.$emit('map-touchcancel', map, e);
+      // });
 
-      map.on('sourcedata', e => {
-        /**
-         * Map Source Data
-         * @type {object}
-         */
+      // map.on('sourcedata', e => {
+      //   /**
+      //    * Map Source Data
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-sourcedata', map, e);
-      });
+      //   this.$emit('map-sourcedata', map, e);
+      // });
 
-      map.on('dataloading', e => {
-        /**
-         * Map Data Loading
-         * @type {object}
-         */
+      // map.on('dataloading', e => {
+      //   /**
+      //    * Map Data Loading
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-dataloading', map, e);
-      });
+      //   this.$emit('map-dataloading', map, e);
+      // });
 
-      map.on('styledataloading', e => {
-        /**
-         * Map Style Data Loading
-         * @type {object}
-         */
+      // map.on('styledataloading', e => {
+      //   /**
+      //    * Map Style Data Loading
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-styledataloading', map, e);
-      });
+      //   this.$emit('map-styledataloading', map, e);
+      // });
 
-      map.on('dblclick', e => {
-        /**
-         * Map Double Click
-         * @type {object}
-         */
+      // map.on('dblclick', e => {
+      //   /**
+      //    * Map Double Click
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-dblclick', map, e);
-      });
+      //   this.$emit('map-dblclick', map, e);
+      // });
 
-      map.on('render', () => {
-        /**
-         * Map Render
-         * @type {object}
-         */
+      // map.on('render', () => {
+      //   /**
+      //    * Map Render
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-render', map);
-      });
+      //   this.$emit('map-render', map);
+      // });
 
-      map.on('mouseout', e => {
-        /**
-         * Map Mouse Out
-         * @type {object}
-         */
+      // map.on('mouseout', e => {
+      //   /**
+      //    * Map Mouse Out
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-mouseout', map, e);
-      });
+      //   this.$emit('map-mouseout', map, e);
+      // });
 
-      map.on('mousedown', e => {
-        /**
-         * Map Mouse Down
-         * @type {object}
-         */
+      // map.on('mousedown', e => {
+      //   /**
+      //    * Map Mouse Down
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-mousedown', map, e);
-      });
+      //   this.$emit('map-mousedown', map, e);
+      // });
 
-      map.on('touchend', e => {
-        /**
-         * Map Touch End
-         * @type {object}
-         */
+      // map.on('touchend', e => {
+      //   /**
+      //    * Map Touch End
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-touchend', map, e);
-      });
+      //   this.$emit('map-touchend', map, e);
+      // });
 
-      map.on('zoomstart', e => {
-        /**
-         * Map Zoom Start
-         * @type {object}
-         */
+      // map.on('zoomstart', e => {
+      //   /**
+      //    * Map Zoom Start
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-zoomstart', map, e);
-      });
+      //   this.$emit('map-zoomstart', map, e);
+      // });
 
-      map.on('zoomend', e => {
-        /**
-         * Map Zoom End
-         * @type {object}
-         */
+      // map.on('zoomend', e => {
+      //   /**
+      //    * Map Zoom End
+      //    * @type {object}
+      //    */
 
-        this.$emit('map-zoomend', map, e);
-      });
+      //   this.$emit('map-zoomend', map, e);
+      // });
 
-      map.on('zoom', e => {
-        this.$emit('map-zoom', map, e);
-      });
+      // map.on('zoom', e => {
+      //   this.$emit('map-zoom', map, e);
+      // });
 
-      map.on('boxzoomcancel', e => {
-        /**
-         * Map Box Zoom Cancel
-         * @type {object}
-         */
-        this.$emit('map-boxzoomcancel', map, e);
-      });
+      // map.on('boxzoomcancel', e => {
+      //   /**
+      //    * Map Box Zoom Cancel
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-boxzoomcancel', map, e);
+      // });
 
-      map.on('boxzoomend', e => {
-        this.$emit('map-boxzoomend', map, e);
-      });
+      // map.on('boxzoomend', e => {
+      //   this.$emit('map-boxzoomend', map, e);
+      // });
 
-      map.on('boxzoomstart', e => {
-        /**
-         * Map Box Zoom Start
-         * @type {object}
-         */
-        this.$emit('map-boxzoomstart', map, e);
-      });
+      // map.on('boxzoomstart', e => {
+      //   /**
+      //    * Map Box Zoom Start
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-boxzoomstart', map, e);
+      // });
 
-      map.on('rotatestart', e => {
-        /**
-         * Map Rotate Start
-         * @type {object}
-         */
-        this.$emit('map-rotatestart', map, e);
-      });
+      // map.on('rotatestart', e => {
+      //   /**
+      //    * Map Rotate Start
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-rotatestart', map, e);
+      // });
 
-      map.on('rotate', e => {
-        /**
-         * Map Rotate
-         * @type {object}
-         */
-        this.$emit('map-rotate', map, e);
-      });
+      // map.on('rotate', e => {
+      //   /**
+      //    * Map Rotate
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-rotate', map, e);
+      // });
 
-      map.on('rotateend', e => {
-        /**
-         * Map Rotate End
-         * @type {object}
-         */
-        this.$emit('map-rotateend', map, e);
-      });
+      // map.on('rotateend', e => {
+      //   /**
+      //    * Map Rotate End
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-rotateend', map, e);
+      // });
 
-      map.on('dragend', e => {
-        /**
-         * Map Drag End
-         * @type {object}
-         */
-        this.$emit('map-dragend', map, e);
-      });
+      // map.on('dragend', e => {
+      //   /**
+      //    * Map Drag End
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-dragend', map, e);
+      // });
 
-      map.on('drag', e => {
-        /**
-         * Map Drag
-         * @type {object}
-         */
-        this.$emit('map-drag', map, e);
-      });
+      // map.on('drag', e => {
+      //   /**
+      //    * Map Drag
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-drag', map, e);
+      // });
 
-      map.on('dragstart', e => {
-        /**
-         * Map Drag Start
-         * @type {object}
-         */
-        this.$emit('map-dragstart', map, e);
-      });
+      // map.on('dragstart', e => {
+      //   /**
+      //    * Map Drag Start
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-dragstart', map, e);
+      // });
 
-      map.on('pitch', e => {
-        /**
-         * Map Pitch
-         * @type {object}
-         */
-        this.$emit('map-pitch', map, e);
-      });
+      // map.on('pitch', e => {
+      //   /**
+      //    * Map Pitch
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-pitch', map, e);
+      // });
 
-      map.on('pitchstart', e => {
-        /**
-         * Map Pitch Start
-         * @type {object}
-         */
-        this.$emit('map-pitchstart', map, e);
-      });
+      // map.on('pitchstart', e => {
+      //   /**
+      //    * Map Pitch Start
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-pitchstart', map, e);
+      // });
 
-      map.on('pitchend', e => {
-        /**
-         * Map Pitch End
-         * @type {object}
-         */
-        this.$emit('map-pitchend', map, e);
-      });
+      // map.on('pitchend', e => {
+      //   /**
+      //    * Map Pitch End
+      //    * @type {object}
+      //    */
+      //   this.$emit('map-pitchend', map, e);
+      // });
     },
     addControls(map) {
       //Nav Control

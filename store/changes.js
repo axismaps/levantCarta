@@ -18,18 +18,42 @@ export const mutations = {
 }
 
 export const actions = {
-    applyChange({ commit, rootState }, change) {
+    applyChange({ commit, rootState }, changeAction) {
+
         const currentLayer = rootState.layers.currentItem._id //this probably is going to change when we connect the backend 
-        const currentYear = rootState.layers.currentYear
-        
-        delete change.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory 
+        const featureForm = rootState.attributeForm
+        const draw = rootState.draw
+        const changeType = changeAction.type
 
-        // Todo: find the property by its id and update it 
-        // . 
-        // .
-        // .
+        const featureToUpdateId = changeAction.features[0].id;
 
-        commit('PUSH_CHANGE', { ...change, layer: currentLayer, year: currentYear })
+
+        switch (changeType) {
+            case 'draw.create':
+                delete changeAction.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory 
+                draw.setFeatureProperty(featureToUpdateId, 'name', featureForm.name)
+                    .setFeatureProperty(featureToUpdateId, 'mappedFrom', featureForm.mappedFrom)
+                    .setFeatureProperty(featureToUpdateId, 'mappedTo', featureForm.mappedTo)
+                    .setFeatureProperty(featureToUpdateId, 'type', featureForm.type)
+                    .setFeatureProperty(featureToUpdateId, 'tags', featureForm.tags);
+
+                commit('UPDATE_EDITION_STATUS', false, { root: true })
+                break;
+            case 'draw.update':
+
+                draw.setFeatureProperty(featureToUpdateId, 'name', featureForm.name)
+                    .setFeatureProperty(featureToUpdateId, 'mappedFrom', featureForm.mappedFrom)
+                    .setFeatureProperty(featureToUpdateId, 'mappedTo', featureForm.mappedTo)
+                    .setFeatureProperty(featureToUpdateId, 'type', featureForm.type)
+                    .setFeatureProperty(featureToUpdateId, 'tags', featureForm.tags);
+
+                break;
+            default:
+                break;
+        }
+
+
+        // commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer, year: currentYear })
     },
     undoChange({ commit, state }) {
         commit('POP_CHANGE')

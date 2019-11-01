@@ -9,16 +9,8 @@ export const mutations = {
     SET_ITEMS(state, items) {
         state.items = items
     },
-    ADD_ITEM(state, item) {
-        state.items.push(item)
-    },
     REMOVE_ITEM(state, { item }) {
         state.items.splice(state.items.indexOf(item), 1)
-    },
-    UPDATE_ITEM(state, item) {
-    },
-    SET_LOADING_STATUS(state, status) {
-        state.isLoading = status
     },
     SET_CURRENT_ITEM(state, item) {
         state.currentItem = item

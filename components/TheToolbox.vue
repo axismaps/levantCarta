@@ -8,20 +8,20 @@
       <el-button size="small" icon="el-icon-position" @click="anableDirectSelectMode"></el-button>
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" @click="anableDrawPointMode" :disabled="activeLayer.type !== 'Point'">
+      <el-button size="small" @click="anableDrawPointMode" :disabled="activeLayer.geometryType !== 'Point'">
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
         size="small"
         @click="anableDrawLineMode"
-        :disabled="activeLayer.type !== 'LineString'"
+        :disabled="activeLayer.geometryType !== 'LineString'"
       >
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
         size="small"
         @click="anableDrawPolygonMode"
-        :disabled="activeLayer.type !== 'Polygon'"
+        :disabled="activeLayer.geometryType !== 'Polygon'"
       >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
@@ -92,7 +92,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      undoDrawAction: 'changes/undoChange'
+      undoDrawAction: 'changes/undoChange',
+      updateDrawMode: 'updateDrawMode'
     }),
     drawInit() {
       const Draw = new MapboxDraw();
@@ -106,12 +107,15 @@ export default {
     },
     anableDrawPointMode() {
       this.draw.changeMode('draw_point');
+      this.updateDrawMode('draw_point');
     },
     anableDrawLineMode() {
       this.draw.changeMode('draw_line_string');
+      this.updateDrawMode('draw_line_string');
     },
     anableDrawPolygonMode() {
       this.draw.changeMode('draw_polygon');
+      this.updateDrawMode('draw_polygon');
     },
     trash() {
       //TODO: emit the change here
