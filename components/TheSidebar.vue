@@ -57,6 +57,16 @@
           </el-select>
         </el-form-item>
       </el-form>
+      <!-- <p>
+        Is form valid:
+        <br />
+        {{isAttributeFormValid}}
+      </p>
+      <p>
+        Is edition in progress:
+        <br />
+        {{isEditionInProgress}}
+      </p> -->
     </div>
   </div>
 </template>
@@ -84,24 +94,17 @@ export default {
             trigger: 'blur'
           }
         ],
-        region: [
+        mappedFrom: [
           {
-            required: true,
-            message: 'Please select Type',
-            trigger: 'change'
-          }
-        ],
-        date1: [
-          {
-            type: 'date',
+            type: 'string',
             required: true,
             message: 'Please pick a date',
             trigger: 'change'
           }
         ],
-        date2: [
+        mappedTo: [
           {
-            type: 'date',
+            type: 'string',
             required: true,
             message: 'Please pick a time',
             trigger: 'change'
@@ -114,13 +117,6 @@ export default {
             message: 'Please select at least one activity type',
             trigger: 'change'
           }
-        ],
-        desc: [
-          {
-            required: true,
-            message: 'Please input activity form',
-            trigger: 'blur'
-          }
         ]
       }
     };
@@ -129,18 +125,30 @@ export default {
     ...mapGetters({
       drawMode: 'drawMode',
       selectedFeature: 'selectedFeature',
-      currentLayer: 'layers/currentItem'
+      currentLayer: 'layers/currentItem',
+      isAttributeFormValid: 'isAttributeFormValid',
+      isEditionInProgress: 'isEditionInProgress'
     })
   },
   methods: {
     ...mapActions({
-      updateAttributeForm: 'updateAttributeForm'
+      updateAttributeForm: 'updateAttributeForm',
+      updateAttributeFormValidity: 'updateAttributeFormValidity'
     }),
     addNewFeature() {
       this.$emit('add-new-feature');
     },
     handleUpdateAttributeForm() {
       this.updateAttributeForm(JSON.parse(JSON.stringify(this.form)));
+
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          this.updateAttributeFormValidity(true);
+        } else {
+          this.updateAttributeFormValidity(false);
+          return false;
+        }
+      });
     }
   },
   created() {

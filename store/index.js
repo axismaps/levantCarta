@@ -10,7 +10,8 @@ export const state = () => ({
         type: '',
         tags: []
     },
-    isEditionInProgress: false
+    isEditionInProgress: false,
+    isAttributeFormValid: false
 })
 
 export const mutations = {
@@ -36,7 +37,13 @@ export const mutations = {
         }
     },
     UPDATE_EDITION_STATUS(state, status) {
+        console.log('UPDATE_EDITION_STATUS', status)
+
         state.isEditionInProgress = status
+    },
+    UPDATE_ATTRIBUTE_FORM_VALIDITY(state, status) {
+        console.log('UPDATE_ATTRIBUTE_FORM_VALIDITY', status)
+        state.isAttributeFormValid = status
     }
 
 }
@@ -57,31 +64,51 @@ export const actions = {
         commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
         commit('UPDATE_EDITION_STATUS', true)
     },
+    updateAttributeFormValidity({ commit }, status) {
+        commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', status)
+    },
     //this action is commmited by mapbox 
     updateSelectedFeature({ commit, state, dispatch }, features) {
         console.log('UPDATE_SELECTED_FEATURE', features[0])
-        console.log('atribute form', state.attributeForm)
+        console.log('attribute form', state.attributeForm)
 
         if (!state.isEditionInProgress) {
             if (features[0]) {
                 commit('UPDATE_SELECTED_FEATURE', features[0])
+                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', true)
+                const attributeForm = {
+                    name: features[0].properties.name,
+                    mappedFrom: features[0].properties.mappedFrom,
+                    mappedTo: features[0].properties.mappedTo,
+                    type: features[0].properties.type,
+                    tags: features[0].properties.tags
+                }
+                commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
+
             } else {
                 commit('UPDATE_SELECTED_FEATURE', null)
+                commit('CLEAR_ATTRIBUTE_FORM')
+                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false)
             }
-        } else {
+        } else if (state.isAttributeFormValid) {
             const changeAction = {
                 features: [state.selectedFeature],
                 type: "draw.update",
-                target: 'map, mas nao tem map? wtf'
             }
             dispatch('changes/applyChange', changeAction)
             commit('UPDATE_EDITION_STATUS', false)
-            commit('CLEAR_ATTRIBUTE_FORM')
 
             if (features[0]) {
                 commit('UPDATE_SELECTED_FEATURE', features[0])
+
             } else {
                 commit('UPDATE_SELECTED_FEATURE', null)
+                commit('CLEAR_ATTRIBUTE_FORM')
+                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false)
+            }
+        } else {
+            if (state.drawMode !== 'direct_select') {
+                state.draw.changeMode('simple_select', { featureIds: [state.selectedFeature.id] })
             }
         }
 
@@ -103,5 +130,8 @@ export const getters = {
     },
     isEditionInProgress(state) {
         return state.isEditionInProgress
+    },
+    isAttributeFormValid(state) {
+        return state.isAttributeFormValid
     }
 }
