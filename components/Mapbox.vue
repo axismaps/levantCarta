@@ -86,6 +86,8 @@ export default {
 
     //Register Map Events
     this.registerEvents(map);
+
+    this.initPopup();
   },
   methods: {
     ...mapActions({
@@ -113,7 +115,29 @@ export default {
 
       return map;
     },
+    initPopup() {
+      const popup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: true
+      });
+      this.$emit('popup-init', popup);
+    },
     registerEvents(map) {
+      map.on('mousemove', e => {
+        var features = map.queryRenderedFeatures(e.point);
+        // console.log(features);
+        features.map(feature => {
+          if (feature.source === 'mapbox-gl-draw-cold') {
+            var coordinates = e.lngLat;
+
+            this.$emit('create-popup', {
+              coordinates,
+              id: feature.properties.id
+            });
+          }
+        });
+      });
+
       map.on('load', () => {
         /**
          * Mapbox instance complete load event.

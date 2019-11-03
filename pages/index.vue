@@ -25,6 +25,8 @@
         show: true,
         position: 'top-right'
         }"
+      v-on:create-popup="handleCreatePopup"
+      v-on:popup-init="handleInitPopup"
       v-on:map-init="handleMapInit"
       class="map"
     />
@@ -49,7 +51,8 @@ export default {
     return {
       showSidebar: true,
       map: null,
-      draw: null
+      draw: null,
+      popup: null
     };
   },
   async fetch(context) {
@@ -72,6 +75,27 @@ export default {
       updateDrawMode: 'updateDrawMode',
       setDraw: 'setDraw'
     }),
+    handleInitPopup(popup) {
+      this.popup = popup;
+    },
+    handleCreatePopup(feature) {
+      const { name, mappedFrom, mappedTo, type } = this.draw.get(
+        feature.id
+      ).properties;
+
+      const description = `
+      Name: ${name}
+      <br>
+      Mapped: ${mappedFrom} - ${mappedTo}
+      <br>
+      Type: ${type}
+      `;
+
+      this.popup
+        .setLngLat(feature.coordinates)
+        .setHTML(description)
+        .addTo(this.map);
+    },
     handleMapInit(map) {
       console.log('Here is the map:', map);
       map.addControl(this.draw);
@@ -84,6 +108,7 @@ export default {
     },
     handleTogglesidebar() {
       this.showSidebar = !this.showSidebar;
+      console.log(this.map.getStyle().layers);
     },
     handleSetActiveOverlay(overlayId) {
       console.log(overlayId);
