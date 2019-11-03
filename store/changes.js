@@ -39,7 +39,8 @@ export const actions = {
                         .setFeatureProperty(featureToUpdate.id, 'mappedFrom', attributeForm.mappedFrom)
                         .setFeatureProperty(featureToUpdate.id, 'mappedTo', attributeForm.mappedTo)
                         .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
-                        .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags);
+                        .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
+                        .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
 
                     commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
                     commit('UPDATE_EDITION_STATUS', false, { root: true })
@@ -51,7 +52,8 @@ export const actions = {
                     .setFeatureProperty(featureToUpdate.id, 'mappedFrom', attributeForm.mappedFrom)
                     .setFeatureProperty(featureToUpdate.id, 'mappedTo', attributeForm.mappedTo)
                     .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
-                    .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags);
+                    .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
+                    .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
 
                 break;
             default:

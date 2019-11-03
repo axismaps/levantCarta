@@ -66,7 +66,9 @@ export default {
       layers: 'layers/items',
       activeLayer: 'layers/currentItem',
       overlays: 'overlays/items',
-      activeOverlay: 'overlays/currentItem'
+      activeOverlay: 'overlays/currentItem',
+      isEditionInProgress: 'isEditionInProgress',
+      drawMode: 'drawMode'
     })
   },
   methods: {
@@ -79,22 +81,25 @@ export default {
       this.popup = popup;
     },
     handleCreatePopup(feature) {
-      const { name, mappedFrom, mappedTo, type } = this.draw.get(
-        feature.id
-      ).properties;
+      if (this.isEditionInProgress || this.drawMode !== 'simple_select') return;
+      try {
+        const { name, mappedFrom, mappedTo, type } = this.draw.get(
+          feature.id
+        ).properties;
 
-      const description = `
-      Name: ${name}
-      <br>
-      Mapped: ${mappedFrom} - ${mappedTo}
-      <br>
-      Type: ${type}
-      `;
+        const description = `
+        Name: ${name}
+        <br>
+        Mapped: ${mappedFrom} - ${mappedTo}
+        <br>
+        Type: ${type}
+        `;
 
-      this.popup
-        .setLngLat(feature.coordinates)
-        .setHTML(description)
-        .addTo(this.map);
+        this.popup
+          .setLngLat(feature.coordinates)
+          .setHTML(description)
+          .addTo(this.map);
+      } catch (error) {}
     },
     handleMapInit(map) {
       console.log('Here is the map:', map);
