@@ -56,6 +56,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <the-sidebar-add-tag :initialTags="form.tags" @update-tags="handleUpdateTags" />
       </el-form>
       <!-- <p>
         Is form valid:
@@ -66,14 +67,18 @@
         Is edition in progress:
         <br />
         {{isEditionInProgress}}
-      </p> -->
+      </p>-->
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import TheSidebarAddTag from '~/components/TheSidebarAddTag';
 export default {
+  components: {
+    TheSidebarAddTag
+  },
   data() {
     return {
       searchbox: '',
@@ -90,7 +95,7 @@ export default {
         name: [
           {
             required: true,
-            message: 'Please input Activity name',
+            message: 'Please input Feature name',
             trigger: 'blur'
           }
         ],
@@ -98,7 +103,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please pick a date',
+            message: 'Please a Year',
             trigger: 'change'
           }
         ],
@@ -106,7 +111,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please pick a time',
+            message: 'Please a Year',
             trigger: 'change'
           }
         ],
@@ -114,7 +119,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please select at least one activity type',
+            message: 'Please select the Feature type',
             trigger: 'change'
           }
         ]
@@ -139,7 +144,7 @@ export default {
       this.$emit('add-new-feature');
     },
     handleUpdateAttributeForm() {
-      this.updateAttributeForm(JSON.parse(JSON.stringify(this.form)));
+      this.updateAttributeForm(JSON.parse(JSON.stringify(this.form))); //  I'm doing a deep copy here...
 
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -149,6 +154,10 @@ export default {
           return false;
         }
       });
+    },
+    handleUpdateTags(tags) {
+      this.form.tags = tags;
+      this.handleUpdateAttributeForm();
     }
   },
   created() {
@@ -156,7 +165,7 @@ export default {
       if (mutation.type === 'UPDATE_SELECTED_FEATURE') {
         if (state.selectedFeature) {
           this.form = JSON.parse(
-            JSON.stringify(state.selectedFeature.properties)
+            JSON.stringify(state.selectedFeature.properties) //I'm doing a deep copy here...
           );
         } else {
           this.form = {
