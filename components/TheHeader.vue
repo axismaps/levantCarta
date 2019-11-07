@@ -22,7 +22,7 @@
       format="yyyy"
       value-format="yyyy"
       placeholder="Pick a year"
-      v-on:change="handleSetYearCurrentYear"
+      @change="handleSetYearCurrentYear"
     ></el-date-picker>
     <div class="basemap-dropdown">
       <el-select
@@ -38,7 +38,7 @@
 
     <div id="opacity-slider" class="layerOpacityController">
       <p>{{layerOpacity}}%</p>
-      <el-slider v-model="layerOpacity" v-on:change="handleSetOverlayOpacity"></el-slider>
+      <el-slider v-model="layerOpacity" @change="handleSetOverlayOpacity"></el-slider>
     </div>
   </div>
 </template>

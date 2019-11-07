@@ -2,16 +2,16 @@
   <div class="container">
     <the-header
       class="header"
-      v-on:set-active-overlay="handleSetActiveOverlay"
-      v-on:set-overlay-opacity="handleSetOverlayOpacity"
+      @set-active-overlay="handleSetActiveOverlay"
+      @set-overlay-opacity="handleSetOverlayOpacity"
     />
     <div class="sidebar">
       <the-sidebar v-show="showSidebar" @add-new-feature="handleAddNewFeature" />
       <the-toolbox
         class="toolbox"
         :showSidebar="showSidebar"
-        v-on:draw-init="handleDrawInit"
-        v-on:toggle-sidebar="handleTogglesidebar"
+        @draw-init="handleDrawInit"
+        @toggle-sidebar="handleTogglesidebar"
       />
     </div>
     <mapbox
@@ -25,9 +25,9 @@
         show: true,
         position: 'top-right'
         }"
-      v-on:create-popup="handleCreatePopup"
-      v-on:popup-init="handleInitPopup"
-      v-on:map-init="handleMapInit"
+      @create-popup="handleCreatePopup"
+      @popup-init="handleInitPopup"
+      @map-init="handleMapInit"
       class="map"
     />
   </div>
