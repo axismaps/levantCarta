@@ -18,7 +18,7 @@ export const mutations = {
 }
 
 export const actions = {
-    applyChange({ commit, rootState, dispatch }, changeAction) {
+    applyChange({ commit, rootState }, changeAction) {
 
         const currentLayer = rootState.layers.currentItem._id //this probably is going to change when we connect the backend 
         const attributeForm = rootState.attributeForm
@@ -67,20 +67,24 @@ export const actions = {
         }
 
 
-        // commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer, year: currentYear })
+        commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
-    undoChange({ commit, state }) {
+    undoChange({ commit, state, rootState }) {
         commit('POP_CHANGE')
         const { pendingUndoChange } = state
 
-        if (!pendingUndoChange) console.log('There is nothing more to undo') //just return
+        if (!pendingUndoChange) return
+
+        const draw = rootState.draw
 
         console.log('undo action', pendingUndoChange)
-
-        //TODO: Undo action here
-        // .
-        // .
-        // .
+        switch (pendingUndoChange.type) {
+            case 'draw.create':
+                draw.delete(pendingUndoChange.features[0].id)
+                break;
+            default:
+                break;
+        }
 
         commit('CLEAR_PENDING_CHANGE')
     }
