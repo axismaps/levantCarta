@@ -7,11 +7,11 @@
         </el-checkbox>
         <span style="padding-left: 85px">Value</span>
       </div>
-      <div style="margin: 20px">
+      <div v-if="tags.length" style="margin: 20px">
         <div v-for="tag in tags" :key="tag.id" class="tag">
           <el-checkbox>
-            <el-input v-model="tag.name" @change="updateTags"></el-input>
-            <el-input v-model="tag.value" @change="updateTags"></el-input>
+            <el-input v-model="tag.name" @change="updateTags" />
+            <el-input v-model="tag.value" @change="updateTags" />
           </el-checkbox>
         </div>
       </div>
