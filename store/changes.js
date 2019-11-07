@@ -20,7 +20,7 @@ export const mutations = {
 export const actions = {
     applyChange({ commit, rootState }, changeAction) {
 
-        const currentLayer = rootState.layers.currentItem._id //this probably is going to change when we connect the backend 
+        const currentLayer = rootState.layers.currentItem._id //this probably is going to change when we connect the backend
         const attributeForm = rootState.attributeForm
         const isAttributeFormValid = rootState.isAttributeFormValid
         const draw = rootState.draw
@@ -29,7 +29,7 @@ export const actions = {
         const featureToUpdate = changeAction.features[0];
 
         console.log(changeAction)
-        delete changeAction.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory 
+        delete changeAction.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
 
         switch (changeType) {
             case 'draw.create':
@@ -71,16 +71,26 @@ export const actions = {
     },
     undoChange({ commit, state, rootState }) {
         commit('POP_CHANGE')
-        const { pendingUndoChange } = state
+        const { pendingUndoChange, changes } = state
 
         if (!pendingUndoChange) return
 
         const draw = rootState.draw
 
-        console.log('undo action', pendingUndoChange)
+        // console.log('undo action', pendingUndoChange)
         switch (pendingUndoChange.type) {
             case 'draw.create':
                 draw.delete(pendingUndoChange.features[0].id)
+                break;
+            case 'draw.update':
+                for (let i = changes.length - 1; i >= 0; i--) {
+                    if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
+                        draw.delete(pendingUndoChange.features[0].id)
+                        draw.add(pendingUndoChange.features[0])
+                        break
+                    }
+                }
+
                 break;
             default:
                 break;
