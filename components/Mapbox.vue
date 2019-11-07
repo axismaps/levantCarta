@@ -166,6 +166,7 @@ export default {
          * Draw feature delete
          */
         this.$emit('draw-delete', e);
+        this.applyChange(e);
       });
       map.on('draw.combine', e => {
         /**

@@ -67,7 +67,7 @@
         Is edition in progress:
         <br />
         {{isEditionInProgress}}
-      </p>-->
+      </p> -->
     </div>
   </div>
 </template>

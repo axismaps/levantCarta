@@ -28,10 +28,11 @@ export const actions = {
 
         const featureToUpdate = changeAction.features[0];
 
+        console.log(changeAction)
+        delete changeAction.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory 
 
         switch (changeType) {
             case 'draw.create':
-                delete changeAction.target; //target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory 
                 commit('UPDATE_SELECTED_FEATURE', featureToUpdate, { root: true })
 
                 if (isAttributeFormValid) {
@@ -56,6 +57,11 @@ export const actions = {
                     .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
 
                 break;
+            case 'draw.delete':
+                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
+                commit('UPDATE_EDITION_STATUS', false, { root: true })
+                commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+                commit('UPDATE_SELECTED_FEATURE', null, { root: true })
             default:
                 break;
         }

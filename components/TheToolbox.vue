@@ -101,7 +101,7 @@ export default {
     }),
     drawInit() {
       const Draw = new MapboxDraw({
-        displayControlsDefault: false,
+        // displayControlsDefault: false,
         userProperties: true,
         styles: [
           {
@@ -455,8 +455,6 @@ export default {
       this.updateDrawMode('draw_polygon');
     },
     trash() {
-      //TODO: emit the change here
-      console.log('trash');
       this.confirmDeleteVisibily = false;
       this.draw.trash();
     }
