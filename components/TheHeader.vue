@@ -24,7 +24,7 @@
       placeholder="Pick a year"
       @change="handleSetYearCurrentYear"
     ></el-date-picker>
-    <div class="basemap-dropdown">
+    <div class="form-input-with-ctrl-btn">
       <el-select
         id="basemap-dropdown"
         @change="handleOverlaySelect"
@@ -33,7 +33,7 @@
       >
         <el-option v-for="item in overlays" :key="item.id" :label="item.name" :value="item.id"></el-option>
       </el-select>
-      <el-button icon="el-icon-view"></el-button>
+      <el-button icon="el-icon-view" type="info" plain></el-button>
     </div>
 
     <div id="opacity-slider" class="layerOpacityController">
@@ -101,21 +101,8 @@ export default {
   align-items: center;
   padding: 0px 20px;
 
-  .basemap-dropdown {
-    display: flex;
-    align-items: center;
+  .form-input-with-ctrl-btn {
     padding-left: 30px;
-
-    .el-select {
-      width: 200px;
-      .el-input__inner {
-        border-radius: 3px 0px 0px 3px;
-      }
-    }
-    .el-button {
-      border-radius: 0px 3px 3px 0px;
-      border-left: none;
-    }
   }
 
   .el-date-editor.el-input {

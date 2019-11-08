@@ -3,7 +3,7 @@
     <div v-if="drawMode === 'simple_select' && !selectedFeature">
       <div class="title">
         <el-input placeholder="Search..." v-model="searchbox" class="input-with-select">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-button slot="append" icon="el-icon-refresh-left"></el-button>
         </el-input>
       </div>
       <div class="controls">
@@ -14,50 +14,63 @@
     <div v-else>
       <el-form :model="form" :rules="rules" ref="form" label-width="120px" label-position="top">
         <el-form-item label="Name" prop="name">
-          <el-input v-model="form.name" @change="handleUpdateAttributeForm"></el-input>
+          <div class="form-input-with-ctrl-btn">
+            <el-input v-model="form.name" @change="handleUpdateAttributeForm"></el-input>
+            <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
+          </div>
         </el-form-item>
 
         <el-form-item label="Mapped" required>
           <el-col :span="11">
             <el-form-item prop="mappedFrom">
-              <el-date-picker
-                id="year-stepper"
-                v-model="form.mappedFrom"
-                @change="handleUpdateAttributeForm"
-                type="year"
-                format="yyyy"
-                value-format="yyyy"
-                placeholder="Pick a year"
-              ></el-date-picker>
+              <div class="form-input-with-ctrl-btn">
+                <el-date-picker
+                  id="year-stepper"
+                  v-model="form.mappedFrom"
+                  @change="handleUpdateAttributeForm"
+                  type="year"
+                  format="yyyy"
+                  value-format="yyyy"
+                  placeholder="Pick a year"
+                ></el-date-picker>
+                <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
+              </div>
             </el-form-item>
           </el-col>
           <el-col :span="11">
             <el-form-item prop="mappedTo">
-              <el-date-picker
-                id="year-stepper"
-                v-model="form.mappedTo"
-                @change="handleUpdateAttributeForm"
-                type="year"
-                format="yyyy"
-                value-format="yyyy"
-                placeholder="Pick a year"
-              ></el-date-picker>
+              <div class="form-input-with-ctrl-btn">
+                <el-date-picker
+                  id="year-stepper"
+                  v-model="form.mappedTo"
+                  @change="handleUpdateAttributeForm"
+                  type="year"
+                  format="yyyy"
+                  value-format="yyyy"
+                  placeholder="Pick a year"
+                ></el-date-picker>
+                <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
+              </div>
             </el-form-item>
           </el-col>
         </el-form-item>
 
         <el-form-item label="Type" prop="type">
-          <el-select v-model="form.type" @change="handleUpdateAttributeForm" placeholder="Type">
-            <el-option
-              v-for="type in currentLayer.layerTypes"
-              :key="type"
-              :label="type"
-              :value="type"
-            ></el-option>
-          </el-select>
+          <div class="form-input-with-ctrl-btn">
+            <el-select v-model="form.type" @change="handleUpdateAttributeForm" placeholder="Type">
+              <el-option
+                v-for="type in currentLayer.layerTypes"
+                :key="type"
+                :label="type"
+                :value="type"
+              ></el-option>
+            </el-select>
+            <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
+          </div>
         </el-form-item>
         <the-sidebar-add-tag :initialTags="form.tags" @update-tags="handleUpdateTags" />
       </el-form>
+      <pre>{{selectedFeature}}</pre>
       <!-- <p>
         Is form valid:
         <br />
@@ -67,7 +80,7 @@
         Is edition in progress:
         <br />
         {{isEditionInProgress}}
-      </p> -->
+      </p>-->
     </div>
   </div>
 </template>

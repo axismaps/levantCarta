@@ -83,6 +83,7 @@ export const actions = {
                 draw.delete(pendingUndoChange.features[0].id)
                 break;
             case 'draw.update':
+                //search the change stack from top to bottom
                 for (let i = changes.length - 1; i >= 0; i--) {
                     if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
                         draw.delete(pendingUndoChange.features[0].id)
