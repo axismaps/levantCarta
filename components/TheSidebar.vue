@@ -2,9 +2,7 @@
   <div class="sidebar">
     <div v-if="drawMode === 'simple_select' && !selectedFeature">
       <div class="title">
-        <el-input placeholder="Search..." v-model="searchbox" class="input-with-select">
-          <el-button slot="append" icon="el-icon-refresh-left"></el-button>
-        </el-input>
+        <el-input placeholder="Search..." v-model="searchbox" class="input-with-select"></el-input>
       </div>
       <div class="controls">
         <el-button type="success" icon="el-icon-plus" @click="addNewFeature">Add new feature</el-button>
@@ -16,43 +14,63 @@
         <el-form-item label="Name" prop="name">
           <div class="form-input-with-ctrl-btn">
             <el-input v-model="form.name" @change="handleUpdateAttributeForm"></el-input>
-            <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
+            <el-button
+              id="name"
+              icon="el-icon-refresh-left"
+              type="info"
+              @click="undoAttributeFormChange"
+              plain
+            ></el-button>
           </div>
         </el-form-item>
 
         <el-form-item label="Mapped" required>
-          <el-col :span="11">
-            <el-form-item prop="mappedFrom">
-              <div class="form-input-with-ctrl-btn">
-                <el-date-picker
-                  id="year-stepper"
-                  v-model="form.mappedFrom"
-                  @change="handleUpdateAttributeForm"
-                  type="year"
-                  format="yyyy"
-                  value-format="yyyy"
-                  placeholder="Pick a year"
-                ></el-date-picker>
-                <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
-              </div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11">
-            <el-form-item prop="mappedTo">
-              <div class="form-input-with-ctrl-btn">
-                <el-date-picker
-                  id="year-stepper"
-                  v-model="form.mappedTo"
-                  @change="handleUpdateAttributeForm"
-                  type="year"
-                  format="yyyy"
-                  value-format="yyyy"
-                  placeholder="Pick a year"
-                ></el-date-picker>
-                <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
-              </div>
-            </el-form-item>
-          </el-col>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item prop="mappedFrom">
+                <div class="form-input-with-ctrl-btn">
+                  <el-date-picker
+                    id="year-stepper"
+                    v-model="form.mappedFrom"
+                    @change="handleUpdateAttributeForm"
+                    type="year"
+                    format="yyyy"
+                    value-format="yyyy"
+                    placeholder="Pick a year"
+                  ></el-date-picker>
+                  <el-button
+                    id="mappedFrom"
+                    icon="el-icon-refresh-left"
+                    type="info"
+                    @click="undoAttributeFormChange"
+                    plain
+                  ></el-button>
+                </div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item prop="mappedTo">
+                <div class="form-input-with-ctrl-btn">
+                  <el-date-picker
+                    id="year-stepper"
+                    v-model="form.mappedTo"
+                    @change="handleUpdateAttributeForm"
+                    type="year"
+                    format="yyyy"
+                    value-format="yyyy"
+                    placeholder="Pick a year"
+                  ></el-date-picker>
+                  <el-button
+                    id="mappedTo"
+                    icon="el-icon-refresh-left"
+                    type="info"
+                    @click="undoAttributeFormChange"
+                    plain
+                  ></el-button>
+                </div>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form-item>
 
         <el-form-item label="Type" prop="type">
@@ -65,7 +83,13 @@
                 :value="type"
               ></el-option>
             </el-select>
-            <el-button icon="el-icon-refresh-left" type="info" plain></el-button>
+            <el-button
+              id="type"
+              icon="el-icon-refresh-left"
+              type="info"
+              @click="undoAttributeFormChange"
+              plain
+            ></el-button>
           </div>
         </el-form-item>
         <the-sidebar-add-tag :initialTags="form.tags" @update-tags="handleUpdateTags" />
@@ -97,10 +121,8 @@ export default {
       searchbox: '',
       form: {
         name: '',
-        mapped: {
-          from: '',
-          to: ''
-        },
+        mappedFrom: '',
+        mappedTo: '',
         type: '',
         tags: []
       },
@@ -170,6 +192,12 @@ export default {
     },
     handleUpdateTags(tags) {
       this.form.tags = tags;
+      this.handleUpdateAttributeForm();
+    },
+    undoAttributeFormChange(event) {
+      const eventSource = event.currentTarget.id;
+      console.log(eventSource);
+      this.form[eventSource] = this.selectedFeature.properties[eventSource];
       this.handleUpdateAttributeForm();
     }
   },
