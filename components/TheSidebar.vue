@@ -19,6 +19,7 @@
               icon="el-icon-refresh-left"
               type="info"
               @click="undoAttributeFormChange"
+              :disabled="!hasChanged.name"
               plain
             ></el-button>
           </div>
@@ -42,6 +43,7 @@
                     id="mappedFrom"
                     icon="el-icon-refresh-left"
                     type="info"
+                    :disabled="!hasChanged.mappedFrom"
                     @click="undoAttributeFormChange"
                     plain
                   ></el-button>
@@ -64,6 +66,7 @@
                     id="mappedTo"
                     icon="el-icon-refresh-left"
                     type="info"
+                    :disabled="!hasChanged.mappedTo"
                     @click="undoAttributeFormChange"
                     plain
                   ></el-button>
@@ -87,6 +90,7 @@
               id="type"
               icon="el-icon-refresh-left"
               type="info"
+              :disabled="!hasChanged.type"
               @click="undoAttributeFormChange"
               plain
             ></el-button>
@@ -168,7 +172,26 @@ export default {
       currentLayer: 'layers/currentItem',
       isAttributeFormValid: 'isAttributeFormValid',
       isEditionInProgress: 'isEditionInProgress'
-    })
+    }),
+    hasChanged() {
+      if (!this.selectedFeature)
+        return {
+          name: false,
+          mappedFrom: false,
+          mappedTo: false,
+          type: false
+        };
+      return {
+        name: !(this.form.name === this.selectedFeature.properties.name),
+        mappedFrom: !(
+          this.form.mappedFrom === this.selectedFeature.properties.mappedFrom
+        ),
+        mappedTo: !(
+          this.form.mappedTo === this.selectedFeature.properties.mappedTo
+        ),
+        type: !(this.form.type === this.selectedFeature.properties.type)
+      };
+    }
   },
   methods: {
     ...mapActions({
@@ -196,10 +219,10 @@ export default {
     },
     undoAttributeFormChange(event) {
       const eventSource = event.currentTarget.id;
-      console.log(eventSource);
       this.form[eventSource] = this.selectedFeature.properties[eventSource];
       this.handleUpdateAttributeForm();
     }
+    //TODO: implementar lógica para controlar o btn se nada tiver mudado
   },
   created() {
     this.$store.subscribe((mutation, state) => {
