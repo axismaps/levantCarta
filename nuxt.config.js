@@ -43,6 +43,25 @@ module.exports = {
   modules: [
     '@nuxtjs/pwa',
     ['@nuxtjs/style-resources'],
+    ['nuxt-i18n', {
+      locales: [
+        {
+          name: 'Português',
+          code: 'pt-br',
+          iso: 'pt-BR',
+          file: 'pt-BR.js'
+        },
+        {
+          name: 'English',
+          code: 'en',
+          iso: 'en-US',
+          file: 'en-US.js'
+        },
+      ],
+      langDir: 'lang/',
+      defaultLocale: 'en',
+      lazy: true
+    }]
   ],
   styleResources: {
     scss: [
