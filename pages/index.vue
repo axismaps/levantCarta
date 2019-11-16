@@ -83,14 +83,14 @@ export default {
     handleCreatePopup(feature) {
       if (this.isEditionInProgress || this.drawMode !== 'simple_select') return;
       try {
-        const { name, mappedFrom, mappedTo, type } = this.draw.get(
+        const { name, firstyear, lastyear, type } = this.draw.get(
           feature.id
         ).properties;
 
         const description = `
         Name: ${name}
         <br>
-        Mapped: ${mappedFrom} - ${mappedTo}
+        Mapped: ${firstyear} - ${lastyear}
         <br>
         Type: ${type}
         `;

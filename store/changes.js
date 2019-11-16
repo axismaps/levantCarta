@@ -37,8 +37,8 @@ export const actions = {
 
                 if (isAttributeFormValid) {
                     draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
-                        .setFeatureProperty(featureToUpdate.id, 'mappedFrom', attributeForm.mappedFrom)
-                        .setFeatureProperty(featureToUpdate.id, 'mappedTo', attributeForm.mappedTo)
+                        .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
+                        .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
                         .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
                         .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
                         .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
@@ -50,8 +50,8 @@ export const actions = {
                 break;
             case 'draw.update':
                 draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
-                    .setFeatureProperty(featureToUpdate.id, 'mappedFrom', attributeForm.mappedFrom)
-                    .setFeatureProperty(featureToUpdate.id, 'mappedTo', attributeForm.mappedTo)
+                    .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
+                    .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
                     .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
                     .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
                     .setFeatureProperty(featureToUpdate.id, 'approved', 'false');

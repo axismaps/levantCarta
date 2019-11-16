@@ -5,8 +5,8 @@ export const state = () => ({
     selectedFeature: null,
     attributeForm: {
         name: '',
-        mappedFrom: '',
-        mappedTo: '',
+        firstyear: '',
+        lastyear: '',
         type: '',
         tags: []
     },
@@ -30,8 +30,8 @@ export const mutations = {
     CLEAR_ATTRIBUTE_FORM(state) {
         state.attributeForm = {
             name: '',
-            mappedFrom: '',
-            mappedTo: '',
+            firstyear: '',
+            lastyear: '',
             type: '',
             tags: []
         }
@@ -78,8 +78,8 @@ export const actions = {
                 commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', true)
                 const attributeForm = {
                     name: features[0].properties.name,
-                    mappedFrom: features[0].properties.mappedFrom,
-                    mappedTo: features[0].properties.mappedTo,
+                    firstyear: features[0].properties.firstyear,
+                    lastyear: features[0].properties.lastyear,
                     type: features[0].properties.type,
                     tags: features[0].properties.tags
                 }

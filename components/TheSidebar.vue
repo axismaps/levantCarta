@@ -32,11 +32,11 @@
         <el-form-item :label="$t('sidebar.mapped')" required>
           <el-row :gutter="10">
             <el-col :span="11">
-              <el-form-item prop="mappedFrom">
+              <el-form-item prop="firstyear">
                 <div class="form-input-with-ctrl-btn">
                   <el-date-picker
                     id="year-stepper"
-                    v-model="form.mappedFrom"
+                    v-model="form.firstyear"
                     @change="handleUpdateAttributeForm"
                     type="year"
                     format="yyyy"
@@ -44,10 +44,10 @@
                     placeholder="Pick a year"
                   ></el-date-picker>
                   <el-button
-                    id="mappedFrom"
+                    id="firstyear"
                     icon="el-icon-refresh-left"
                     type="info"
-                    :disabled="!hasChanged.mappedFrom"
+                    :disabled="!hasChanged.firstyear"
                     @click="undoAttributeFormChange"
                     plain
                   ></el-button>
@@ -56,11 +56,11 @@
             </el-col>
             <el-col :span="2">to</el-col>
             <el-col :span="11">
-              <el-form-item prop="mappedTo">
+              <el-form-item prop="lastyear">
                 <div class="form-input-with-ctrl-btn">
                   <el-date-picker
                     id="year-stepper"
-                    v-model="form.mappedTo"
+                    v-model="form.lastyear"
                     @change="handleUpdateAttributeForm"
                     type="year"
                     format="yyyy"
@@ -68,10 +68,10 @@
                     placeholder="Pick a year"
                   ></el-date-picker>
                   <el-button
-                    id="mappedTo"
+                    id="lastyear"
                     icon="el-icon-refresh-left"
                     type="info"
-                    :disabled="!hasChanged.mappedTo"
+                    :disabled="!hasChanged.lastyear"
                     @click="undoAttributeFormChange"
                     plain
                   ></el-button>
@@ -130,7 +130,7 @@ export default {
     const checkYearRange = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please input the password again'));
-      } else if (value <= this.form.mappedFrom) {
+      } else if (value <= this.form.firstyear) {
         callback(new Error('It must be after Start Year'));
       } else {
         callback();
@@ -140,8 +140,8 @@ export default {
       searchbox: '',
       form: {
         name: '',
-        mappedFrom: '',
-        mappedTo: '',
+        firstyear: '',
+        lastyear: '',
         type: '',
         tags: []
       },
@@ -153,7 +153,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        mappedFrom: [
+        firstyear: [
           {
             type: 'string',
             required: true,
@@ -161,7 +161,7 @@ export default {
             trigger: 'change'
           }
         ],
-        mappedTo: [
+        lastyear: [
           {
             type: 'string',
             required: true,
@@ -193,17 +193,17 @@ export default {
       if (!this.selectedFeature)
         return {
           name: false,
-          mappedFrom: false,
-          mappedTo: false,
+          firstyear: false,
+          lastyear: false,
           type: false
         };
       return {
         name: !(this.form.name === this.selectedFeature.properties.name),
-        mappedFrom: !(
-          this.form.mappedFrom === this.selectedFeature.properties.mappedFrom
+        firstyear: !(
+          this.form.firstyear === this.selectedFeature.properties.firstyear
         ),
-        mappedTo: !(
-          this.form.mappedTo === this.selectedFeature.properties.mappedTo
+        lastyear: !(
+          this.form.lastyear === this.selectedFeature.properties.lastyear
         ),
         type: !(this.form.type === this.selectedFeature.properties.type)
       };
@@ -250,8 +250,8 @@ export default {
         } else {
           this.form = {
             name: '',
-            mappedFrom: '',
-            mappedTo: '',
+            firstyear: '',
+            lastyear: '',
             type: '',
             tags: []
           };
