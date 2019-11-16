@@ -5,13 +5,17 @@
         <el-input placeholder="Search..." v-model="searchbox" class="input-with-select"></el-input>
       </div>
       <div class="controls">
-        <el-button type="success" icon="el-icon-plus" @click="addNewFeature">Add new feature</el-button>
+        <el-button
+          type="success"
+          icon="el-icon-plus"
+          @click="addNewFeature"
+        >{{$t('sidebar.newfeatureBtn')}}</el-button>
       </div>
     </div>
 
     <div v-else>
       <el-form :model="form" :rules="rules" ref="form" label-width="120px" label-position="top">
-        <el-form-item label="Name" prop="name">
+        <el-form-item :label="$t('sidebar.name')" prop="name">
           <div class="form-input-with-ctrl-btn">
             <el-input v-model="form.name" @change="handleUpdateAttributeForm"></el-input>
             <el-button
@@ -25,7 +29,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="Mapped" required>
+        <el-form-item :label="$t('sidebar.mapped')" required>
           <el-row :gutter="10">
             <el-col :span="11">
               <el-form-item prop="mappedFrom">
@@ -77,7 +81,7 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="Type" prop="type">
+        <el-form-item :label="$t('sidebar.type')" prop="type">
           <div class="form-input-with-ctrl-btn">
             <el-select v-model="form.type" @change="handleUpdateAttributeForm" placeholder="Type">
               <el-option

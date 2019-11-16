@@ -1,11 +1,11 @@
 <template>
-  <el-form-item label="Tags" prop="tags" size="mini">
+  <el-form-item :label="$t('sidebar.tag')" prop="tags" size="mini">
     <el-card shadow="never" class="add-tag-card" :body-style="{ padding: '0px' }">
       <div slot="header" style="line-height: 0px">
         <el-checkbox>
-          <span>Name</span>
+          <span>{{$t('sidebar.tags.name')}}</span>
         </el-checkbox>
-        <span style="padding-left: 85px">Value</span>
+        <span style="padding-left: 85px">{{$t('sidebar.tags.value')}}</span>
       </div>
       <div v-if="tags.length" style="margin: 20px">
         <div v-for="tag in tags" :key="tag.id" class="tag">
@@ -15,7 +15,7 @@
           </el-checkbox>
         </div>
       </div>
-      <el-button class="add-tag" icon="el-icon-plus" @click="pushNewTag">add Tag</el-button>
+      <el-button class="add-tag" icon="el-icon-plus" @click="pushNewTag">{{$t('sidebar.newTagBtn')}}</el-button>
     </el-card>
   </el-form-item>
 </template>
