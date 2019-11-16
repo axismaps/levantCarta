@@ -26,8 +26,8 @@
         </el-form-item>
 
         <el-form-item label="Mapped" required>
-          <el-row :gutter="20">
-            <el-col :span="12">
+          <el-row :gutter="10">
+            <el-col :span="11">
               <el-form-item prop="mappedFrom">
                 <div class="form-input-with-ctrl-btn">
                   <el-date-picker
@@ -50,7 +50,8 @@
                 </div>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="2">to</el-col>
+            <el-col :span="11">
               <el-form-item prop="mappedTo">
                 <div class="form-input-with-ctrl-btn">
                   <el-date-picker
@@ -122,6 +123,15 @@ export default {
     TheSidebarAddTag
   },
   data() {
+    const checkYearRange = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please input the password again'));
+      } else if (value <= this.form.mappedFrom) {
+        callback(new Error('It must be after Start Year'));
+      } else {
+        callback();
+      }
+    };
     return {
       searchbox: '',
       form: {
@@ -143,7 +153,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please a Year',
+            message: 'Please a select a Year',
             trigger: 'change'
           }
         ],
@@ -151,9 +161,10 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please a Year',
+            message: 'Please a select a Year',
             trigger: 'change'
-          }
+          },
+          { validator: checkYearRange, trigger: 'change' }
         ],
         type: [
           {
