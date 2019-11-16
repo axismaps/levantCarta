@@ -146,13 +146,6 @@ export default {
         tags: []
       },
       rules: {
-        name: [
-          {
-            required: true,
-            message: 'Please input Feature name',
-            trigger: 'blur'
-          }
-        ],
         firstyear: [
           {
             type: 'string',
