@@ -44,3 +44,6 @@ $sidebar-width: 360px;
     }
   }
 }
+.mapboxgl-popup-content {
+  pointer-events: none;
+}

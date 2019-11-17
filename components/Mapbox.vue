@@ -117,7 +117,7 @@ export default {
     },
     initPopup() {
       const popup = new mapboxgl.Popup({
-        closeButton: true,
+        closeButton: false,
         closeOnClick: true
       });
       this.$emit('popup-init', popup);
