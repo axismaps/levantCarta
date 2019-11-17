@@ -128,10 +128,8 @@ export default {
   },
   data() {
     const checkYearRange = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password again'));
-      } else if (value <= this.form.firstyear) {
-        callback(new Error('It must be after Start Year'));
+      if (value <= this.form.firstyear) {
+        callback(new Error(this.$t('erros.invalidYearDate')));
       } else {
         callback();
       }
@@ -150,7 +148,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please a select a Year',
+            message: this.$t('erros.selectYear'),
             trigger: 'change'
           }
         ],
@@ -158,7 +156,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please a select a Year',
+            message: this.$t('erros.selectYear'),
             trigger: 'change'
           },
           { validator: checkYearRange, trigger: 'change' }
@@ -167,7 +165,7 @@ export default {
           {
             type: 'string',
             required: true,
-            message: 'Please select the Feature type',
+            message: this.$t('erros.selectType'),
             trigger: 'change'
           }
         ]
@@ -231,7 +229,6 @@ export default {
       this.form[eventSource] = this.selectedFeature.properties[eventSource];
       this.handleUpdateAttributeForm();
     }
-    //TODO: implementar lógica para controlar o btn se nada tiver mudado
   },
   created() {
     this.$store.subscribe((mutation, state) => {

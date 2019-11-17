@@ -10,5 +10,10 @@ export default {
             value: 'Valor'
         },
         newTagBtn: 'nova Tag'
+    },
+    erros: {
+        selectYear: 'Selecione um ano',
+        selectType: 'Selecione a categoria da feição',
+        invalidYearDate: 'Precisa ser maior do que o ano inicial'
     }
 }
