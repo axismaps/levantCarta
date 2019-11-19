@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="btn-group el-button-group">
-      <el-button v-if="showSidebar"  @click="toggleSidebar">
+    <div class="el-button-group btn-group">
+      <el-button v-if="showSidebar" @click="toggleSidebar">
         <collapse-left-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
@@ -9,32 +9,20 @@
         <collapse-rigth-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
-    <div class="btn-group el-button-group">
-      <el-button
-        size="small"
-        @click="anableDrawPointMode"
-        :disabled="activeLayer.geometryType !== 'Point'"
-      >
+    <div class="el-button-group btn-group">
+      <el-button @click="anableDrawPointMode" :disabled="activeLayer.geometryType !== 'Point'">
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button
-        size="small"
-        @click="anableDrawLineMode"
-        :disabled="activeLayer.geometryType !== 'LineString'"
-      >
+      <el-button @click="anableDrawLineMode" :disabled="activeLayer.geometryType !== 'LineString'">
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button
-        size="small"
-        @click="anableDrawPolygonMode"
-        :disabled="activeLayer.geometryType !== 'Polygon'"
-      >
+      <el-button @click="anableDrawPolygonMode" :disabled="activeLayer.geometryType !== 'Polygon'">
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
 
-    <div class="btn-group el-button-group">
-      <el-button slot="reference" size="small" @click="undoDrawAction" icon="el-icon-refresh-left" />
+    <div class="el-button-group btn-group">
+      <el-button slot="reference" size="mini" @click="undoDrawAction" icon="el-icon-refresh-left" />
 
       <el-popover placement="right" width="190" v-model="confirmDeleteVisibily">
         <p>
@@ -45,7 +33,7 @@
           <el-button size="mini" type="text" @click="confirmDeleteVisibily = false">cancel</el-button>
           <el-button type="primary" size="mini" @click="trash">confirm</el-button>
         </div>
-        <el-button slot="reference" size="small" icon="el-icon-delete" />
+        <el-button slot="reference" size="mini" icon="el-icon-delete" />
       </el-popover>
     </div>
   </div>
@@ -64,6 +52,8 @@ import pointIcon from '@/assets/icons/drawPointIcon.svg';
 import drawStyles from '@/assets/drawStyles';
 import collapseLeftIcon from '@/assets/icons/collapseLeftIcon.svg';
 import collapseRigthIcon from '@/assets/icons/collapseRigthIcon.svg';
+import trashIcon from '@/assets/icons/trashIcon.svg';
+import undoIcon from '@/assets/icons/undoIcon.svg';
 
 export default {
   components: {
@@ -72,7 +62,9 @@ export default {
     lineIcon,
     pointIcon,
     collapseLeftIcon,
-    collapseRigthIcon
+    collapseRigthIcon,
+    trashIcon,
+    undoIcon
   },
   props: {
     showSidebar: {
@@ -137,14 +129,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  scoped>
 .btn-group {
   margin-bottom: 30px;
 }
+
 .btn-group button {
-  padding: 13px;
+  padding: 11px;
   cursor: pointer;
   display: block;
+  width: 43px;
 }
 
 .btn-group button:not(:last-child) {
