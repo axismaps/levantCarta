@@ -1,8 +1,13 @@
 <template>
   <div>
     <div class="btn-group el-button-group">
-      <el-button v-if="showSidebar" size="small" icon="el-icon-arrow-left" @click="toggleSidebar" />
-      <el-button v-else size="small" icon="el-icon-arrow-right" @click="toggleSidebar" />
+      <el-button v-if="showSidebar"  @click="toggleSidebar">
+        <collapse-left-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
+
+      <el-button v-else size="small" @click="toggleSidebar">
+        <collapse-rigth-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
     </div>
     <div class="btn-group el-button-group">
       <el-button
@@ -57,13 +62,17 @@ import polygonIcon from '@/assets/icons/drawPolygonIcon.svg';
 import lineIcon from '@/assets/icons/drawLineIcon.svg';
 import pointIcon from '@/assets/icons/drawPointIcon.svg';
 import drawStyles from '@/assets/drawStyles';
+import collapseLeftIcon from '@/assets/icons/collapseLeftIcon.svg';
+import collapseRigthIcon from '@/assets/icons/collapseRigthIcon.svg';
 
 export default {
   components: {
     squareIcon,
     polygonIcon,
     lineIcon,
-    pointIcon
+    pointIcon,
+    collapseLeftIcon,
+    collapseRigthIcon
   },
   props: {
     showSidebar: {
