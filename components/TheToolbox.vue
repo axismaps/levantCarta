@@ -5,9 +5,6 @@
       <el-button v-else size="small" icon="el-icon-arrow-right" @click="toggleSidebar" />
     </div>
     <div class="btn-group el-button-group">
-      <el-button size="small" icon="el-icon-position" @click="anableDirectSelectMode"></el-button>
-    </div>
-    <div class="btn-group el-button-group">
       <el-button
         size="small"
         @click="anableDrawPointMode"
@@ -110,9 +107,6 @@ export default {
     },
     toggleSidebar() {
       this.$emit('toggle-sidebar');
-    },
-    anableDirectSelectMode() {
-      console.log(this.draw.getAll());
     },
     anableDrawPointMode() {
       this.draw.changeMode('draw_point');
