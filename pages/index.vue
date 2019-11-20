@@ -62,6 +62,14 @@ export default {
     context.store.dispatch('overlays/setItems', overlays);
     context.store.dispatch('layers/setItems', layers);
   },
+  watch: {
+    drawMode() {
+      this.showSidebar = true;
+    },
+    selectedFeature() {
+      this.showSidebar = true;
+    }
+  },
   computed: {
     ...mapGetters({
       layers: 'layers/items',
@@ -69,7 +77,8 @@ export default {
       overlays: 'overlays/items',
       activeOverlay: 'overlays/currentItem',
       isEditionInProgress: 'isEditionInProgress',
-      drawMode: 'drawMode'
+      drawMode: 'drawMode',
+      selectedFeature: 'selectedFeature'
     })
   },
   methods: {
@@ -134,7 +143,6 @@ export default {
       this.setActiveOverlay(overlayId);
     },
     handleSetOverlayOpacity(opacity) {
-      console.log('opacity: ', opacity);
       this.map.setPaintProperty(
         this.activeOverlay.id,
         'raster-opacity',
