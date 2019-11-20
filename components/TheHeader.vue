@@ -5,6 +5,7 @@
       @change="handleLayerSelect"
       v-model="activeLayer"
       placeholder="Select"
+      :disabled="isEditionInProgress"
     >
       <i slot="prefix" class="el-input__icon el-icon-document-copy"></i>
       <el-option v-for="item in layers" :key="item._id" :label="item.name" :value="item._id"></el-option>
@@ -60,7 +61,7 @@ export default {
       layers: 'layers/items',
       currentYear: 'layers/currentYear',
       overlays: 'overlays/items',
-      editionStatus: 'isEditionInProgress'
+      isEditionInProgress: 'isEditionInProgress'
     })
   },
   methods: {
