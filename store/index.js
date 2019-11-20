@@ -1,5 +1,6 @@
 
 export const state = () => ({
+    map: null,
     draw: {},
     drawMode: 'simple_select',
     selectedFeature: null,
@@ -15,6 +16,9 @@ export const state = () => ({
 })
 
 export const mutations = {
+    SET_MAP(state, payload) {
+        state.map = payload
+    },
     SET_DRAW(state, draw) {
         state.draw = draw
     },
@@ -49,6 +53,9 @@ export const mutations = {
 }
 
 export const actions = {
+    setMap({ commit }, map) {
+        commit('SET_MAP', map)
+    },
     setDraw({ commit }, draw) {
         commit('SET_DRAW', draw)
     },
@@ -116,6 +123,9 @@ export const actions = {
 }
 
 export const getters = {
+    map(state) {
+        return state.map
+    },
     draw(state) {
         return state.draw
     },

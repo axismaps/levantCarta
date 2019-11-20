@@ -28,6 +28,7 @@
       @create-popup="handleCreatePopup"
       @popup-init="handleInitPopup"
       @map-init="handleMapInit"
+      @map-load="handleMapLoad"
       class="map"
     />
   </div>
@@ -103,8 +104,11 @@ export default {
     },
     handleMapInit(map) {
       console.log('Here is the map:', map);
-      map.addControl(this.draw);
       this.map = map;
+    },
+    handleMapLoad() {
+      this.loadOverlays(this.map);
+      this.map.addControl(this.draw);
     },
     handleDrawInit(draw) {
       console.log('Here is the draw instance', draw);
@@ -115,16 +119,19 @@ export default {
       this.showSidebar = !this.showSidebar;
       console.log(this.map.getStyle().layers);
     },
+    loadOverlays(map) {
+      this.overlays.map(overlay => {
+        map.addLayer({
+          ...overlay,
+          paint: {
+            'raster-opacity': 0
+          }
+        });
+      });
+    },
     handleSetActiveOverlay(overlayId) {
-      console.log(overlayId);
-      const overlay = this.overlays.filter(
-        overlay => overlay.id === overlayId
-      )[0];
-      console.log(overlay);
-      this.map.addLayer(overlay);
-      this.map.moveLayer(overlayId);
+      this.map.setPaintProperty(overlayId, 'raster-opacity', 1);
       this.setActiveOverlay(overlayId);
-      console.log(this.map.getStyle().layers);
     },
     handleSetOverlayOpacity(opacity) {
       console.log('opacity: ', opacity);
