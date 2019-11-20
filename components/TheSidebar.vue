@@ -2,7 +2,10 @@
   <div class="sidebar">
     <div v-if="drawMode === 'simple_select' && !selectedFeature">
       <div class="title">
-        <el-input placeholder="Search..." v-model="searchbox" class="input-with-select"></el-input>
+        <div class="form-input-with-ctrl-btn">
+          <el-input placeholder="Search..." v-model="searchbox" class="input-with-select"></el-input>
+          <el-button icon="el-icon-search" type="info" plain></el-button>
+        </div>
       </div>
       <div class="controls">
         <el-button
