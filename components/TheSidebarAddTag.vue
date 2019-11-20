@@ -41,6 +41,11 @@ export default {
       this.$emit('update-tags', this.tags);
     }
   },
+  watch: {
+    initialTags(newValue, oldValue) {
+      this.tags = JSON.parse(JSON.stringify(this.initialTags));
+    }
+  },
   created() {
     this.tags = JSON.parse(JSON.stringify(this.initialTags));
   }
