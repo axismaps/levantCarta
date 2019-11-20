@@ -33,7 +33,7 @@
           <el-button size="mini" type="text" @click="confirmDeleteVisibily = false">cancel</el-button>
           <el-button type="primary" size="mini" @click="trash">confirm</el-button>
         </div>
-        <el-button slot="reference" size="mini" icon="el-icon-delete" />
+        <el-button slot="reference" size="mini" icon="el-icon-delete" :disabled="!selectedFeature"/>
       </el-popover>
     </div>
   </div>
@@ -90,7 +90,8 @@ export default {
   computed: {
     ...mapGetters({
       layers: 'layers/items',
-      activeLayer: 'layers/currentItem'
+      activeLayer: 'layers/currentItem',
+      selectedFeature: 'selectedFeature'
     })
   },
   methods: {
