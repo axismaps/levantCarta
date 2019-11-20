@@ -34,8 +34,8 @@
 
         <el-form-item :label="$t('sidebar.mapped')" required>
           <el-row :gutter="10">
-            <el-col :span="11">
-              <el-form-item prop="firstyear">
+            <el-col :span="12">
+              <el-form-item label="From" prop="firstyear">
                 <div class="form-input-with-ctrl-btn">
                   <el-date-picker
                     id="year-stepper"
@@ -57,9 +57,8 @@
                 </div>
               </el-form-item>
             </el-col>
-            <el-col :span="2">to</el-col>
-            <el-col :span="11">
-              <el-form-item prop="lastyear">
+            <el-col :span="12">
+              <el-form-item label="To" prop="lastyear">
                 <div class="form-input-with-ctrl-btn">
                   <el-date-picker
                     id="year-stepper"
