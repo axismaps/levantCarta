@@ -23,7 +23,7 @@ export const mutations = {
 export const actions = {
     applyChange({ commit, rootState }, changeAction) {
 
-        const currentLayer = rootState.layers.currentItem._id //this probably is going to change when we connect the backend
+        const currentLayer = rootState.layers.currentItem.id
         const attributeForm = rootState.attributeForm
         const isAttributeFormValid = rootState.isAttributeFormValid
         const draw = rootState.draw

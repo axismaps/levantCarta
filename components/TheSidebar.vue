@@ -87,10 +87,10 @@
           <div class="form-input-with-ctrl-btn">
             <el-select v-model="form.type" @change="handleUpdateAttributeForm" placeholder="Type">
               <el-option
-                v-for="type in currentLayer.layerTypes"
-                :key="type"
-                :label="type"
-                :value="type"
+                v-for="type in currentLayer.Types"
+                :key="type.id"
+                :label="type.title"
+                :value="type.title"
               ></el-option>
             </el-select>
             <el-button

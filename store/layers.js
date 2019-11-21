@@ -25,9 +25,11 @@ export const actions = {
         commit('SET_ITEMS', items)
     },
     setCurrentItem({ commit, state, rootState }, itemId) {
-        const currentItem = state.items.filter(item => item._id === itemId)[0]
+        const currentItem = state.items.filter(item => item.id === itemId)[0]
 
-        rootState.draw.changeMode('simple_select')
+        try {
+            rootState.draw.changeMode('simple_select')
+        } catch (error) { console.log(error) }
         commit('SET_CURRENT_ITEM', currentItem)
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
         commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })

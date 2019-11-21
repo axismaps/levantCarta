@@ -18,8 +18,8 @@
       v-if="draw"
       :map-options="{
         style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
-        center: [-43.181587010622025, -22.905508179548036],
-        zoom: 11,
+        center: [35.478894004292044, 33.895794666036764],
+        zoom: 14,
         }"
       :geolocate-control="{
         show: true,
@@ -42,6 +42,7 @@ import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
 
+const API = 'http://beirut.georio.levantcarta.org/api/v1/get/layers';
 export default {
   components: {
     Mapbox,
@@ -58,7 +59,10 @@ export default {
     };
   },
   async fetch(context) {
-    const { data: layers } = await axios.get('/data/layers.json');
+    const {
+      data: { response: layers }
+    } = await axios.get(API);
+
     const { data: overlays } = await axios.get('/data/overlays.json');
     context.store.dispatch('overlays/setItems', overlays);
     context.store.dispatch('layers/setItems', layers);
@@ -157,17 +161,17 @@ export default {
       );
     },
     handleAddNewFeature() {
-      const activeLayerType = this.activeLayer.geometryType;
+      const activeLayerType = this.activeLayer.geometry;
       switch (activeLayerType) {
-        case 'Point':
+        case 'point':
           this.updateDrawMode('draw_point');
           this.draw.changeMode('draw_point');
           break;
-        case 'LineString':
+        case 'line':
           this.draw.changeMode('draw_line_string');
           this.updateDrawMode('draw_line_string');
           break;
-        case 'Polygon':
+        case 'polygon':
           this.draw.changeMode('draw_polygon');
           this.updateDrawMode('draw_polygon');
           break;

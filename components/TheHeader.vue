@@ -8,7 +8,7 @@
       :disabled="isEditionInProgress"
     >
       <i slot="prefix" class="el-input__icon el-icon-document-copy"></i>
-      <el-option v-for="item in layers" :key="item._id" :label="item.name" :value="item._id"></el-option>
+      <el-option v-for="item in layers" :key="item.id" :label="item.title" :value="item.id"></el-option>
     </el-select>
 
     <div class="connection">
@@ -83,7 +83,7 @@ export default {
     }
   },
   created() {
-    const activeLayerId = this.layers[0]._id; // set first layer as active
+    const activeLayerId = this.layers[0].id; // set first layer as active
     this.activeLayer = activeLayerId;
     this.setActiveLayer(activeLayerId);
     this.layerYear = this.currentYear;
