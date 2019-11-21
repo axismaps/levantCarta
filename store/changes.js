@@ -46,14 +46,14 @@ export const actions = {
 
                 commit('UPDATE_SELECTED_FEATURE', featureToUpdate, { root: true })
 
-                if (isAttributeFormValid) {
-                    draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
-                        .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
-                        .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
-                        .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
-                        .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
-                        .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
+                draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
+                    .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
+                    .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
+                    .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
+                    .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
+                    .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
 
+                if (isAttributeFormValid) {
                     commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
                     commit('UPDATE_EDITION_STATUS', false, { root: true })
                     commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })

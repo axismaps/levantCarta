@@ -26,6 +26,7 @@
         position: 'top-right'
         }"
       @create-popup="handleCreatePopup"
+      @delete-popup="handleDeletePopup"
       @popup-init="handleInitPopup"
       @map-init="handleMapInit"
       @map-load="handleMapLoad"
@@ -110,6 +111,12 @@ export default {
           .setHTML(description)
           .addTo(this.map);
       } catch (error) {}
+    },
+    handleDeletePopup() {
+      console.log('remove popup');
+      try {
+        this.popup.remove();
+      } catch (e) {}
     },
     handleMapInit(map) {
       console.log('Here is the map:', map);

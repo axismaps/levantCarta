@@ -134,6 +134,8 @@ export default {
               coordinates,
               id: feature.properties.id
             });
+          } else {
+            // this.$emit('delete-popup');
           }
         });
       });
