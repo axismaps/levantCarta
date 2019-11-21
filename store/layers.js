@@ -24,9 +24,14 @@ export const actions = {
     setItems({ commit }, items) {
         commit('SET_ITEMS', items)
     },
-    setCurrentItem({ commit, state }, itemId) {
+    setCurrentItem({ commit, state, rootState }, itemId) {
         const currentItem = state.items.filter(item => item._id === itemId)[0]
+
+        rootState.draw.changeMode('simple_select')
         commit('SET_CURRENT_ITEM', currentItem)
+        commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
+        commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+        commit('UPDATE_SELECTED_FEATURE', null, { root: true })
     },
     setCurrentYear({ commit }, year) {
         commit('SET_CURRENT_YEAR', year)
