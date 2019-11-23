@@ -24,12 +24,13 @@ export const actions = {
     setItems({ commit }, items) {
         commit('SET_ITEMS', items)
     },
-    setCurrentItem({ commit, state, rootState }, itemId) {
+    async setCurrentItem({ commit, dispatch, state, rootState }, itemId) {
         const currentItem = state.items.filter(item => item.id === itemId)[0]
-
+        console.log('layerID', itemId)
         try {
             rootState.draw.changeMode('simple_select')
         } catch (error) { console.log(error) }
+        await dispatch('features/setFeaturesFromLayer', itemId, { root: true })
         commit('SET_CURRENT_ITEM', currentItem)
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
         commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })

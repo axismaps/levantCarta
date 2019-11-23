@@ -1,4 +1,4 @@
-<template>
+]<template>
   <div class="container">
     <the-header
       class="header"
@@ -18,7 +18,7 @@
       v-if="draw"
       :map-options="{
         style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
-        center: [35.478894004292044, 33.895794666036764],
+        center: [-43.181587010622025, -22.905508179548036],
         zoom: 14,
         }"
       :geolocate-control="{
@@ -66,6 +66,9 @@ export default {
     const { data: overlays } = await axios.get('/data/overlays.json');
     context.store.dispatch('overlays/setItems', overlays);
     context.store.dispatch('layers/setItems', layers);
+    // const featureId = 'b858c519-cff1-4a6c-887e-e37b3c245601';
+
+    // await context.store.dispatch('features/setFeaturesFromLayer', featureId);
   },
   watch: {
     drawMode() {
