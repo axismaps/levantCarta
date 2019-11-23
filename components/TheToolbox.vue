@@ -10,13 +10,13 @@
       </el-button>
     </div>
     <div class="el-button-group btn-group">
-      <el-button @click="anableDrawPointMode" :disabled="activeLayer.geometry !== 'point'">
+      <el-button @click="anableDrawPointMode" v-if="activeLayer.geometry == 'point'" :disabled="activeLayer.geometry !== 'point'">
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button @click="anableDrawLineMode" :disabled="activeLayer.geometry !== 'line'">
+      <el-button @click="anableDrawLineMode" v-if="activeLayer.geometry == 'line'" :disabled="activeLayer.geometry !== 'line'">
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button @click="anableDrawPolygonMode" :disabled="activeLayer.geometry !== 'polygon'">
+      <el-button @click="anableDrawPolygonMode" v-if="activeLayer.geometry == 'polygon'" :disabled="activeLayer.geometry !== 'polygon'">
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
