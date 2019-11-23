@@ -81,12 +81,6 @@ export default {
     handleSetYearCurrentYear(year) {
       this.setCurrentYear(year);
     }
-  },
-  created() {
-    const activeLayerId = this.layers[0].id; // set first layer as active
-    this.activeLayer = activeLayerId;
-    this.setActiveLayer(activeLayerId);
-    this.layerYear = this.currentYear;
   }
 };
 </script>
