@@ -9,7 +9,9 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
-    return {};
+    return {
+      mouseOverFeature: null
+    };
   },
   props: {
     /**
@@ -124,20 +126,19 @@ export default {
     },
     registerEvents(map) {
       map.on('mousemove', e => {
-        var features = map.queryRenderedFeatures(e.point);
-        // console.log(features);
-        features.map(feature => {
-          if (feature.source === 'mapbox-gl-draw-cold') {
-            var coordinates = e.lngLat;
-
+        const feature = map.queryRenderedFeatures(e.point)[0];
+        if (this.mouseOverFeature == feature.properties.id) {
+          if (feature.properties.id) {
+            const coordinates = e.lngLat;
             this.$emit('create-popup', {
               coordinates,
               id: feature.properties.id
             });
           } else {
-            // this.$emit('delete-popup');
+            this.$emit('delete-popup');
           }
-        });
+        }
+        this.mouseOverFeature = feature.properties.id;
       });
 
       map.on('load', () => {
