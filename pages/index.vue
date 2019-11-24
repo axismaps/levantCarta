@@ -99,7 +99,7 @@ export default {
       this.popup = popup;
     },
     handleCreatePopup(feature) {
-      if (this.isEditionInProgress || this.drawMode !== 'simple_select') return;
+      if (this.selectedFeature) return;
       try {
         const { name, firstyear, lastyear, type } = this.draw.get(
           feature.id
@@ -120,7 +120,6 @@ export default {
       } catch (error) {}
     },
     handleDeletePopup() {
-      console.log('remove popup');
       try {
         this.popup.remove();
       } catch (e) {}
