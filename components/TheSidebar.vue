@@ -12,6 +12,7 @@
           type="success"
           icon="el-icon-plus"
           @click="addNewFeature"
+          :disabled="!currentLayer"
         >{{$t('sidebar.newfeatureBtn')}}</el-button>
       </div>
     </div>

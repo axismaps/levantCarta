@@ -1,7 +1,7 @@
 export const state = () => ({
     items: [],
     isLoading: false,
-    currentItem: {},
+    currentItem: null,
     currentYear: '1800'
 })
 
