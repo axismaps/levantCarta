@@ -17,6 +17,11 @@
     </div>
 
     <div v-else>
+      <el-row type="flex" justify="end">
+        <el-col :span="2" :offset="22" style="text-align: end">
+          <i id="close-edition" class="el-icon-close close-btn" @click="handleCloseEdition"></i>
+        </el-col>
+      </el-row>
       <el-form :model="form" :rules="rules" ref="form" label-width="120px" label-position="top">
         <el-form-item :label="$t('sidebar.name')" prop="name">
           <div class="form-input-with-ctrl-btn">
@@ -176,6 +181,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      draw: 'draw',
       drawMode: 'drawMode',
       selectedFeature: 'selectedFeature',
       currentLayer: 'layers/currentItem',
@@ -205,7 +211,9 @@ export default {
   methods: {
     ...mapActions({
       updateAttributeForm: 'updateAttributeForm',
-      updateAttributeFormValidity: 'updateAttributeFormValidity'
+      updateAttributeFormValidity: 'updateAttributeFormValidity',
+      updateSelectedFeature: 'updateSelectedFeature',
+      updateDrawMode: 'updateDrawMode'
     }),
     addNewFeature() {
       this.$emit('add-new-feature');
@@ -230,6 +238,11 @@ export default {
       const eventSource = event.currentTarget.id;
       this.form[eventSource] = this.selectedFeature.properties[eventSource];
       this.handleUpdateAttributeForm();
+    },
+    handleCloseEdition() {
+      this.draw.changeMode('simple_select');
+      this.updateDrawMode('simple_select');
+      this.updateSelectedFeature([]);
     }
   },
   created() {
@@ -292,6 +305,14 @@ export default {
     .el-input {
       padding-top: 5px;
     }
+  }
+}
+.close-btn {
+  color: grey;
+  text-align: end;
+  cursor: pointer;
+  &:hover {
+    color: $--color-primary;
   }
 }
 </style>
