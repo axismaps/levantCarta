@@ -106,11 +106,11 @@ export default {
         ).properties;
 
         const description = `
-        Name: ${name}
+        <span style="color: grey">Name: </span> ${name}
         <br>
-        Mapped: ${firstyear} - ${lastyear}
+        <span style="color: grey">Mapped: </span> ${firstyear} - ${lastyear}
         <br>
-        Type: ${type}
+        <span style="color: grey">Type: </span> ${type}
         `;
 
         this.popup
