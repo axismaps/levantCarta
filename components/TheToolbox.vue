@@ -109,7 +109,7 @@ export default {
   methods: {
     ...mapActions({
       undoDrawAction: 'changes/undoChange',
-      updateDrawMode: 'updateDrawMode'
+      enterDrawMode: 'enterDrawMode'
     }),
     drawInit() {
       const Draw = new MapboxDraw({
@@ -123,16 +123,13 @@ export default {
       this.$emit('toggle-sidebar');
     },
     anableDrawPointMode() {
-      this.draw.changeMode('draw_point');
-      this.updateDrawMode('draw_point');
+      this.enterDrawMode('draw_point');
     },
     anableDrawLineMode() {
-      this.draw.changeMode('draw_line_string');
-      this.updateDrawMode('draw_line_string');
+      this.enterDrawMode('draw_line_string');
     },
     anableDrawPolygonMode() {
-      this.draw.changeMode('draw_polygon');
-      this.updateDrawMode('draw_polygon');
+      this.enterDrawMode('draw_polygon');
     },
     trash() {
       this.confirmDeleteVisibily = false;

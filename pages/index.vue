@@ -30,12 +30,14 @@
       @popup-init="handleInitPopup"
       @map-init="handleMapInit"
       @map-load="handleMapLoad"
+      @map-click="handleMapClick"
       class="map"
     />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import uuidv4 from 'uuid/v4';
 import axios from 'axios';
 import Mapbox from '~/components/Mapbox.vue';
 import TheToolbox from '~/components/TheToolbox';
@@ -55,7 +57,8 @@ export default {
       showSidebar: true,
       map: null,
       draw: null,
-      popup: null
+      popup: null,
+      featureBeingCreatedId: ''
     };
   },
   async fetch(context) {
@@ -66,9 +69,6 @@ export default {
     const { data: overlays } = await axios.get('/data/overlays.json');
     context.store.dispatch('overlays/setItems', overlays);
     context.store.dispatch('layers/setItems', layers);
-    // const featureId = 'b858c519-cff1-4a6c-887e-e37b3c245601';
-
-    // await context.store.dispatch('features/setFeaturesFromLayer', featureId);
   },
   watch: {
     drawMode() {
@@ -93,7 +93,9 @@ export default {
     ...mapActions({
       setActiveOverlay: 'overlays/setCurrentItem',
       updateDrawMode: 'updateDrawMode',
-      setDraw: 'setDraw'
+      enterDrawMode: 'enterDrawMode',
+      setDraw: 'setDraw',
+      applyChange: 'changes/applyChange'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -162,20 +164,44 @@ export default {
         opacity / 100
       );
     },
+    handleMapClick(map, e) {
+      // console.log('click', [e.point.x, e.point.y]);
+      if (this.drawMode === 'draw_polygon') {
+        const change = {
+          type: 'draw.step',
+          features: [
+            {
+              type: 'Polygon',
+              coordinates: [e.lngLat.lng, e.lngLat.lat]
+            }
+          ]
+        };
+        this.applyChange(change);
+      } else if (this.drawMode === 'draw_line_string') {
+        const change = {
+          type: 'draw.step',
+          features: [
+            {
+              type: 'LineString',
+              coordinates: [e.lngLat.lng, e.lngLat.lat]
+            }
+          ]
+        };
+        this.applyChange(change);
+      }
+    },
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.geometry;
+
       switch (activeLayerType) {
         case 'point':
-          this.updateDrawMode('draw_point');
-          this.draw.changeMode('draw_point');
+          this.enterDrawMode('draw_point');
           break;
         case 'line':
-          this.draw.changeMode('draw_line_string');
-          this.updateDrawMode('draw_line_string');
+          this.enterDrawMode('draw_line_string');
           break;
         case 'polygon':
-          this.draw.changeMode('draw_polygon');
-          this.updateDrawMode('draw_polygon');
+          this.enterDrawMode('draw_polygon');
           break;
         default:
           break;

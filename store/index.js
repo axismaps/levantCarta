@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 
 export const state = () => ({
     map: null,
@@ -67,6 +68,34 @@ export const actions = {
             commit('UPDATE_EDITION_STATUS', true)
         }
     },
+    enterDrawMode({ commit, state }, drawMode) {
+        const { draw } = state
+
+        const feature = {
+            'id': uuidv4(),
+            'type': 'Feature',
+            'properties': {}
+        };
+
+        commit('UPDATE_EDITION_STATUS', true)
+        commit('UPDATE_SELECTED_FEATURE', feature);
+        commit('UPDATE_DRAW_MODE', drawMode);
+
+        switch (drawMode) {
+            case 'draw_point':
+                draw.changeMode('draw_point');
+                break;
+            case 'draw_line_string':
+                draw.changeMode('draw_line_string');
+                break;
+            case 'draw_polygon':
+                draw.changeMode('draw_polygon');
+                break;
+            default:
+                break;
+        }
+
+    },
     updateAttributeForm({ commit }, attributeForm) {
         commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
         commit('UPDATE_EDITION_STATUS', true)
@@ -74,7 +103,7 @@ export const actions = {
     updateAttributeFormValidity({ commit }, status) {
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', status)
     },
-    //this action is commmited by mapbox 
+    //this action is commmited by mapbox
     updateSelectedFeature({ commit, state, dispatch }, features) {
         console.log('UPDATE_SELECTED_FEATURE', features[0])
         console.log('attribute form', state.attributeForm)

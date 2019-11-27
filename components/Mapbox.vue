@@ -218,13 +218,13 @@ export default {
       //   this.$emit('map-mousemove', map, e);
       // });
 
-      // map.on('click', e => {
-      //   /**
-      //    * Map clicked.
-      //    * @type {object}
-      //    */
-      //   this.$emit('map-click', map, e);
-      // });
+      map.on('click', e => {
+        /**
+         * Map clicked.
+         * @type {object}
+         */
+        this.$emit('map-click', map, e);
+      });
 
       // map.on('contextmenu', e => {
       //   /**
