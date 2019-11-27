@@ -268,7 +268,7 @@ export default {
 };
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .sidebar {
   min-width: $sidebar-width;
   max-height: calc(100vh - #{$header-height});

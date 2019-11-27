@@ -9,7 +9,7 @@
         <collapse-rigth-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
-    <div class="el-button-group btn-group">
+    <div class="el-button-group btn-group" :class="{ active: isToolActive }">
       <el-button
         @click="anableDrawPointMode"
         v-if="activeLayer && activeLayer.geometry == 'point'"
@@ -103,8 +103,18 @@ export default {
     ...mapGetters({
       layers: 'layers/items',
       activeLayer: 'layers/currentItem',
-      selectedFeature: 'selectedFeature'
-    })
+      selectedFeature: 'selectedFeature',
+      drawMode: 'drawMode'
+    }),
+    isToolActive() {
+      if (
+        this.drawMode === 'draw_line_string' ||
+        this.drawMode === 'draw_point' ||
+        this.drawMode === 'draw_polygon'
+      ) {
+        return true;
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -139,7 +149,7 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style lang="scss" scoped>
 .btn-group {
   margin-bottom: 30px;
 }
@@ -151,6 +161,12 @@ export default {
   width: 43px;
 }
 
+.active {
+  button {
+    color: $--color-primary;
+    border-color: $--color-primary;
+  }
+}
 .btn-group button:not(:last-child) {
   border-bottom: none; /* Prevent double borders */
 }
