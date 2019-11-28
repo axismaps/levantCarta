@@ -28,27 +28,8 @@ export const actions = {
 
         const { data } = await axios.get('http://beirut.georio.levantcarta.org/api/v1/get/features/' + layerId);
 
-        const features = data.features.map(feature => {
-            return {
-                "id": feature.id,
-                "type": "Feature",
-                "properties": {
-                    name: feature.name,
-                    firstyear: feature.firstyear,
-                    lastyear: feature.lastyear,
-                },
-                "geometry": feature.geom
-            }
 
-
-        })
-
-        const featureCollection = {
-            "type": "FeatureCollection",
-            "features": features
-        }
-
-        rootState.draw.add(featureCollection)
+        rootState.draw.add(data)
 
         commit('LOAD_LAYER', layerId)
 
