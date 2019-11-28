@@ -43,15 +43,11 @@
             <el-col :span="12">
               <el-form-item label="From" prop="firstyear">
                 <div class="form-input-with-ctrl-btn">
-                  <el-date-picker
-                    id="year-stepper"
+                  <el-input-number
                     v-model="form.firstyear"
                     @change="handleUpdateAttributeForm"
-                    type="year"
-                    format="yyyy"
-                    value-format="yyyy"
-                    placeholder="Pick a year"
-                  ></el-date-picker>
+                    :controls="false"
+                  ></el-input-number>
                   <el-button
                     id="firstyear"
                     icon="el-icon-refresh-left"
@@ -66,15 +62,11 @@
             <el-col :span="12">
               <el-form-item label="To" prop="lastyear">
                 <div class="form-input-with-ctrl-btn">
-                  <el-date-picker
-                    id="year-stepper"
+                  <el-input-number
                     v-model="form.lastyear"
                     @change="handleUpdateAttributeForm"
-                    type="year"
-                    format="yyyy"
-                    value-format="yyyy"
-                    placeholder="Pick a year"
-                  ></el-date-picker>
+                    :controls="false"
+                  ></el-input-number>
                   <el-button
                     id="lastyear"
                     icon="el-icon-refresh-left"
@@ -154,7 +146,7 @@ export default {
       rules: {
         firstyear: [
           {
-            type: 'string',
+            type: 'number',
             required: true,
             message: this.$t('erros.selectYear'),
             trigger: 'change'
@@ -162,7 +154,7 @@ export default {
         ],
         lastyear: [
           {
-            type: 'string',
+            type: 'number',
             required: true,
             message: this.$t('erros.selectYear'),
             trigger: 'change'
