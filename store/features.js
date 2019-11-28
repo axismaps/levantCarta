@@ -23,33 +23,34 @@ export const mutations = {
 
 export const actions = {
     async setFeaturesFromLayer({ commit, state, rootState }, layerId) {
-        // const { data: { features } } = await axios.get(API + layerId);
 
         if (state.loadedLayers.includes(layerId)) return;
 
-        if (layerId == 'b858c519-cff1-4a6c-887e-e37b3c245601') {
-            const { data } = await axios.get('/data/schools.json');
+        const { data } = await axios.get('http://beirut.georio.levantcarta.org/api/v1/get/features/' + layerId);
 
-            try {
-                rootState.draw.add(data)
-            } catch (error) { }
-            console.log('Here is the features data', data)
-            commit('SET_FEATURES', data)
-        } else {
-            const { data } = await axios.get('/data/features.json');
+        const features = data.features.map(feature => {
+            return {
+                "id": feature.id,
+                "type": "Feature",
+                "properties": {
+                    name: feature.name,
+                    firstyear: feature.firstyear,
+                    lastyear: feature.lastyear,
+                },
+                "geometry": feature.geom
+            }
 
 
-            try {
-                rootState.draw.add(data)
-            } catch (error) { }
-            console.log('Here is the features data', data)
-            commit('SET_FEATURES', data)
+        })
 
+        const featureCollection = {
+            "type": "FeatureCollection",
+            "features": features
         }
 
+        rootState.draw.add(featureCollection)
+
         commit('LOAD_LAYER', layerId)
-
-
 
     }
 }

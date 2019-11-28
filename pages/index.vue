@@ -14,11 +14,13 @@
         @toggle-sidebar="handleTogglesidebar"
       />
     </div>
+    <!-- center: [-43.181587010622025, -22.905508179548036], -->
+
     <mapbox
       v-if="draw"
       :map-options="{
         style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
-        center: [-43.181587010622025, -22.905508179548036],
+        center: [35.50411547, 33.89508665],
         zoom: 14,
         }"
       :geolocate-control="{
