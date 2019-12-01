@@ -66,7 +66,8 @@ export const actions = {
 
         if (drawMode !== 'simple_select') {
             commit('UPDATE_EDITION_STATUS', true)
-        }
+        } else { commit('UPDATE_EDITION_STATUS', false) }
+
     },
     enterDrawMode({ commit, state }, drawMode) {
         const { draw } = state
