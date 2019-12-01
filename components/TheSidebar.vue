@@ -233,9 +233,9 @@ export default {
       this.handleUpdateAttributeForm();
     },
     handleCloseEdition() {
+      this.updateSelectedFeature([]);
       this.draw.changeMode('simple_select');
       this.updateDrawMode('simple_select');
-      this.updateSelectedFeature([]);
     }
   },
   created() {

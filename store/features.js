@@ -1,6 +1,16 @@
 import axios from 'axios';
 const API = 'http://beirut.georio.levantcarta.org/api/v1/get/features/';
 
+
+// TODO: Nao sei se eu preciso dessa porra, talvez seja o caso de vincular essa lógica as layers
+/* 
+merge com layers
+ao adicionar uma nova feature eu preciso adicionar essa na layer carregada. no redraw eu vou desenhar essa feature tbm
+ao salvar a layer carregada eu vou buscar as features que faltam salvar salvar...
+
+
+**/ 
+
 export const state = () => ({
     features: [],
     isLoading: false,
