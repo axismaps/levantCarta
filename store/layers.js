@@ -2,7 +2,8 @@ export const state = () => ({
     items: [],
     isLoading: false,
     currentItem: null,
-    currentYear: '1800'
+    currentYear: '1800',
+    loadedItems: []
 })
 
 export const mutations = {
@@ -17,6 +18,9 @@ export const mutations = {
     },
     SET_CURRENT_YEAR(state, year) {
         state.currentYear = year
+    },
+    LOAD_LAYER(state, layer) {
+        state.loadedItems.push(layer)
     }
 }
 /** async actions */

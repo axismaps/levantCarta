@@ -9,12 +9,11 @@ ao adicionar uma nova feature eu preciso adicionar essa na layer carregada. no r
 ao salvar a layer carregada eu vou buscar as features que faltam salvar salvar...
 
 
-**/ 
+**/
 
 export const state = () => ({
     features: [],
     isLoading: false,
-    loadedLayers: [],
     currentFeatures: [],
 
 })
@@ -26,17 +25,15 @@ export const mutations = {
     UPDATE_CURRENT_FEATURES(state, features) {
         state.currentFeatures = features
     },
-    LOAD_LAYER(state, layer) {
-        state.loadedLayers.push(layer)
-    }
+
 }
 
 export const actions = {
     async setFeaturesFromLayer({ commit, state, rootState }, layerId) {
 
         let featureCollection = {}
-
-        if (state.loadedLayers.includes(layerId)) {
+        console.log(rootState)
+        if (rootState.layers.loadedItems.includes(layerId)) {
             featureCollection = state.features.filter(layer => {
                 console.log(layer)
                 console.log(layerId)
@@ -51,7 +48,7 @@ export const actions = {
             featureCollection = data
             commit('UPDATE_CURRENT_FEATURES', { ...data, layerId })
             commit('SET_FEATURES', { ...data, layerId })
-            commit('LOAD_LAYER', layerId)
+            commit('layers/LOAD_LAYER', layerId, { root: true })
         }
 
 
