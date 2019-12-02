@@ -12,11 +12,13 @@
         :showSidebar="showSidebar"
         @draw-init="handleDrawInit"
         @toggle-sidebar="handleTogglesidebar"
+        @add-new-feature="handleAddNewFeature"
       />
     </div>
     <!-- center: [-43.181587010622025, -22.905508179548036], -->
 
     <mapbox
+      id="map"
       v-if="draw"
       :map-options="{
         style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
@@ -35,6 +37,7 @@
       @map-click="handleMapClick"
       class="map"
     />
+    <button id="myButton">My Button</button>
   </div>
 </template>
 <script>
@@ -45,6 +48,16 @@ import Mapbox from '~/components/Mapbox.vue';
 import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
+
+import tippy, { followCursor } from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+
+tippy('#myButton', {
+  // Follow both x and y axes
+  followCursor: true,
+  plugins: [followCursor],
+  content: "I'm a Tippy tooltip!"
+});
 
 const API = 'http://beirut.georio.levantcarta.org/api/v1/get/layers';
 export default {
@@ -60,7 +73,8 @@ export default {
       map: null,
       draw: null,
       popup: null,
-      featureBeingCreatedId: ''
+      featureBeingCreatedId: '',
+      tippy: {}
     };
   },
   async fetch(context) {
@@ -97,7 +111,8 @@ export default {
       updateDrawMode: 'updateDrawMode',
       enterDrawMode: 'enterDrawMode',
       setDraw: 'setDraw',
-      applyChange: 'changes/applyChange'
+      applyChange: 'changes/applyChange',
+      saveFeature: 'features/saveFeature'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -144,6 +159,7 @@ export default {
     handleTogglesidebar() {
       this.showSidebar = !this.showSidebar;
       console.log(this.map.getStyle().layers);
+      this.saveFeature();
     },
     loadOverlays(map) {
       this.overlays.map(overlay => {
@@ -168,6 +184,10 @@ export default {
     },
     handleMapClick(map, e) {
       // console.log('click', [e.point.x, e.point.y]);
+      if (this.tippy[0]) {
+        this.tippy[0].destroy();
+        this.tippy = [];
+      }
       if (this.drawMode === 'draw_polygon') {
         const change = {
           type: 'draw.step',
@@ -194,6 +214,12 @@ export default {
     },
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.geometry;
+
+      this.tippy = tippy('#map', {
+        followCursor: true,
+        plugins: [followCursor],
+        content: 'click to start drawing'
+      });
 
       switch (activeLayerType) {
         case 'point':

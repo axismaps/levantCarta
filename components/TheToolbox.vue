@@ -11,21 +11,21 @@
     </div>
     <div class="el-button-group btn-group" :class="{ active: isToolActive }">
       <el-button
-        @click="anableDrawPointMode"
+        @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'point'"
         :disabled="activeLayer.geometry !== 'point'"
       >
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
-        @click="anableDrawLineMode"
+        @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'line'"
         :disabled="activeLayer.geometry !== 'line'"
       >
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
-        @click="anableDrawPolygonMode"
+        @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'polygon'"
         :disabled="activeLayer.geometry !== 'polygon'"
       >
@@ -132,14 +132,8 @@ export default {
     toggleSidebar() {
       this.$emit('toggle-sidebar');
     },
-    anableDrawPointMode() {
-      this.enterDrawMode('draw_point');
-    },
-    anableDrawLineMode() {
-      this.enterDrawMode('draw_line_string');
-    },
-    anableDrawPolygonMode() {
-      this.enterDrawMode('draw_polygon');
+    addNewFeature() {
+      this.$emit('add-new-feature');
     },
     trash() {
       this.confirmDeleteVisibily = false;
