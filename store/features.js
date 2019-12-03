@@ -1,16 +1,6 @@
 import axios from 'axios';
 const API = 'http://beirut.georio.levantcarta.org/api/v1/get/features/';
 
-
-// TODO: Nao sei se eu preciso dessa porra, talvez seja o caso de vincular essa lógica as layers
-/* 
-merge com layers
-ao adicionar uma nova feature eu preciso adicionar essa na layer carregada. no redraw eu vou desenhar essa feature tbm
-ao salvar a layer carregada eu vou buscar as features que faltam salvar salvar...
-
-
-**/
-
 export const state = () => ({
     features: [],
     isLoading: false,
@@ -51,9 +41,119 @@ export const actions = {
             commit('layers/LOAD_LAYER', layerId, { root: true })
         }
 
-
         rootState.draw.deleteAll()
         rootState.draw.add(featureCollection)
+    },
+    async saveFeature({ }, feature) {
 
+        const request = {
+            type: feature.properties.type,
+            dataType: 'geojson',
+            data: {
+                id: feature.id,
+                properties: feature.properties,
+                geometry: feature.geometry
+            }
+        }
+
+        await axios.post('http://beirut.georio.levantcarta.org/api/v1/make/feature', request)
+
+        console.log('saving feature: ', request)
     }
+}
+
+const _data = {
+    "data": {
+        "responseCode": 200,
+        "responseMessage": "OK",
+        "response": {
+            "firstyear": 1935,
+            "lastyear": 1940,
+            "name": null,
+            "tags": "tags",
+            "approved": false,
+            "id": "random-id",
+            "geom": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [
+                                35.52542158834564,
+                                33.87618177166101
+                            ],
+                            [
+                                35.52676337514657,
+                                33.87398648736959
+                            ],
+                            [
+                                35.52891418045971,
+                                33.8747892471298
+                            ],
+                            [
+                                35.52542158834564,
+                                33.87618177166101
+                            ]
+                        ]
+                    ]
+                ]
+            },
+            "geom_merc": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [
+                                3954671.841431004,
+                                4012188.355703198
+                            ],
+                            [
+                                3954821.2084544376,
+                                4011894.014804172
+                            ],
+                            [
+                                3955060.6350066913,
+                                4012001.6469239825
+                            ],
+                            [
+                                3954671.841431004,
+                                4012188.355703198
+                            ]
+                        ]
+                    ]
+                ]
+            },
+            "updatedAt": "2019-12-03T19:59:07.416Z",
+            "createdAt": "2019-12-03T19:59:07.377Z",
+            "remoteId": null,
+            "firstdate": null,
+            "lastdate": null,
+            "TypeId": "860651a7-2d8c-42bc-b993-beb37d0eea22"
+        }
+    },
+    "status": 200,
+    "statusText": "OK",
+    "headers": {
+        "content-type": "application/json; charset=utf-8"
+    },
+    "config": {
+        "url": "http://beirut.georio.levantcarta.org/api/v1/make/feature",
+        "method": "post",
+        "data": "{\"type\":\"860651a7-2d8c-42bc-b993-beb37d0eea22\",\"dataType\":\"geojson\",\"data\":{\"id\":\"random-id\",\"properties\":{\"firstyear\":1935,\"lastyear\":1940,\"name\":null,\"tags\":\"tags\",\"approved\":\"false\"},\"geometry\":{\"type\":\"polygon\",\"coordinates\":[[[35.52542158834564,33.87618177166101],[35.52676337514657,33.87398648736959],[35.52891418045971,33.8747892471298],[35.52542158834564,33.87618177166101]]]}}}",
+        "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/json;charset=utf-8"
+        },
+        "transformRequest": [
+            null
+        ],
+        "transformResponse": [
+            null
+        ],
+        "timeout": 0,
+        "xsrfCookieName": "XSRF-TOKEN",
+        "xsrfHeaderName": "X-XSRF-TOKEN",
+        "maxContentLength": -1
+    },
+    "request": {}
 }

@@ -80,7 +80,6 @@
             </el-col>
           </el-row>
         </el-form-item>
-
         <el-form-item :label="$t('sidebar.type')" prop="type">
           <div class="form-input-with-ctrl-btn">
             <el-select v-model="form.type" @change="handleUpdateAttributeForm" placeholder="Type">
@@ -88,7 +87,7 @@
                 v-for="type in currentLayer.Types"
                 :key="type.id"
                 :label="type.title"
-                :value="type.title"
+                :value="type.id"
               ></el-option>
             </el-select>
             <el-button

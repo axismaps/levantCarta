@@ -37,7 +37,6 @@
       @map-click="handleMapClick"
       class="map"
     />
-    <button id="myButton">My Button</button>
   </div>
 </template>
 <script>

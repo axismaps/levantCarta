@@ -23,7 +23,7 @@ export default {
                 ['==', 'active', 'false'],
                 ['==', '$type', 'Polygon'],
                 ['!=', 'mode', 'static'],
-                ['==', 'user_approved', 'false']
+                ['==', 'user_approved', false]
             ],
             paint: {
                 'fill-color': '#aff424',
@@ -84,7 +84,7 @@ export default {
                 ['==', 'active', 'false'],
                 ['==', '$type', 'Polygon'],
                 ['!=', 'mode', 'static'],
-                ['==', 'user_approved', 'false']
+                ['==', 'user_approved', false]
             ],
             layout: {
                 'line-cap': 'round',
@@ -139,7 +139,7 @@ export default {
                 ['==', 'active', 'false'],
                 ['==', '$type', 'LineString'],
                 ['!=', 'mode', 'static'],
-                ['==', 'user_approved', 'false']
+                ['==', 'user_approved', false]
             ],
             layout: {
                 'line-cap': 'round',
@@ -236,7 +236,7 @@ export default {
                 ['==', '$type', 'Point'],
                 ['==', 'meta', 'feature'],
                 ['!=', 'mode', 'static'],
-                ['==', 'user_approved', 'false']
+                ['==', 'user_approved', false]
             ],
             paint: {
                 'circle-radius': 4,

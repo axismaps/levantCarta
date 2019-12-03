@@ -1,3 +1,5 @@
+import { dispatch } from "rxjs/internal/observable/pairs"
+
 export const state = () => ({
     changes: [],
     pendingUndoChange: {},
@@ -18,7 +20,7 @@ export const mutations = {
 }
 
 export const actions = {
-    applyChange({ commit, rootState }, changeAction) {
+    applyChange({ commit, rootState, dispatch }, changeAction) {
 
         const { draw, selectedFeature } = rootState
         const currentLayer = rootState.layers.currentItem.id
@@ -31,6 +33,7 @@ export const actions = {
         console.log(changeAction)
         delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
 
+        console.log(featureToUpdate)
         switch (changeType) {
             case 'draw.step':
                 featureToUpdate.id = selectedFeature.id;
@@ -41,7 +44,7 @@ export const actions = {
                         'lastyear': attributeForm.lastyear,
                         'type': attributeForm.type,
                         'tags': attributeForm.tags,
-                        'approved': 'false'
+                        'approved': false
                     }
                 }
                 break;
@@ -60,7 +63,7 @@ export const actions = {
                     .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
                     .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
                     .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
-                    .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
+                    .setFeatureProperty(featureToUpdate.id, 'approved', false);
 
                 if (isAttributeFormValid) {
                     commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
@@ -74,7 +77,7 @@ export const actions = {
                     .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
                     .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
                     .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
-                    .setFeatureProperty(featureToUpdate.id, 'approved', 'false');
+                    .setFeatureProperty(featureToUpdate.id, 'approved', false);
 
                 break;
             case 'draw.delete':
@@ -86,6 +89,18 @@ export const actions = {
                 break;
         }
 
+        featureToUpdate = {
+            ...featureToUpdate, properties: {
+                'name': attributeForm.name,
+                'firstyear': attributeForm.firstyear,
+                'lastyear': attributeForm.lastyear,
+                'type': attributeForm.type,
+                'tags': attributeForm.tags || [],
+                'approved': false
+            }
+        }
+
+        dispatch('features/saveFeature', featureToUpdate, { root: true })
 
         commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
@@ -104,13 +119,11 @@ export const actions = {
 
                 if (pendingUndoChange.features[0].type === 'Polygon') {
                     geometry = {
-
                         type: pendingUndoChange.features[0].type,
                         coordinates: [changes.slice().reverse().map((change) => {
                             if (change.type === 'draw.step') {
                                 return change.features[0].coordinates
                             }
-
                         })]
                     }
 
@@ -123,7 +136,6 @@ export const actions = {
                             if (change.type === 'draw.step') {
                                 return change.features[0].coordinates
                             }
-
                         })
                     }
                 }
@@ -132,7 +144,7 @@ export const actions = {
                     id: pendingUndoChange.features[0].id,
                     type: "Feature",
                     properties: {
-                        'approved': 'false',
+                        'approved': false,
                         'firstyear': rootState.attributeForm.firstyear,
                         'lastyear': rootState.attributeForm.lastyear,
                         'type': rootState.attributeForm.type,
