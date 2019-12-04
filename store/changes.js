@@ -1,6 +1,7 @@
 export const state = () => ({
     changes: [],
     pendingUndoChange: {},
+    isFeatureSavePending: false,
 })
 
 export const mutations = {
@@ -14,11 +15,14 @@ export const mutations = {
     },
     CLEAR_PENDING_CHANGE(state) {
         state.pendingUndoChange = {}
+    },
+    UPDATE_FEATURE_SAVE_PENDING_STATUS(state, status) {
+        state.isFeatureSavePending = status
     }
 }
 
 export const actions = {
-    async applyChange({ commit, rootState, dispatch }, changeAction) {
+    async applyChange({ commit, state, rootState, dispatch }, changeAction) {
 
         const { draw, selectedFeature } = rootState
         const currentLayer = rootState.layers.currentItem.id
@@ -64,6 +68,7 @@ export const actions = {
                 draw.changeMode('simple_select', { featureIds: [featureToUpdate.id] })
 
 
+                commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', true)
                 commit('UPDATE_SELECTED_FEATURE', featureToUpdate, { root: true })
 
                 draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
@@ -74,6 +79,9 @@ export const actions = {
                     .setFeatureProperty(featureToUpdate.id, 'approved', false);
 
                 if (isAttributeFormValid) {
+                    await dispatch('features/saveFeature', featureToUpdate, { root: true })
+
+                    commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', true)
                     commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
                     commit('UPDATE_EDITION_STATUS', false, { root: true })
                     commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
@@ -87,7 +95,11 @@ export const actions = {
                     .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
                     .setFeatureProperty(featureToUpdate.id, 'approved', false);
 
-                await dispatch('features/updateFeature', featureToUpdate, { root: true })
+                if (state.isFeatureSavePending) {
+                    await dispatch('features/saveFeature', featureToUpdate, { root: true })
+                } else {
+                    await dispatch('features/updateFeature', featureToUpdate, { root: true })
+                }
 
 
                 break;
@@ -101,7 +113,6 @@ export const actions = {
         }
 
 
-        await dispatch('features/saveFeature', featureToUpdate, { root: true })
 
         commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
