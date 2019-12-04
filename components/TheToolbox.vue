@@ -123,7 +123,7 @@ export default {
     }),
     drawInit() {
       const Draw = new MapboxDraw({
-        // displayControlsDefault: false,
+        displayControlsDefault: false,
         userProperties: true,
         styles: drawStyles.styles
       });
