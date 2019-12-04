@@ -56,7 +56,13 @@ export const actions = {
             }
         }
 
-        await axios.post('http://beirut.georio.levantcarta.org/api/v1/make/feature', request)
+        try {
+
+            await axios.post('http://beirut.georio.levantcarta.org/api/v1/make/feature', request)
+        } catch (error) {
+            console.log("couldn't create feature: ", error.response)
+
+        }
     },
     async updateFeature({ rootState }, feature) {
         const layerId = rootState.layers.currentItem.id
@@ -67,6 +73,13 @@ export const actions = {
             geom: feature.geometry
         }
 
-        await axios.post(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`, req)
+        try {
+            await axios.post(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`, req)
+        } catch (error) {
+            console.log("couldn't update feature: ", error.response)
+        }
+
+
     }
 }
+
