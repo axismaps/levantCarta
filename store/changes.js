@@ -38,7 +38,7 @@ export const actions = {
                 'firstyear': attributeForm.firstyear,
                 'lastyear': attributeForm.lastyear,
                 'type': attributeForm.type,
-                'tags': attributeForm.tags || [],
+                'tags': attributeForm.tags || '',
                 'approved': false
             }
         }

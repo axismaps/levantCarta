@@ -42,7 +42,11 @@ export default {
   },
   watch: {
     initialTags(newValue, oldValue) {
-      this.tags = JSON.parse(this.initialTags);
+      try {
+        this.tags = JSON.parse(this.initialTags);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   created() {

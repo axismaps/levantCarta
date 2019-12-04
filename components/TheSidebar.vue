@@ -140,7 +140,7 @@ export default {
         firstyear: '',
         lastyear: '',
         type: '',
-        tags: []
+        tags: ''
       },
       rules: {
         firstyear: [
@@ -250,7 +250,7 @@ export default {
             firstyear: '',
             lastyear: '',
             type: '',
-            tags: []
+            tags: ''
           };
         }
       }

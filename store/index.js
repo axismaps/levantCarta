@@ -10,7 +10,7 @@ export const state = () => ({
         firstyear: '',
         lastyear: '',
         type: '',
-        tags: []
+        tags: ''
     },
     isEditionInProgress: false,
     isAttributeFormValid: false
@@ -38,7 +38,7 @@ export const mutations = {
             firstyear: '',
             lastyear: '',
             type: '',
-            tags: []
+            tags: ''
         }
     },
     UPDATE_EDITION_STATUS(state, status) {
