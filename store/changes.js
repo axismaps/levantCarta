@@ -99,9 +99,9 @@ export const actions = {
                     await dispatch('features/saveFeature', featureToUpdate, { root: true })
                 } else {
                     await dispatch('features/updateFeature', featureToUpdate, { root: true })
+
+                    commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', false)
                 }
-
-
                 break;
             case 'draw.delete':
                 commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
@@ -111,8 +111,6 @@ export const actions = {
             default:
                 break;
         }
-
-
 
         commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
