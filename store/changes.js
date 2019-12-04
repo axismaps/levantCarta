@@ -97,10 +97,10 @@ export const actions = {
 
                 if (state.isFeatureSavePending) {
                     await dispatch('features/saveFeature', featureToUpdate, { root: true })
+                    commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', false)
+
                 } else {
                     await dispatch('features/updateFeature', featureToUpdate, { root: true })
-
-                    commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', false)
                 }
                 break;
             case 'draw.delete':
