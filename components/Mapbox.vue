@@ -91,6 +91,11 @@ export default {
 
     this.initPopup();
   },
+  computed: {
+    ...mapGetters({
+      isEditionInProgress: 'isEditionInProgress'
+    })
+  },
   methods: {
     ...mapActions({
       updateDrawMode: 'updateDrawMode',
@@ -125,8 +130,10 @@ export default {
       this.$emit('popup-init', popup);
     },
     registerEvents(map) {
+      if (this.isEditionInProgress) return;
       map.on('mousemove', e => {
         const feature = map.queryRenderedFeatures(e.point)[0];
+        if (!feature) return;
         if (this.mouseOverFeature == feature.properties.id) {
           if (feature.properties.id) {
             const coordinates = e.lngLat;
