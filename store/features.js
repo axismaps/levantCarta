@@ -74,12 +74,11 @@ export const actions = {
         }
 
         try {
+            console.log(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`)
+            console.log('saving: ', req)
             await axios.post(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`, req)
         } catch (error) {
             console.log("couldn't update feature: ", error.response)
         }
-
-
     }
 }
-

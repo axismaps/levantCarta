@@ -6,7 +6,7 @@ export const state = () => ({
     drawMode: 'simple_select',
     selectedFeature: null,
     attributeForm: {
-        name: '',
+        name: null,
         firstyear: '',
         lastyear: '',
         type: '',
@@ -34,7 +34,7 @@ export const mutations = {
     },
     CLEAR_ATTRIBUTE_FORM(state) {
         state.attributeForm = {
-            name: '',
+            name: null,
             firstyear: '',
             lastyear: '',
             type: '',

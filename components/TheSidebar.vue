@@ -136,7 +136,7 @@ export default {
     return {
       searchbox: '',
       form: {
-        name: '',
+        name: null,
         firstyear: '',
         lastyear: '',
         type: '',
@@ -246,7 +246,7 @@ export default {
           );
         } else {
           this.form = {
-            name: '',
+            name: null,
             firstyear: '',
             lastyear: '',
             type: '',
