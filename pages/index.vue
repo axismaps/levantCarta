@@ -15,8 +15,6 @@
         @add-new-feature="handleAddNewFeature"
       />
     </div>
-    <!-- center: [-43.181587010622025, -22.905508179548036], -->
-
     <mapbox
       id="map"
       v-if="draw"
@@ -52,7 +50,6 @@ import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 tippy('#myButton', {
-  // Follow both x and y axes
   followCursor: true,
   plugins: [followCursor],
   content: "I'm a Tippy tooltip!"
@@ -157,8 +154,6 @@ export default {
     },
     handleTogglesidebar() {
       this.showSidebar = !this.showSidebar;
-      console.log(this.map.getStyle().layers);
-      this.saveFeature();
     },
     loadOverlays(map) {
       this.overlays.map(overlay => {
@@ -182,7 +177,6 @@ export default {
       );
     },
     handleMapClick(map, e) {
-      // console.log('click', [e.point.x, e.point.y]);
       if (this.tippy[0]) {
         this.tippy[0].destroy();
         this.tippy = [];

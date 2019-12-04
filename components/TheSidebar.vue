@@ -102,7 +102,7 @@
         </el-form-item>
         <the-sidebar-add-tag :initialTags="form.tags" @update-tags="handleUpdateTags" />
       </el-form>
-      <pre>{{selectedFeature}}</pre>
+      <!-- <pre>{{selectedFeature}}</pre> -->
       <!-- <h5>{{$t('hello')}}</h5> -->
       <!-- <p>
         Is form valid:

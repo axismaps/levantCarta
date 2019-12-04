@@ -1,5 +1,4 @@
 import axios from 'axios';
-const API = 'http://beirut.georio.levantcarta.org/api/v1/get/features/';
 
 export const state = () => ({
     features: [],
@@ -15,7 +14,6 @@ export const mutations = {
     UPDATE_CURRENT_FEATURES(state, features) {
         state.currentFeatures = features
     },
-
 }
 
 export const actions = {
@@ -57,11 +55,9 @@ export const actions = {
         }
 
         try {
-
             await axios.post('http://beirut.georio.levantcarta.org/api/v1/make/feature', request)
         } catch (error) {
             console.log("couldn't create feature: ", error.response)
-
         }
     },
     async updateFeature({ rootState }, feature) {
