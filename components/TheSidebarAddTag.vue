@@ -24,8 +24,7 @@
 export default {
   props: {
     initialTags: {
-      type: Array,
-      default: () => []
+      type: String
     }
   },
   data() {
@@ -38,16 +37,23 @@ export default {
       this.tags.push({ id: this.tags.length + 1, name: '', value: '' });
     },
     updateTags() {
-      this.$emit('update-tags', this.tags);
+      this.$emit('update-tags', JSON.stringify(this.tags));
     }
   },
   watch: {
     initialTags(newValue, oldValue) {
-      this.tags = JSON.parse(JSON.stringify(this.initialTags));
+      this.tags = JSON.parse(this.initialTags);
     }
   },
   created() {
-    this.tags = JSON.parse(JSON.stringify(this.initialTags));
+    try {
+      this.tags = JSON.parse(this.initialTags);
+      if (!this.tags) {
+        this.tags = [];
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 </script>
