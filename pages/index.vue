@@ -120,12 +120,14 @@ export default {
           feature.id
         ).properties;
 
-        const description = `
-        <span style="color: grey">Name: </span> ${name}
+        const { title: typeTitle } = this.activeLayer.Types.find(el => {
+          return el.id === type;
+        });
+        const description = `<span style="color: grey">Name: </span> ${name}
         <br>
         <span style="color: grey">Mapped: </span> ${firstyear} - ${lastyear}
         <br>
-        <span style="color: grey">Type: </span> ${type}
+        <span style="color: grey">Type: </span> ${typeTitle}
         `;
 
         this.popup
