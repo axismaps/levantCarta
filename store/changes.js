@@ -87,7 +87,7 @@ export const actions = {
                 break;
             case 'draw.update':
 
-                if (changeAction.action === 'change_coordinates') {
+                if (changeAction.action) {
                     draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
                         .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
                         .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
@@ -116,7 +116,7 @@ export const actions = {
 
         commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
-    undoChange({ commit, state, rootState }) {
+    async undoChange({ commit, state, rootState, dispatch }) {
         commit('POP_CHANGE')
         const { pendingUndoChange, changes } = state
 
@@ -195,14 +195,16 @@ export const actions = {
                 //search the change stack from top to bottom
                 for (let i = changes.length - 1; i >= 0; i--) {
                     if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
-                        if (pendingUndoChange.action === "change_coordinates") {
+                        if (pendingUndoChange.action) {
                             draw.delete(pendingUndoChange.features[0].id)
                             draw.add(changes[i].features[0])
-                            break
+                            await dispatch('features/updateFeature', changes[i].features[0], { root: true })
                         } else {
                             draw.delete(pendingUndoChange.features[0].id)
                             draw.add(pendingUndoChange.features[0])
+                            await dispatch('features/updateFeature', pendingUndoChange.features[0], { root: true })
                         }
+                        break
                     }
                 }
 
