@@ -20,11 +20,8 @@ export const actions = {
     async setFeaturesFromLayer({ commit, state, rootState }, layerId) {
 
         let featureCollection = {}
-        console.log(rootState)
         if (rootState.layers.loadedItems.includes(layerId)) {
             featureCollection = state.features.filter(layer => {
-                console.log(layer)
-                console.log(layerId)
                 return layer.layerId === layerId
             })[0]
             commit('UPDATE_CURRENT_FEATURES', featureCollection)
@@ -70,8 +67,8 @@ export const actions = {
         }
 
         try {
-            console.log(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`)
-            console.log('saving: ', req)
+            // console.log(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`)
+            console.log('SAVING FEATURE: ', req)
             await axios.post(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`, req)
         } catch (error) {
             console.log("couldn't update feature: ", error.response)

@@ -30,7 +30,6 @@ export const actions = {
     },
     async setCurrentItem({ commit, dispatch, state, rootState }, itemId) {
         const currentItem = state.items.filter(item => item.id === itemId)[0]
-        console.log('layerID', itemId)
 
         rootState.draw.changeMode('simple_select')
         await dispatch('features/setFeaturesFromLayer', itemId, { root: true })

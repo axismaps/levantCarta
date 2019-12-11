@@ -6,7 +6,7 @@ export const state = () => ({
 
 export const mutations = {
     PUSH_CHANGE(state, change) {
-        console.log('change: ', change)
+        console.log('PUSH_CHANGE', change)
         state.changes.push(change)
     },
     POP_CHANGE(state) {
@@ -32,7 +32,7 @@ export const actions = {
 
         let featureToUpdate = changeAction.features[0];
 
-        console.log(changeAction)
+        // console.log(changeAction)
         delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
 
 
@@ -191,7 +191,7 @@ export const actions = {
                 for (let i = changes.length - 1; i >= 0; i--) {
                     if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
                         draw.delete(pendingUndoChange.features[0].id)
-                        draw.add(pendingUndoChange.features[0])
+                        draw.add(changes[i].features[0])
                         break
                     }
                 }
