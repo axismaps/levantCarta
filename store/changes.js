@@ -31,11 +31,6 @@ export const actions = {
         const changeType = changeAction.type
 
         let featureToUpdate = changeAction.features[0];
-
-        // console.log(changeAction)
-        delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
-
-
         featureToUpdate = {
             ...featureToUpdate, properties: {
                 'name': attributeForm.name,
@@ -43,9 +38,12 @@ export const actions = {
                 'lastyear': attributeForm.lastyear,
                 'type': attributeForm.type,
                 'tags': attributeForm.tags || '',
-                'approved': false
             }
         }
+
+        // console.log(changeAction)
+        delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
+
         switch (changeType) {
             case 'draw.step':
                 featureToUpdate.id = selectedFeature.id;
@@ -67,6 +65,7 @@ export const actions = {
                 draw.add(featureToUpdate)
                 draw.changeMode('simple_select', { featureIds: [featureToUpdate.id] })
 
+                featureToUpdate.properties.approved = false
 
                 commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', true)
                 commit('UPDATE_SELECTED_FEATURE', featureToUpdate, { root: true })
@@ -80,20 +79,23 @@ export const actions = {
 
                 if (isAttributeFormValid) {
                     await dispatch('features/saveFeature', featureToUpdate, { root: true })
-
-                    commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', true)
+                    commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', false)
                     commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
                     commit('UPDATE_EDITION_STATUS', false, { root: true })
                     commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
                 }
                 break;
             case 'draw.update':
-                draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
-                    .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
-                    .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
-                    .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
-                    .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
-                    .setFeatureProperty(featureToUpdate.id, 'approved', false);
+
+                if (changeAction.action === 'change_coordinates') {
+                    draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
+                        .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
+                        .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
+                        .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
+                        .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
+                        .setFeatureProperty(featureToUpdate.id, 'approved', false);
+                    featureToUpdate.properties.approved = false
+                }
 
                 if (state.isFeatureSavePending) {
                     await dispatch('features/saveFeature', featureToUpdate, { root: true })
@@ -118,7 +120,10 @@ export const actions = {
         commit('POP_CHANGE')
         const { pendingUndoChange, changes } = state
 
-        if (!pendingUndoChange) return
+        if (!pendingUndoChange) {
+            console.log('Nothing to undo')
+            return
+        }
 
         const draw = rootState.draw
 
@@ -190,9 +195,14 @@ export const actions = {
                 //search the change stack from top to bottom
                 for (let i = changes.length - 1; i >= 0; i--) {
                     if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
-                        draw.delete(pendingUndoChange.features[0].id)
-                        draw.add(changes[i].features[0])
-                        break
+                        if (pendingUndoChange.action === "change_coordinates") {
+                            draw.delete(pendingUndoChange.features[0].id)
+                            draw.add(changes[i].features[0])
+                            break
+                        } else {
+                            draw.delete(pendingUndoChange.features[0].id)
+                            draw.add(pendingUndoChange.features[0])
+                        }
                     }
                 }
 
