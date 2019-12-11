@@ -114,6 +114,7 @@ export const actions = {
                 break;
         }
 
+        changeAction.features[0] = featureToUpdate
         commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
     async undoChange({ commit, state, rootState, dispatch }) {
