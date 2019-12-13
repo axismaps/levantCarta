@@ -52,6 +52,7 @@ export const actions = {
         }
 
         try {
+            console.log('CREATING FEATURE: ', req)
             await axios.post('http://beirut.georio.levantcarta.org/api/v1/make/feature', request)
         } catch (error) {
             console.log("couldn't create feature: ", error.response)

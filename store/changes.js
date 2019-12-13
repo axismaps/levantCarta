@@ -38,6 +38,7 @@ export const actions = {
                 'lastyear': attributeForm.lastyear,
                 'type': attributeForm.type,
                 'tags': attributeForm.tags || '',
+                'approved': attributeForm.approved
             }
         }
 
@@ -198,12 +199,28 @@ export const actions = {
                     if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
                         if (pendingUndoChange.action) {
                             draw.delete(pendingUndoChange.features[0].id)
-                            draw.add(changes[i].features[0])
-                            await dispatch('features/updateFeature', changes[i].features[0], { root: true })
+                            try {
+                                draw.add(changes[i].features[0])
+                                await dispatch('features/updateFeature', changes[i].features[0], { root: true })
+                            } catch (error) {
+                                //if a feature is not created, the behavior is the same as a deletion
+                                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
+                                commit('UPDATE_EDITION_STATUS', false, { root: true })
+                                commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+                                commit('UPDATE_SELECTED_FEATURE', null, { root: true })
+                            }
                         } else {
                             draw.delete(pendingUndoChange.features[0].id)
-                            draw.add(pendingUndoChange.features[0])
-                            await dispatch('features/updateFeature', pendingUndoChange.features[0], { root: true })
+                            try {
+                                draw.add(pendingUndoChange.features[0])
+                                await dispatch('features/updateFeature', pendingUndoChange.features[0], { root: true })
+                            } catch (error) {
+                                //if a feature is not created, the behavior is the same as a deletion
+                                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
+                                commit('UPDATE_EDITION_STATUS', false, { root: true })
+                                commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+                                commit('UPDATE_SELECTED_FEATURE', null, { root: true })
+                            }
                         }
                         break
                     }

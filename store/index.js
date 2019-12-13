@@ -10,7 +10,8 @@ export const state = () => ({
         firstyear: '',
         lastyear: '',
         type: '',
-        tags: ''
+        tags: '',
+        approved: false
     },
     isEditionInProgress: false,
     isAttributeFormValid: false
@@ -38,7 +39,8 @@ export const mutations = {
             firstyear: '',
             lastyear: '',
             type: '',
-            tags: ''
+            tags: '',
+            approved: false,
         }
     },
     UPDATE_EDITION_STATUS(state, status) {
@@ -120,7 +122,8 @@ export const actions = {
                     firstyear: features[0].properties.firstyear,
                     lastyear: features[0].properties.lastyear,
                     type: features[0].properties.type,
-                    tags: features[0].properties.tags
+                    tags: features[0].properties.tags,
+                    approved: features[0].properties.approved
                 }
                 commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
 
