@@ -98,8 +98,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateDrawMode: 'updateDrawMode',
-      updateSelectedFeature: 'updateSelectedFeature',
+  
       applyChange: 'changes/applyChange'
     }),
     mapInit() {
@@ -130,8 +129,8 @@ export default {
       this.$emit('popup-init', popup);
     },
     registerEvents(map) {
-      if (this.isEditionInProgress) return;
       map.on('mousemove', e => {
+        if (this.isEditionInProgress) return;
         const feature = map.queryRenderedFeatures(e.point)[0];
         if (!feature) return;
         if (this.mouseOverFeature == feature.properties.id) {
@@ -194,14 +193,12 @@ export default {
         /**
          * Draw selection change
          */
-        this.updateSelectedFeature(e.features);
         this.$emit('draw-selectionchange', e);
       });
       map.on('draw.modechange', e => {
         /**
          * Draw mode change
          */
-        this.updateDrawMode(e.mode);
         this.$emit('draw-modechange', e);
       });
       map.on('draw.render', e => {

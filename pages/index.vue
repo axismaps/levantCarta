@@ -33,27 +33,21 @@
       @map-init="handleMapInit"
       @map-load="handleMapLoad"
       @map-click="handleMapClick"
+      @draw-selectionchange="handleSelectionchange"
+      @draw-modechange="handleModechange"
       class="map"
     />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import uuidv4 from 'uuid/v4';
 import axios from 'axios';
 import Mapbox from '~/components/Mapbox.vue';
 import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
-
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-
-tippy('#myButton', {
-  followCursor: true,
-  plugins: [followCursor],
-  content: "I'm a Tippy tooltip!"
-});
 
 const API = 'http://beirut.georio.levantcarta.org/api/v1/get/layers';
 export default {
@@ -108,7 +102,9 @@ export default {
       enterDrawMode: 'enterDrawMode',
       setDraw: 'setDraw',
       applyChange: 'changes/applyChange',
-      saveFeature: 'features/saveFeature'
+      saveFeature: 'features/saveFeature',
+      updateSelectedFeature: 'updateSelectedFeature',
+      updateDrawMode: 'updateDrawMode'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -206,6 +202,14 @@ export default {
         };
         this.applyChange(change);
       }
+    },
+    handleSelectionchange(e) {
+      this.updateSelectedFeature(e.features);
+
+      console.log('selection change', e);
+    },
+    handleModechange(e) {
+      this.updateDrawMode(e.mode);
     },
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.geometry;
