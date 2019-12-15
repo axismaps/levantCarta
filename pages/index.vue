@@ -206,7 +206,13 @@ export default {
     handleSelectionchange(e) {
       this.updateSelectedFeature(e.features);
 
-      console.log('selection change', e);
+      if (e.features[0]) {
+        const changeAction = {
+          ...e
+        };
+
+        this.applyChange(e);
+      }
     },
     handleModechange(e) {
       this.updateDrawMode(e.mode);

@@ -46,6 +46,8 @@ export const actions = {
         delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
 
         switch (changeType) {
+            case 'draw.selectionchange':
+                break;
             case 'draw.step':
                 featureToUpdate.id = selectedFeature.id;
                 featureToUpdate = {
@@ -209,6 +211,7 @@ export const actions = {
                                 commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
                                 commit('UPDATE_SELECTED_FEATURE', null, { root: true })
                             }
+                            //TODO: adicionar undo de movimentação.
                         } else {
                             draw.delete(pendingUndoChange.features[0].id)
                             try {
@@ -234,3 +237,4 @@ export const actions = {
         commit('CLEAR_PENDING_CHANGE')
     }
 }
+
