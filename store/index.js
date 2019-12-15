@@ -136,6 +136,7 @@ export const actions = {
             const changeAction = {
                 features: [state.selectedFeature],
                 type: "draw.update",
+                action: "properties.update"
             }
             dispatch('changes/applyChange', changeAction)
             commit('UPDATE_EDITION_STATUS', false)
