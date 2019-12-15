@@ -200,30 +200,9 @@ export const actions = {
                 for (let i = changes.length - 1; i >= 0; i--) {
                     if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
                         if (pendingUndoChange.action) {
-                            draw.delete(pendingUndoChange.features[0].id)
-                            try {
-                                draw.add(changes[i].features[0])
-                                await dispatch('features/updateFeature', changes[i].features[0], { root: true })
-                            } catch (error) {
-                                //if a feature is not created, the behavior is the same as a deletion
-                                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
-                                commit('UPDATE_EDITION_STATUS', false, { root: true })
-                                commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
-                                commit('UPDATE_SELECTED_FEATURE', null, { root: true })
-                            }
-                            //TODO: adicionar undo de movimentação.
+                            replaceFeature(draw, commit, dispatch, pendingUndoChange.features[0].id, changes[i].features[0])
                         } else {
-                            draw.delete(pendingUndoChange.features[0].id)
-                            try {
-                                draw.add(pendingUndoChange.features[0])
-                                await dispatch('features/updateFeature', pendingUndoChange.features[0], { root: true })
-                            } catch (error) {
-                                //if a feature is not created, the behavior is the same as a deletion
-                                commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
-                                commit('UPDATE_EDITION_STATUS', false, { root: true })
-                                commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
-                                commit('UPDATE_SELECTED_FEATURE', null, { root: true })
-                            }
+                            replaceFeature(draw, commit, dispatch, pendingUndoChange.features[0].id, pendingUndoChange.features[0])
                         }
                         break
                     }
@@ -238,3 +217,22 @@ export const actions = {
     }
 }
 
+const replaceFeature = async (draw, commit, dispatch, oldFeatureId, newFeature) => {
+    draw.delete(oldFeatureId)
+
+    try {
+        draw.add(newFeature)
+        commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
+        commit('UPDATE_EDITION_STATUS', false, { root: true })
+        commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+        commit('UPDATE_SELECTED_FEATURE', null, { root: true })
+
+        await dispatch('features/updateFeature', newFeature, { root: true })
+    } catch (error) {
+        //if a feature is not created, the behavior is the same as a deletion
+        commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
+        commit('UPDATE_EDITION_STATUS', false, { root: true })
+        commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+        commit('UPDATE_SELECTED_FEATURE', null, { root: true })
+    }
+}

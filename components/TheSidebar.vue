@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div v-if="drawMode === 'simple_select' && !selectedFeature">
+    <div v-if="!selectedFeature">
       <div class="title">
         <div class="form-input-with-ctrl-btn">
           <el-input placeholder="Search..." v-model="searchbox" class="input-with-select"></el-input>

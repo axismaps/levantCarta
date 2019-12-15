@@ -98,7 +98,6 @@ export default {
   },
   methods: {
     ...mapActions({
-  
       applyChange: 'changes/applyChange'
     }),
     mapInit() {
