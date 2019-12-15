@@ -27,8 +27,8 @@ export const actions = {
                 return layer.layerId === layerId
             })[0]
             commit('UPDATE_CURRENT_FEATURES', featureCollection)
-
             console.log('NO API', featureCollection)
+            loading.close()
         } else {
             const { data } = await axios.get('http://beirut.georio.levantcarta.org/api/v1/get/features/' + layerId);
 
