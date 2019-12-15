@@ -143,7 +143,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .btn-group {
   margin-bottom: 30px;
 }
@@ -155,12 +155,11 @@ export default {
   width: 43px;
 }
 
-.active {
-  button {
-    color: $--color-primary;
-    border-color: $--color-primary;
-  }
+.active button {
+  color: #2e90e6;
+  border-color: #2e90e6;
 }
+
 .btn-group button:not(:last-child) {
   border-bottom: none; /* Prevent double borders */
 }
