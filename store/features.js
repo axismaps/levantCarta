@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Loading } from 'element-ui';
 
 export const state = () => ({
     features: [],
@@ -18,6 +19,7 @@ export const mutations = {
 
 export const actions = {
     async setFeaturesFromLayer({ commit, state, rootState }, layerId) {
+        const loading = Loading.service({ fullscreen: true })
 
         let featureCollection = {}
         if (rootState.layers.loadedItems.includes(layerId)) {
@@ -29,6 +31,8 @@ export const actions = {
             console.log('NO API', featureCollection)
         } else {
             const { data } = await axios.get('http://beirut.georio.levantcarta.org/api/v1/get/features/' + layerId);
+
+            loading.close()
             console.log('API')
             featureCollection = data
             commit('UPDATE_CURRENT_FEATURES', { ...data, layerId })
