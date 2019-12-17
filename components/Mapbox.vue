@@ -128,6 +128,10 @@ export default {
       this.$emit('popup-init', popup);
     },
     registerEvents(map) {
+      /**
+       * Mapbox feature data probe event.
+       * @type {object}
+       */
       map.on('mousemove', e => {
         if (this.isEditionInProgress) return;
         const feature = map.queryRenderedFeatures(e.point)[0];
