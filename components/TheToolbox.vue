@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="el-button-group btn-group">
-      <el-button v-if="showSidebar" @click="toggleSidebar">
+      <el-button v-if="isSidebarOpen" @click="toggleSidebar">
         <collapse-left-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
@@ -79,7 +79,10 @@ export default {
     undoIcon
   },
   props: {
-    showSidebar: {
+    /**
+     * Sidebar toggle state
+     */
+    isSidebarOpen: {
       type: Boolean,
       default: true
     }

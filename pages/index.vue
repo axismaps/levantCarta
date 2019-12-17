@@ -9,7 +9,7 @@
       <the-sidebar v-show="showSidebar" @add-new-feature="handleAddNewFeature" />
       <the-toolbox
         class="toolbox"
-        :showSidebar="showSidebar"
+        :isSidebarOpen="showSidebar"
         @draw-init="handleDrawInit"
         @toggle-sidebar="handleTogglesidebar"
         @add-new-feature="handleAddNewFeature"
