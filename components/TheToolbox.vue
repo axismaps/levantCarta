@@ -13,21 +13,21 @@
       <el-button
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'point'"
-        :disabled="activeLayer.geometry !== 'point'"
+        :disabled="isToolActive"
       >
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'line'"
-        :disabled="activeLayer.geometry !== 'line'"
+        :disabled="isToolActive"
       >
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'polygon'"
-        :disabled="activeLayer.geometry !== 'polygon'"
+        :disabled="isToolActive"
       >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
@@ -159,6 +159,11 @@ export default {
 }
 
 .active button {
+  color: #2e90e6;
+  border-color: #2e90e6;
+}
+.active button:hover {
+  cursor: pointer;
   color: #2e90e6;
   border-color: #2e90e6;
 }
