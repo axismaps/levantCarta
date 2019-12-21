@@ -23,24 +23,13 @@ export const actions = {
     async setFeaturesFromLayer({ commit, state, rootState }, layerId) {
         const loading = Loading.service({ fullscreen: true })
 
-        let featureCollection = {}
-        if (rootState.layers.loadedItems.includes(layerId)) {
-            featureCollection = state.features.filter(layer => {
-                return layer.layerId === layerId
-            })[0]
-            commit('UPDATE_CURRENT_FEATURES', featureCollection)
-            console.log('NO API', featureCollection)
-            loading.close()
-        } else {
-            const { data } = await axios.get(`${API}/get/features/${layerId}`);
+        const { data: featureCollection } = await axios.get(`${API}/get/features/${layerId}`);
 
-            loading.close()
-            console.log('API')
-            featureCollection = data
-            commit('UPDATE_CURRENT_FEATURES', { ...data, layerId })
-            commit('SET_FEATURES', { ...data, layerId })
-            commit('layers/LOAD_LAYER', layerId, { root: true })
-        }
+        loading.close()
+
+        commit('UPDATE_CURRENT_FEATURES', { ...featureCollection, layerId })
+        commit('SET_FEATURES', { ...featureCollection, layerId })
+        commit('layers/LOAD_LAYER', layerId, { root: true })
 
         rootState.draw.deleteAll()
         rootState.draw.add(featureCollection)
