@@ -20,7 +20,8 @@ module.exports = {
    * 
   */
   env: {
-    mapboxToken: process.env.MAPBOX_TOKEN || 'variável nao encontrada'
+    mapboxToken: process.env.MAPBOX_TOKEN,
+    API: process.env.API
   },
   /*
   ** Customize the progress-bar color
