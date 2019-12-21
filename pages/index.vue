@@ -19,7 +19,8 @@
       id="map"
       v-if="draw"
       :map-options="{
-        style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
+        style: 'mapbox://styles/mapbox/satellite-v9',
+        accessToken: mapboxToken, 
         center: [35.50411547, 33.89508665],
         zoom: 14,
         }"
@@ -50,7 +51,6 @@ import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 const API = process.env.API;
-
 
 export default {
   components: {
