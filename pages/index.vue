@@ -49,7 +49,7 @@ import TheSidebar from '~/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
-const API = 'http://beirut.georio.levantcarta.org/api/v1/get/layers';
+const API = process.env.API;
 
 
 export default {
@@ -72,7 +72,7 @@ export default {
   async fetch(context) {
     const {
       data: { response: layers }
-    } = await axios.get(API);
+    } = await axios.get(`${API}/get/layers`);
 
     const { data: overlays } = await axios.get('/data/overlays.json');
     context.store.dispatch('overlays/setItems', overlays);

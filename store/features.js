@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Loading } from 'element-ui';
 
+const API = process.env.API
+
 export const state = () => ({
     features: [],
     isLoading: false,
@@ -30,7 +32,7 @@ export const actions = {
             console.log('NO API', featureCollection)
             loading.close()
         } else {
-            const { data } = await axios.get('http://beirut.georio.levantcarta.org/api/v1/get/features/' + layerId);
+            const { data } = await axios.get(`${API}/get/features/${layerId}`);
 
             loading.close()
             console.log('API')
@@ -55,9 +57,9 @@ export const actions = {
             }
         }
 
+        console.log('CREATING FEATURE: ', request)
         try {
-            console.log('CREATING FEATURE: ', req)
-            await axios.post('http://beirut.georio.levantcarta.org/api/v1/make/feature', request)
+            await axios.post(`${API}/make/feature`, request)
         } catch (error) {
             console.log("couldn't create feature: ", error.response)
         }
@@ -66,15 +68,14 @@ export const actions = {
         const layerId = rootState.layers.currentItem.id
         const featureId = feature.id
 
-        const req = {
+        const request = {
             ...feature.properties,
             geom: feature.geometry
         }
 
+        console.log('SAVING FEATURE: ', request)
         try {
-            // console.log(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`)
-            console.log('SAVING FEATURE: ', req)
-            await axios.post(`http://beirut.georio.levantcarta.org/api/v1/update/feature/${layerId}/${featureId}`, req)
+            await axios.post(`${API}/update/feature/${layerId}/${featureId}`, request)
         } catch (error) {
             console.log("couldn't update feature: ", error.response)
         }
