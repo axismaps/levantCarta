@@ -16,6 +16,12 @@ module.exports = {
       { rel: 'stylesheet', href: 'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css', type: 'text/css' }
     ]
   },
+  /** Env variables. See .env
+   * 
+  */
+  env: {
+    mapboxToken: process.env.MAPBOX_TOKEN || 'variável nao encontrada'
+  },
   /*
   ** Customize the progress-bar color
   */

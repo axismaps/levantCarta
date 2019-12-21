@@ -50,6 +50,8 @@ import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 const API = 'http://beirut.georio.levantcarta.org/api/v1/get/layers';
+
+
 export default {
   components: {
     Mapbox,
@@ -93,7 +95,10 @@ export default {
       isEditionInProgress: 'isEditionInProgress',
       drawMode: 'drawMode',
       selectedFeature: 'selectedFeature'
-    })
+    }),
+    mapboxToken() {
+      return process.env.mapboxToken;
+    }
   },
   methods: {
     ...mapActions({
