@@ -179,12 +179,15 @@ export default {
         opacity / 100
       );
     },
+    /** 
+     TODO:
+    This handles 'in progress state' and it needs to be simplified. In progress drawing should be handled somewhere else, an option would be
+    extend the Mapbox component API to emmit such events...
+    */
     handleMapClick(map, e) {
-      if (this.tippy[0]) {
-        this.tippy[0].destroy();
-        this.tippy = [];
-      }
       if (this.drawMode === 'draw_polygon') {
+        this.createTooltip();
+
         const change = {
           type: 'draw.step',
           features: [
@@ -225,24 +228,33 @@ export default {
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.geometry;
 
-      this.tippy = tippy('#map', {
-        followCursor: true,
-        plugins: [followCursor],
-        content: 'click to start drawing'
-      });
-
       switch (activeLayerType) {
         case 'point':
+          this.createTooltip('Click to add point');
           this.enterDrawMode('draw_point');
           break;
         case 'line':
+          this.createTooltip('Click to start drawing line');
           this.enterDrawMode('draw_line_string');
           break;
         case 'polygon':
+          this.createTooltip('Click to start drawing polygon');
           this.enterDrawMode('draw_polygon');
           break;
         default:
           break;
+      }
+    },
+    createTooltip(content) {
+      if (this.tippy[0]) {
+        this.tippy[0].destroy();
+        this.tippy = [];
+      } else {
+        this.tippy = tippy('#map', {
+          followCursor: true,
+          plugins: [followCursor],
+          content: content
+        });
       }
     }
   }
