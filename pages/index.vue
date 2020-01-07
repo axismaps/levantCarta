@@ -1,4 +1,4 @@
-]<template>
+<template>
   <div class="container">
     <the-header
       class="header"
@@ -186,8 +186,7 @@ export default {
     */
     handleMapClick(map, e) {
       if (this.drawMode === 'draw_polygon') {
-        this.createTooltip();
-
+        this.createTooltip('Click to continue drawing polygon');
         const change = {
           type: 'draw.step',
           features: [
@@ -199,6 +198,7 @@ export default {
         };
         this.applyChange(change);
       } else if (this.drawMode === 'draw_line_string') {
+        this.createTooltip('Click to continue drawing line');
         const change = {
           type: 'draw.step',
           features: [
@@ -249,13 +249,13 @@ export default {
       if (this.tippy[0]) {
         this.tippy[0].destroy();
         this.tippy = [];
-      } else {
-        this.tippy = tippy('#map', {
-          followCursor: true,
-          plugins: [followCursor],
-          content: content
-        });
       }
+      this.tippy = tippy('#map', {
+        trigger: 'mouseenter focus click',
+        followCursor: true,
+        plugins: [followCursor],
+        content: content
+      });
     }
   }
 };
