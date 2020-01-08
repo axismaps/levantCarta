@@ -130,10 +130,21 @@ export default {
        * @type {object}
        */
       map.on('mousemove', e => {
-        if (this.isEditionInProgress) return;
+        // if (this.isEditionInProgress) return;
         const feature = map.queryRenderedFeatures(e.point)[0];
         if (!feature) return;
-        if (this.mouseOverFeature == feature.properties.id) {
+
+        if (
+          this.mouseOverFeature === feature.properties.id ||
+          this.mouseOverFeature === feature.properties.parent
+        ) {
+          if (
+            feature.geometry.type === 'Point' &&
+            feature.properties.meta === 'vertex'
+          ) {
+            this.$emit('draw-mouseoverpoint', feature.geometry);
+          }
+
           if (feature.properties.id) {
             const coordinates = e.lngLat;
             this.$emit('create-popup', {
@@ -144,7 +155,8 @@ export default {
             this.$emit('delete-popup');
           }
         }
-        this.mouseOverFeature = feature.properties.id;
+        this.mouseOverFeature =
+          feature.properties.id || feature.properties.parent;
       });
 
       map.on('load', () => {
