@@ -39,6 +39,7 @@
       @draw-create="handleDrawCreate"
       @draw-update="handleDrawUpdate"
       @draw-delete="handleDrawDelete"
+      @draw-mouseoverpoint="handleMouseOverPoint"
       class="map"
     />
   </div>
@@ -189,7 +190,7 @@ export default {
     */
     handleMapClick(map, e) {
       if (this.drawMode === 'draw_polygon') {
-        this.createTooltip('Click to continue drawing polygon');
+        this.createTooltip({ content: 'Click to continue drawing polygon' });
         const change = {
           type: 'draw.step',
           features: [
@@ -233,15 +234,15 @@ export default {
 
       switch (activeLayerType) {
         case 'point':
-          this.createTooltip('Click to add point');
+          this.createTooltip({ content: 'Click to add point' });
           this.enterDrawMode('draw_point');
           break;
         case 'line':
-          this.createTooltip('Click to start drawing line');
+          this.createTooltip({ content: 'Click to start drawing line' });
           this.enterDrawMode('draw_line_string');
           break;
         case 'polygon':
-          this.createTooltip('Click to start drawing polygon');
+          this.createTooltip({ content: 'Click to start drawing polygon' });
           this.enterDrawMode('draw_polygon');
           break;
         default:
@@ -261,16 +262,23 @@ export default {
     handleDrawDelete(e) {
       this.applyChange(e);
     },
-    createTooltip(content) {
+    handleMouseOverPoint(point) {
+      if (this.tippy[0]) {
+        this.createTooltip({
+          content: 'Click again to finish drawing'
+        });
+      }
+    },
+    createTooltip(options) {
       if (this.tippy[0]) {
         this.tippy[0].destroy();
         this.tippy = [];
       }
       this.tippy = tippy('#map', {
+        ...options,
         trigger: 'mouseenter focus click',
         followCursor: true,
-        plugins: [followCursor],
-        content: content
+        plugins: [followCursor]
       });
     }
   }
