@@ -36,6 +36,9 @@
       @map-click="handleMapClick"
       @draw-selectionchange="handleSelectionchange"
       @draw-modechange="handleModechange"
+      @draw-create="handleDrawCreate"
+      @draw-update="handleDrawUpdate"
+      @draw-delete="handleDrawDelete"
       class="map"
     />
   </div>
@@ -244,6 +247,19 @@ export default {
         default:
           break;
       }
+    },
+    handleDrawCreate(e) {
+      if (this.tippy[0]) {
+        this.tippy[0].destroy();
+        this.tippy = [];
+      }
+      this.applyChange(e);
+    },
+    handleDrawUpdate(e) {
+      this.applyChange(e);
+    },
+    handleDrawDelete(e) {
+      this.applyChange(e);
     },
     createTooltip(content) {
       if (this.tippy[0]) {

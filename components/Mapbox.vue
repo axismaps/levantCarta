@@ -97,9 +97,6 @@ export default {
     })
   },
   methods: {
-    ...mapActions({
-      applyChange: 'changes/applyChange'
-    }),
     mapInit() {
       //Mapbox GL access token
       mapboxgl.accessToken = this.accessToken;
@@ -164,21 +161,18 @@ export default {
          * Draw feature create
          */
         this.$emit('draw-create', e);
-        this.applyChange(e);
       });
       map.on('draw.update', e => {
         /**
          * Draw feature update
          */
         this.$emit('draw-update', e);
-        this.applyChange(e);
       });
       map.on('draw.delete', e => {
         /**
          * Draw feature delete
          */
         this.$emit('draw-delete', e);
-        this.applyChange(e);
       });
       map.on('draw.combine', e => {
         /**
