@@ -1,7 +1,7 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M5 6V19C5 19.5523 5.44772 20 6 20H18C18.5523 20 19 19.5523 19 19V6" stroke="black" stroke-width="1.5"/>
-<path d="M17 7V4C17 3.44772 16.5523 3 16 3H8C7.44772 3 7 3.44772 7 4V7" stroke="black" stroke-width="1.5"/>
-<line x1="9.75" y1="8" x2="9.75" y2="18" stroke="black" stroke-width="1.5"/>
-<path d="M14 8V18" stroke="black" stroke-width="1.5"/>
-<line x1="2" y1="6.25" x2="22" y2="6.25" stroke="black" stroke-width="1.5"/>
+<path d="M5 6V19C5 19.5523 5.44772 20 6 20H18C18.5523 20 19 19.5523 19 19V6" stroke="currentColor" stroke-width="1.5"/>
+<path d="M17 7V4C17 3.44772 16.5523 3 16 3H8C7.44772 3 7 3.44772 7 4V7" stroke="currentColor" stroke-width="1.5"/>
+<line x1="9.75" y1="8" x2="9.75" y2="18" stroke="currentColor" stroke-width="1.5"/>
+<path d="M14 8V18" stroke="currentColor" stroke-width="1.5"/>
+<line x1="2" y1="6.25" x2="22" y2="6.25" stroke="currentColor" stroke-width="1.5"/>
 </svg>
