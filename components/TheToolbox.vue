@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="el-button-group btn-group">
+    <div id="toggle-sidebar-control" class="el-button-group btn-group">
       <el-button v-if="isSidebarOpen" @click="toggleSidebar">
         <collapse-left-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
@@ -9,8 +9,14 @@
         <collapse-rigth-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
-    <div class="el-button-group btn-group" :class="{ active: isToolActive }">
+
+    <div
+      id="draw-feature-control"
+      class="el-button-group btn-group"
+      :class="{ active: isToolActive }"
+    >
       <el-button
+        id="add-point-btn"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'point'"
         :disabled="isToolActive"
@@ -18,6 +24,7 @@
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
+        id="add-line-btn"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'line'"
         :disabled="isToolActive"
@@ -25,17 +32,42 @@
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
+        id="add-polygon-btn"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'polygon'"
         :disabled="isToolActive"
       >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
+      <el-button id="add-geo-btn" @click="addNewFeature" :disabled="isToolActive">
+        <add-geo-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
+      <el-button id="sub-geo-btn" @click="addNewFeature" :disabled="isToolActive">
+        <sub-geo-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
+      <el-button id="snap-btn" @click="addNewFeature" :disabled="isToolActive">
+        <snap-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
     </div>
 
-    <div class="el-button-group btn-group">
-      <el-button slot="reference" size="mini" @click="undoDrawAction" icon="el-icon-refresh-left" />
+    <div id="splip/merge-controls" class="el-button-group btn-group">
+      <el-button id="merge-btn" @click="addNewFeature" :disabled="isToolActive">
+        <compress-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
 
+      <el-button id="split-btn" @click="addNewFeature" :disabled="isToolActive">
+        <expand-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
+    </div>
+
+    <div id="clone-control" class="el-button-group btn-group">
+      <el-button id="clone-btn" @click="addNewFeature" :disabled="isToolActive">
+        <clone-icon viewBox="0 0 22 22" class="img-responsive" />
+      </el-button>
+    </div>
+
+    <div id="undo/delete-control" class="el-button-group btn-group">
+      <el-button slot="reference" size="mini" @click="undoDrawAction" icon="el-icon-refresh-left" />
       <el-popover placement="right" width="190" v-model="confirmDeleteVisibily">
         <p>
           Are you sure to delete
@@ -66,6 +98,12 @@ import collapseLeftIcon from '@/assets/icons/collapseLeftIcon.svg';
 import collapseRigthIcon from '@/assets/icons/collapseRigthIcon.svg';
 import trashIcon from '@/assets/icons/trashIcon.svg';
 import undoIcon from '@/assets/icons/undoIcon.svg';
+import addGeoIcon from '@/assets/icons/addGeoIcon.svg';
+import subGeoIcon from '@/assets/icons/subGeoIcon.svg';
+import snapIcon from '@/assets/icons/snapIcon.svg';
+import compressIcon from '@/assets/icons/compressIcon.svg';
+import expandIcon from '@/assets/icons/expandIcon.svg';
+import cloneIcon from '@/assets/icons/cloneIcon.svg';
 
 export default {
   components: {
@@ -76,7 +114,13 @@ export default {
     collapseLeftIcon,
     collapseRigthIcon,
     trashIcon,
-    undoIcon
+    undoIcon,
+    addGeoIcon,
+    subGeoIcon,
+    snapIcon,
+    compressIcon,
+    expandIcon,
+    cloneIcon
   },
   props: {
     /**
