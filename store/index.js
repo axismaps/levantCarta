@@ -14,7 +14,9 @@ export const state = () => ({
         approved: false
     },
     isEditionInProgress: false,
-    isAttributeFormValid: false
+    isAttributeFormValid: false,
+    isMultiselect: false,
+    multiselectFeatures: []
 })
 
 export const mutations = {
@@ -51,6 +53,14 @@ export const mutations = {
     UPDATE_ATTRIBUTE_FORM_VALIDITY(state, status) {
         console.log('UPDATE_ATTRIBUTE_FORM_VALIDITY', status)
         state.isAttributeFormValid = status
+    },
+    UPDATE_MULTISELECT_STATUS(state, status) {
+        console.log('UPDATE_MULTISELECT_STATUS', status)
+        state.isMultiselect = status
+    },
+    UPDATE_MULTISELECT_FEATURES(state, features) {
+        console.log('UPDATE_MULTISELECT_FEATURES', features)
+        state.multiselectFeatures = features
     }
 
 }
@@ -129,7 +139,16 @@ export const actions = {
         console.log('UPDATE_SELECTED_FEATURE', features[0])
         console.log('attribute form', state.attributeForm)
 
-        if (!state.isEditionInProgress) {
+        if (features.length > 1) {
+            commit('UPDATE_MULTISELECT_STATUS', true)
+            commit('UPDATE_MULTISELECT_FEATURES', features)
+            commit('UPDATE_SELECTED_FEATURE', features[0])
+
+        } else if (!state.isEditionInProgress) {
+
+            commit('UPDATE_MULTISELECT_STATUS', false)
+            commit('UPDATE_MULTISELECT_FEATURES', [])
+
             if (features[0]) {
                 commit('UPDATE_SELECTED_FEATURE', features[0])
                 commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', true)
@@ -195,5 +214,11 @@ export const getters = {
     },
     isAttributeFormValid(state) {
         return state.isAttributeFormValid
+    },
+    isMultiselect(state) {
+        return state.isMultiselect
+    },
+    multiselectFeatures(state) {
+        return state.multiselectFeatures
     }
 }

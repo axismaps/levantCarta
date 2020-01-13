@@ -17,6 +17,15 @@
       </div>
     </div>
 
+    <div v-else-if="isMultiselect">
+      <!-- <pre>{{multiselectFeatures}}</pre> -->
+      <el-card v-for="feature in multiselectFeatures" :key="feature.id" shadow="never">
+        Name:{{ feature.properties.name }}
+        <br />
+        Mapped: {{ feature.properties.firstyear }} - {{ feature.properties.lastyear }}
+      </el-card>
+    </div>
+
     <div v-else>
       <el-row type="flex" justify="end">
         <el-col :span="2" :offset="22" style="text-align: end">
@@ -178,7 +187,9 @@ export default {
       selectedFeature: 'selectedFeature',
       currentLayer: 'layers/currentItem',
       isAttributeFormValid: 'isAttributeFormValid',
-      isEditionInProgress: 'isEditionInProgress'
+      isEditionInProgress: 'isEditionInProgress',
+      isMultiselect: 'isMultiselect',
+      multiselectFeatures: 'multiselectFeatures'
     }),
     hasChanged() {
       if (!this.selectedFeature)
@@ -269,6 +280,9 @@ export default {
   box-shadow: 0px 1px 3px rgb(206, 206, 206);
   overflow-y: auto;
   padding: 20px;
+}
+.el-card {
+  margin-bottom: 10px;
 }
 .title {
   position: relative;
