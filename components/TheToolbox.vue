@@ -39,29 +39,29 @@
       >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button id="add-geo-btn" @click="addNewFeature" :disabled="isToolActive">
+      <el-button id="add-geo-btn" @click="addGeometry" :disabled="isToolActive">
         <add-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button id="sub-geo-btn" @click="addNewFeature" :disabled="isToolActive">
+      <el-button id="sub-geo-btn" @click="subtractGeometry" :disabled="isToolActive">
         <sub-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button id="snap-btn" @click="addNewFeature" :disabled="isToolActive">
+      <el-button id="snap-btn" @click="toggleSnap" :disabled="isToolActive">
         <snap-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
 
     <div id="splip/merge-controls" class="el-button-group btn-group">
-      <el-button id="merge-btn" @click="addNewFeature" :disabled="isToolActive">
+      <el-button id="merge-btn" @click="mergeFeature" :disabled="isToolActive">
         <compress-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
-      <el-button id="split-btn" @click="addNewFeature" :disabled="isToolActive">
+      <el-button id="split-btn" @click="splitFeature" :disabled="isToolActive">
         <expand-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
 
     <div id="clone-control" class="el-button-group btn-group">
-      <el-button id="clone-btn" @click="addNewFeature" :disabled="isToolActive">
+      <el-button id="clone-btn" @click="cloneFeature" :disabled="isToolActive">
         <clone-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
@@ -181,6 +181,30 @@ export default {
     },
     addNewFeature() {
       this.$emit('add-new-feature');
+    },
+    addGeometry() {
+      console.log('add-geometry');
+      this.$emit('add-geometry');
+    },
+    subtractGeometry() {
+      console.log('subtract-geometry');
+      this.$emit('subtract-geometry');
+    },
+    toggleSnap() {
+      console.log('toggle-snap');
+      this.$emit('toggle-snap');
+    },
+    mergeFeature() {
+      console.log('merge-feature');
+      this.$emit('merge-feature');
+    },
+    splitFeature() {
+      console.log('split-feature');
+      this.$emit('split-feature');
+    },
+    cloneFeature() {
+      console.log('clone-feature');
+      this.$emit('clone-feature');
     },
     trash() {
       this.confirmDeleteVisibily = false;
