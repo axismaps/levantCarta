@@ -61,11 +61,10 @@
     </div>
 
     <div id="clone-control" class="el-button-group btn-group">
-      <el-button id="clone-btn" @click="cloneFeature" :disabled="isToolActive">
+      <el-button id="clone-btn" @click="cloneFeature" :disabled="!shouldCloneFeatureBeActive">
         <clone-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
-
     <div id="undo/delete-control" class="el-button-group btn-group">
       <el-button slot="reference" size="mini" @click="undoDrawAction" icon="el-icon-refresh-left" />
       <el-popover placement="right" width="190" v-model="confirmDeleteVisibily">
@@ -159,6 +158,11 @@ export default {
         this.drawMode === 'draw_point' ||
         this.drawMode === 'draw_polygon'
       ) {
+        return true;
+      }
+    },
+    shouldCloneFeatureBeActive() {
+      if (this.selectedFeature) {
         return true;
       }
     }
