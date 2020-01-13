@@ -13,6 +13,7 @@
         @draw-init="handleDrawInit"
         @toggle-sidebar="handleTogglesidebar"
         @add-new-feature="handleAddNewFeature"
+        @clone-feature="handleCloneFeature"
       />
     </div>
     <mapbox
@@ -113,7 +114,8 @@ export default {
       applyChange: 'changes/applyChange',
       saveFeature: 'features/saveFeature',
       updateSelectedFeature: 'updateSelectedFeature',
-      updateDrawMode: 'updateDrawMode'
+      updateDrawMode: 'updateDrawMode',
+      cloneFeature: 'cloneFeature'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -268,6 +270,9 @@ export default {
           content: 'Click again to finish drawing'
         });
       }
+    },
+    handleCloneFeature() {
+      this.cloneFeature(this.selectedFeature);
     },
     createTooltip(options) {
       if (this.tippy[0]) {

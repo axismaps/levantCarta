@@ -85,7 +85,7 @@ export const actions = {
                     commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', false)
                     commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true })
                     commit('UPDATE_EDITION_STATUS', false, { root: true })
-                    commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
+                    // commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
                 }
                 break;
             case 'draw.update':

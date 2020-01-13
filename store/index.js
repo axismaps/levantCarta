@@ -101,6 +101,22 @@ export const actions = {
         }
 
     },
+    cloneFeature({ commit, dispatch }, feature) {
+
+        const newFeature = { ...feature, 'id': uuidv4() }
+
+        commit('UPDATE_SELECTED_FEATURE', newFeature);
+        commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', true)
+
+        const changeAction = {
+            features: [newFeature],
+            type: "draw.create",
+            action: "feature.clone"
+        }
+
+        dispatch('changes/applyChange', changeAction)
+
+    },
     updateAttributeForm({ commit }, attributeForm) {
         commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
         commit('UPDATE_EDITION_STATUS', true)
