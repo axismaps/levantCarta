@@ -1,5 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import union from '@turf/union'
+import { featureCollection } from '@turf/helpers'
+import combine from '@turf/combine'
 
 export const state = () => ({
     map: null,
@@ -129,8 +131,7 @@ export const actions = {
 
     },
     mergeSelectedFeatures({ dispatch, state }) {
-        // console.log('a store vai dar um merge bolado fdp')
-        // console.log(state.multiselectedFeatures)
+
         if (state.multiselectedFeatures.length === 0) return;
 
         const baseFeature = this.state.selectedFeature
@@ -151,7 +152,9 @@ export const actions = {
 
                 break;
             case "MultiLineString":
-                console.log('merge a multline, mulek')
+
+                newGeometry = combine(featureCollection([baseFeature, ...state.multiselectedFeatures])).features[0].geometry
+
                 break
             default:
                 break;
@@ -162,7 +165,6 @@ export const actions = {
             properties: baseFeature.properties,
             "type": "Feature",
             geometry: newGeometry
-
         }
 
         const changeAction = {
@@ -170,6 +172,7 @@ export const actions = {
             type: "draw.update",
             action: "features.merge"
         }
+
         dispatch('changes/applyChange', changeAction)
 
     },
