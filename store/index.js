@@ -138,7 +138,7 @@ export const actions = {
         let newGeometry = {}
 
         switch (baseFeature.geometry.type) {
-            case "MultiPolygon":
+            case "Polygon", "MultiPolygon":
 
                 let polygonsToUnion = [baseFeature, ...state.multiselectedFeatures]
 
@@ -151,11 +151,15 @@ export const actions = {
                 newGeometry = polygonsToUnion[0].geometry
 
                 break;
-            case "MultiLineString":
+            case "LineString", "MultiLineString":
 
                 newGeometry = combine(featureCollection([baseFeature, ...state.multiselectedFeatures])).features[0].geometry
 
                 break
+            case "Point", "MultiPoint":
+                newGeometry = combine(featureCollection([baseFeature, ...state.multiselectedFeatures])).features[0].geometry
+
+                break;
             default:
                 break;
         }
