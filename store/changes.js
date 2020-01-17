@@ -90,14 +90,25 @@ export const actions = {
                 break;
             case 'draw.update':
 
-                if (changeAction.action) {
-                    draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
-                        .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
-                        .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
-                        .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
-                        .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
-                        .setFeatureProperty(featureToUpdate.id, 'approved', false);
-                    featureToUpdate.properties.approved = false
+                switch (changeAction.action) {
+                    case "properties.update":
+                        draw.setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
+                            .setFeatureProperty(featureToUpdate.id, 'firstyear', attributeForm.firstyear)
+                            .setFeatureProperty(featureToUpdate.id, 'lastyear', attributeForm.lastyear)
+                            .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
+                            .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
+                            .setFeatureProperty(featureToUpdate.id, 'approved', false);
+                        featureToUpdate.properties.approved = false
+                        break;
+                    case "features.merge":
+                        /** TODO: 
+                         * the features used to generate de new merged feature need to be deleted here, 
+                         */
+
+                        draw.add(featureToUpdate)
+                        break
+                    default:
+                        break;
                 }
 
                 if (state.isFeatureSavePending) {

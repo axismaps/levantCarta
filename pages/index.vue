@@ -14,6 +14,7 @@
         @toggle-sidebar="handleTogglesidebar"
         @add-new-feature="handleAddNewFeature"
         @clone-feature="handleCloneFeature"
+        @merge-selected-features="handleMergeSelectedFeatures"
       />
     </div>
     <mapbox
@@ -115,7 +116,8 @@ export default {
       saveFeature: 'features/saveFeature',
       updateSelectedFeature: 'updateSelectedFeature',
       updateDrawMode: 'updateDrawMode',
-      cloneFeature: 'cloneFeature'
+      cloneFeature: 'cloneFeature',
+      mergeSelectedFeatures: 'mergeSelectedFeatures'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -273,6 +275,9 @@ export default {
     },
     handleCloneFeature() {
       this.cloneFeature(this.selectedFeature);
+    },
+    handleMergeSelectedFeatures() {
+      this.mergeSelectedFeatures();
     },
     createTooltip(options) {
       if (this.tippy[0]) {

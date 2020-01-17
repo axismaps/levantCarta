@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+import union from '@turf/union'
 
 export const state = () => ({
     map: null,
@@ -16,7 +17,7 @@ export const state = () => ({
     isEditionInProgress: false,
     isAttributeFormValid: false,
     isMultiselect: false,
-    multiselectFeatures: []
+    multiselectedFeatures: []
 })
 
 export const mutations = {
@@ -60,7 +61,7 @@ export const mutations = {
     },
     UPDATE_MULTISELECT_FEATURES(state, features) {
         console.log('UPDATE_MULTISELECT_FEATURES', features)
-        state.multiselectFeatures = features
+        state.multiselectedFeatures = features
     }
 
 }
@@ -127,6 +128,52 @@ export const actions = {
         dispatch('changes/applyChange', changeAction)
 
     },
+    mergeSelectedFeatures({ dispatch, state }) {
+        // console.log('a store vai dar um merge bolado fdp')
+        // console.log(state.multiselectedFeatures)
+        if (state.multiselectedFeatures.length === 0) return;
+
+        const baseFeature = this.state.selectedFeature
+        let newGeometry = {}
+
+        switch (baseFeature.geometry.type) {
+            case "MultiPolygon":
+
+                let polygonsToUnion = [baseFeature, ...state.multiselectedFeatures]
+
+                while (polygonsToUnion.length > 1) {
+                    const args = polygonsToUnion.splice(0, 2)
+                    polygonsToUnion.unshift(union(...args))
+
+                }
+
+                newGeometry = polygonsToUnion[0].geometry
+
+                break;
+            case "MultiLineString":
+                console.log('merge a multline, mulek')
+                break
+            default:
+                break;
+        }
+
+        const featureToUpdate = {
+            id: baseFeature.id,
+            properties: baseFeature.properties,
+            "type": "Feature",
+            geometry: newGeometry
+
+        }
+
+        const changeAction = {
+            features: [featureToUpdate],
+            type: "draw.update",
+            action: "features.merge"
+        }
+        dispatch('changes/applyChange', changeAction)
+
+    },
+
     updateAttributeForm({ commit }, attributeForm) {
         commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
         commit('UPDATE_EDITION_STATUS', true)
@@ -218,7 +265,7 @@ export const getters = {
     isMultiselect(state) {
         return state.isMultiselect
     },
-    multiselectFeatures(state) {
-        return state.multiselectFeatures
+    multiselectedFeatures(state) {
+        return state.multiselectedFeatures
     }
 }

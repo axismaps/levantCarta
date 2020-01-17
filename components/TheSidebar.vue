@@ -18,8 +18,8 @@
     </div>
 
     <div v-else-if="isMultiselect">
-      <!-- <pre>{{multiselectFeatures}}</pre> -->
-      <el-card v-for="feature in multiselectFeatures" :key="feature.id" shadow="never">
+      <!-- <pre>{{multiselectedFeatures}}</pre> -->
+      <el-card v-for="feature in multiselectedFeatures" :key="feature.id" shadow="never">
         Name:{{ feature.properties.name }}
         <br />
         Mapped: {{ feature.properties.firstyear }} - {{ feature.properties.lastyear }}
@@ -189,7 +189,7 @@ export default {
       isAttributeFormValid: 'isAttributeFormValid',
       isEditionInProgress: 'isEditionInProgress',
       isMultiselect: 'isMultiselect',
-      multiselectFeatures: 'multiselectFeatures'
+      multiselectedFeatures: 'multiselectedFeatures'
     }),
     hasChanged() {
       if (!this.selectedFeature)

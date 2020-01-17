@@ -51,7 +51,7 @@
     </div>
 
     <div id="splip/merge-controls" class="el-button-group btn-group">
-      <el-button id="merge-btn" @click="mergeFeature" :disabled="isToolActive">
+      <el-button id="merge-btn" @click="mergeSelectedFeatures" :disabled="isToolActive">
         <compress-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
@@ -198,9 +198,9 @@ export default {
       console.log('toggle-snap');
       this.$emit('toggle-snap');
     },
-    mergeFeature() {
-      console.log('merge-feature');
-      this.$emit('merge-feature');
+    mergeSelectedFeatures() {
+      console.log('merge-selected-features');
+      this.$emit('merge-selected-features');
     },
     splitFeature() {
       console.log('split-feature');
