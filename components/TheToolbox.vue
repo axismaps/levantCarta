@@ -10,35 +10,32 @@
       </el-button>
     </div>
 
-    <div
-      id="draw-feature-control"
-      class="el-button-group btn-group"
-      :class="{ active: isToolActive }"
-    >
+    <div id="draw-feature-control" class="el-button-group btn-group">
       <el-button
         id="add-point-btn"
+        :class="{ active: isToolActive }"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'point'"
-        :disabled="isToolActive"
       >
         <point-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
         id="add-line-btn"
+        :class="{ active: isToolActive }"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'line'"
-        :disabled="isToolActive"
       >
         <line-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-button
         id="add-polygon-btn"
+        :class="{ active: isToolActive }"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'polygon'"
-        :disabled="isToolActive"
       >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
+
       <el-button id="add-geo-btn" @click="addGeometry" :disabled="isToolActive">
         <add-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
@@ -151,19 +148,21 @@ export default {
       activeLayer: 'layers/currentItem',
       selectedFeature: 'selectedFeature',
       drawMode: 'drawMode',
-      isMultiselect: 'isMultiselect'
+      isMultiselect: 'isMultiselect',
+      isEditionInProgress: 'isEditionInProgress'
     }),
     isToolActive() {
       if (
         this.drawMode === 'draw_line_string' ||
         this.drawMode === 'draw_point' ||
-        this.drawMode === 'draw_polygon'
+        this.drawMode === 'draw_polygon' ||
+        this.isEditionInProgress
       ) {
         return true;
       }
     },
     shouldCloneFeatureBeActive() {
-      if (this.selectedFeature) {
+      if (this.selectedFeature && !this.isEditionInProgress) {
         return true;
       }
     }
@@ -231,14 +230,12 @@ export default {
   width: 43px;
 }
 
-.active button {
+.active {
   color: #2e90e6;
-  border-color: #2e90e6;
+  pointer-events: none;
 }
-.active button:hover {
+.active:hover {
   cursor: pointer;
-  color: #2e90e6;
-  border-color: #2e90e6;
 }
 
 .btn-group button:not(:last-child) {
