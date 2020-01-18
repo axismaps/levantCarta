@@ -51,7 +51,7 @@
     </div>
 
     <div id="splip/merge-controls" class="el-button-group btn-group">
-      <el-button id="merge-btn" @click="mergeSelectedFeatures" :disabled="isToolActive">
+      <el-button id="merge-btn" @click="mergeSelectedFeatures" :disabled="!isMultiselect">
         <compress-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
@@ -150,7 +150,8 @@ export default {
       layers: 'layers/items',
       activeLayer: 'layers/currentItem',
       selectedFeature: 'selectedFeature',
-      drawMode: 'drawMode'
+      drawMode: 'drawMode',
+      isMultiselect: 'isMultiselect'
     }),
     isToolActive() {
       if (
