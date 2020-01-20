@@ -15,6 +15,7 @@
         @add-new-feature="handleAddNewFeature"
         @clone-feature="handleCloneFeature"
         @merge-selected-features="handleMergeSelectedFeatures"
+        @add-geometry-to-feature="handleAddGeometryToFeature"
       />
     </div>
     <mapbox
@@ -109,7 +110,6 @@ export default {
   methods: {
     ...mapActions({
       setActiveOverlay: 'overlays/setCurrentItem',
-      updateDrawMode: 'updateDrawMode',
       enterDrawMode: 'enterDrawMode',
       setDraw: 'setDraw',
       applyChange: 'changes/applyChange',
@@ -117,7 +117,8 @@ export default {
       updateSelectedFeature: 'updateSelectedFeature',
       updateDrawMode: 'updateDrawMode',
       cloneFeature: 'cloneFeature',
-      mergeSelectedFeatures: 'mergeSelectedFeatures'
+      mergeSelectedFeatures: 'mergeSelectedFeatures',
+      addGeometryToFeature: 'addGeometryToFeature'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -155,7 +156,7 @@ export default {
       this.map = map;
     },
     handleMapLoad() {
-      this.loadOverlays(this.map);
+      // this.loadOverlays(this.map);
       this.map.addControl(this.draw);
     },
     handleDrawInit(draw) {
@@ -231,7 +232,13 @@ export default {
       }
     },
     handleModechange(e) {
-      this.updateDrawMode(e.mode);
+      /**
+       *TODO
+       *  Mudar altomáticamente de modo é necessário? Avaliar
+       *
+       *
+       */
+      // this.updateDrawMode(e.mode);
     },
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.geometry;
@@ -278,6 +285,9 @@ export default {
     },
     handleMergeSelectedFeatures() {
       this.mergeSelectedFeatures();
+    },
+    handleAddGeometryToFeature() {
+      this.addGeometryToFeature();
     },
     createTooltip(options) {
       if (this.tippy[0]) {

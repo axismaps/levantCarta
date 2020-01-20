@@ -188,7 +188,7 @@ export default {
     },
     addGeometry() {
       console.log('add-geometry');
-      this.$emit('add-geometry');
+      this.$emit('add-geometry-to-feature');
     },
     subtractGeometry() {
       console.log('subtract-geometry');

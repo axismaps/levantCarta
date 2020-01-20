@@ -30,9 +30,13 @@ export const mutations = {
         state.draw = draw
     },
     UPDATE_DRAW_MODE(state, drawMode) {
+        console.log('UPDATE_DRAW_MODE', drawMode)
+
         state.drawMode = drawMode
     },
     UPDATE_SELECTED_FEATURE(state, feature) {
+        console.log('UPDATE_SELECTED_FEATURE', feature)
+
         state.selectedFeature = feature
     },
     UPDATE_ATTRIBUTE_FORM(state, attributeForm) {
@@ -76,7 +80,6 @@ export const actions = {
         commit('SET_DRAW', draw)
     },
     updateDrawMode({ commit }, drawMode) {
-        console.log('UPDATE_DRAW_MODE', drawMode)
         commit('UPDATE_DRAW_MODE', drawMode)
 
         if (drawMode !== 'simple_select') {
@@ -130,8 +133,7 @@ export const actions = {
         dispatch('changes/applyChange', changeAction)
 
     },
-    mergeSelectedFeatures({ dispatch, state }) {
-
+    mergeSelectedFeatures({ dispatch, commit, state }) {
         if (state.multiselectedFeatures.length === 0) return;
 
         const baseFeature = this.state.selectedFeature
@@ -177,7 +179,24 @@ export const actions = {
             action: "features.merge"
         }
 
+        commit('UPDATE_DRAW_MODE', 'simple_select')
         dispatch('changes/applyChange', changeAction)
+
+    },
+
+    addGeometryToFeature({ state, commit }) {
+        commit('UPDATE_DRAW_MODE', 'add_multipart_feature')
+
+        // console.log(state.selectedFeature)
+        /** TODO
+         * salvar a feature selecionada
+         * iniciar modo de desenho 
+         * ao terminar modo de desenho fundir a feature selecionada com a nova feature
+         * 
+         */
+        const { draw } = state
+        draw.setFeatureProperty(state.selectedFeature.id, 'isBeenEdited', true)
+        draw.changeMode('draw_polygon');
 
     },
 
@@ -190,9 +209,7 @@ export const actions = {
     },
     //this action is commmited by mapbox
     updateSelectedFeature({ commit, state, dispatch }, features) {
-        console.log('UPDATE_SELECTED_FEATURE', features[0])
-        console.log('attribute form', state.attributeForm)
-
+        if (state.drawMode === 'add_multipart_feature') return;
         if (features.length > 1) {
             commit('UPDATE_MULTISELECT_STATUS', true)
             commit('UPDATE_MULTISELECT_FEATURES', features)

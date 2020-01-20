@@ -23,12 +23,17 @@ export const mutations = {
 
 export const actions = {
     async applyChange({ commit, state, rootState, dispatch }, changeAction) {
-
         const { draw, selectedFeature } = rootState
         const currentLayer = rootState.layers.currentItem.id
         const attributeForm = rootState.attributeForm
         const isAttributeFormValid = rootState.isAttributeFormValid
         const changeType = changeAction.type
+
+        if (rootState.drawMode === 'add_multipart_feature') {
+            commit('UPDATE_MULTISELECT_FEATURES', changeAction.features, { root: true })
+            await dispatch('mergeSelectedFeatures', null, { root: true })
+            return
+        }
 
         let featureToUpdate = changeAction.features[0];
         featureToUpdate = {
@@ -42,7 +47,7 @@ export const actions = {
             }
         }
 
-        // console.log(changeAction)
+
         delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
 
         switch (changeType) {
