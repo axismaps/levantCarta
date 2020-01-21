@@ -13,7 +13,7 @@
     <div id="draw-feature-control" class="el-button-group btn-group">
       <el-button
         id="add-point-btn"
-        :class="{ active: isToolActive }"
+        :class="{ active: shouldDrawToolBeAnable }"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'point'"
       >
@@ -21,7 +21,7 @@
       </el-button>
       <el-button
         id="add-line-btn"
-        :class="{ active: isToolActive }"
+        :class="{ active: shouldDrawToolBeAnable }"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'line'"
       >
@@ -29,20 +29,25 @@
       </el-button>
       <el-button
         id="add-polygon-btn"
-        :class="{ active: isToolActive }"
+        :class="{ active: shouldDrawToolBeAnable }"
         @click="addNewFeature"
         v-if="activeLayer && activeLayer.geometry == 'polygon'"
       >
         <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
-      <el-button id="add-geo-btn" @click="addGeometry" :disabled="isToolActive">
+      <el-button
+        id="add-geo-btn"
+        :class="{ active: isAddSliplitMultipartToolActive }"
+        @click="addGeometry"
+        :disabled="!shouldAddSplitMultipartFeatureBeAnable"
+      >
         <add-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button id="sub-geo-btn" @click="subtractGeometry" :disabled="isToolActive">
+      <el-button id="sub-geo-btn" @click="subtractGeometry" :disabled="shouldDrawToolBeAnable">
         <sub-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button id="snap-btn" @click="toggleSnap" :disabled="isToolActive">
+      <el-button id="snap-btn" @click="toggleSnap" :disabled="shouldDrawToolBeAnable">
         <snap-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
@@ -52,13 +57,13 @@
         <compress-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
-      <el-button id="split-btn" @click="splitFeature" :disabled="isToolActive">
+      <el-button id="split-btn" @click="splitFeature" :disabled="shouldDrawToolBeAnable">
         <expand-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
 
     <div id="clone-control" class="el-button-group btn-group">
-      <el-button id="clone-btn" @click="cloneFeature" :disabled="!shouldCloneFeatureBeActive">
+      <el-button id="clone-btn" @click="cloneFeature" :disabled="!shouldCloneFeatureBeAnable">
         <clone-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
@@ -151,7 +156,7 @@ export default {
       isMultiselect: 'isMultiselect',
       isEditionInProgress: 'isEditionInProgress'
     }),
-    isToolActive() {
+    shouldDrawToolBeAnable() {
       if (
         this.drawMode === 'draw_line_string' ||
         this.drawMode === 'draw_point' ||
@@ -161,10 +166,18 @@ export default {
         return true;
       }
     },
-    shouldCloneFeatureBeActive() {
+    shouldCloneFeatureBeAnable() {
       if (this.selectedFeature && !this.isEditionInProgress) {
         return true;
       }
+    },
+    shouldAddSplitMultipartFeatureBeAnable() {
+      if (this.selectedFeature && !this.isEditionInProgress) {
+        return true;
+      }
+    },
+    isAddSliplitMultipartToolActive() {
+      return this.drawMode === 'add_multipart_feature';
     }
   },
   methods: {
