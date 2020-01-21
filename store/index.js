@@ -187,16 +187,28 @@ export const actions = {
     addGeometryToFeature({ state, commit }) {
         commit('UPDATE_DRAW_MODE', 'add_multipart_feature')
 
-        // console.log(state.selectedFeature)
         /** TODO
-         * salvar a feature selecionada
-         * iniciar modo de desenho 
-         * ao terminar modo de desenho fundir a feature selecionada com a nova feature
+         * 
+         * editar estilo do parametro para parecer que esta acontecendo uma edição
          * 
          */
-        const { draw } = state
+        const { draw, selectedFeature: { geometry: { type } } } = state
+
         draw.setFeatureProperty(state.selectedFeature.id, 'isBeenEdited', true)
-        draw.changeMode('draw_polygon');
+
+        switch (type) {
+            case "Polygon", "MultiPolygon":
+                draw.changeMode('draw_polygon');
+                break;
+            case "LineString", "MultiLineString":
+                draw.changeMode('draw_line_string')
+                break;
+            case "Point", "MultiPoint":
+                draw.changeMode('draw_point')
+            default:
+                break;
+        }
+
 
     },
 

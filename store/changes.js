@@ -31,6 +31,8 @@ export const actions = {
 
         if (rootState.drawMode === 'add_multipart_feature') {
             commit('UPDATE_MULTISELECT_FEATURES', changeAction.features, { root: true })
+
+            draw.delete(changeAction.features[0].id)
             await dispatch('mergeSelectedFeatures', null, { root: true })
             return
         }
@@ -109,8 +111,8 @@ export const actions = {
                         /** TODO: 
                          * the features used to generate de new merged feature need to be deleted here, 
                          */
-
                         draw.add(featureToUpdate)
+                        draw.changeMode('simple_select', { featureIds: [featureToUpdate.id] })
                         break
                     default:
                         break;
