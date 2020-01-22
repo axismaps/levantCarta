@@ -16,6 +16,7 @@
         @clone-feature="handleCloneFeature"
         @merge-selected-features="handleMergeSelectedFeatures"
         @add-geometry-to-feature="handleAddGeometryToFeature"
+        @slip-multifeature="handleSplitMultifeature(featureSplittingStep,selectedFeature)"
       />
     </div>
     <mapbox
@@ -57,6 +58,11 @@ import TheSidebar from '~/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
+import uuidv4 from 'uuid/v4';
+import union from '@turf/union';
+import { featureCollection } from '@turf/helpers';
+import combine from '@turf/combine';
+
 const API = process.env.API;
 
 export default {
@@ -73,6 +79,8 @@ export default {
       draw: null,
       popup: null,
       featureBeingCreatedId: '',
+      featureBeingSplitted: null,
+      featureSplittingStep: 'before_splitting',
       tippy: {}
     };
   },
@@ -101,7 +109,8 @@ export default {
       activeOverlay: 'overlays/currentItem',
       isEditionInProgress: 'isEditionInProgress',
       drawMode: 'drawMode',
-      selectedFeature: 'selectedFeature'
+      selectedFeature: 'selectedFeature',
+      multiselectedFeatures: 'multiselectedFeatures'
     }),
     mapboxToken() {
       return process.env.mapboxToken;
@@ -111,6 +120,7 @@ export default {
     ...mapActions({
       setActiveOverlay: 'overlays/setCurrentItem',
       enterDrawMode: 'enterDrawMode',
+      drawMode: 'drawMode',
       setDraw: 'setDraw',
       applyChange: 'changes/applyChange',
       saveFeature: 'features/saveFeature',
@@ -118,7 +128,8 @@ export default {
       updateDrawMode: 'updateDrawMode',
       cloneFeature: 'cloneFeature',
       mergeSelectedFeatures: 'mergeSelectedFeatures',
-      addGeometryToFeature: 'addGeometryToFeature'
+      addGeometryToFeature: 'addGeometryToFeature',
+      splitMultifeature: 'splitMultifeature'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -221,10 +232,44 @@ export default {
       }
     },
     handleSelectionchange(e) {
-      this.updateSelectedFeature(e.features);
+      let { features } = e;
 
-      if (e.features[0]) {
-        const changeAction = {
+      if (this.drawMode === 'add_multipart_feature') return;
+
+      /**
+       * After splitting, draw is calling 'selection change',
+       * so here we will handle the splitting state updating.
+       */
+      if (this.drawMode === 'split_multipart_feature') {
+        switch (this.featureSplittingStep) {
+          case 'before_splitting':
+            this.featureSplittingStep = 'after_splitting';
+            break;
+          case 'after_splitting':
+            /**
+             * Selection change after splitting means that the feature to
+             * keep is already selected. So we will call handleSplitMultifeature
+             * again with the new state.
+             */
+            const featureSplited = features[0];
+
+            this.handleSplitMultifeature(
+              this.featureSplittingStep,
+              this.featureBeingSplitted,
+              this.multiselectedFeatures,
+              featureSplited
+            );
+            return;
+            break;
+          default:
+            break;
+        }
+      }
+
+      this.updateSelectedFeature(features);
+
+      if (features[0]) {
+        const updateFeatureAction = {
           ...e
         };
 
@@ -234,9 +279,7 @@ export default {
     handleModechange(e) {
       /**
        *TODO
-       *  Mudar altomáticamente de modo é necessário? Avaliar
-       *
-       *
+       *  autochange mode is actualy necessary?
        */
       // this.updateDrawMode(e.mode);
     },
@@ -260,6 +303,7 @@ export default {
           break;
       }
     },
+
     handleDrawCreate(e) {
       if (this.tippy[0]) {
         this.tippy[0].destroy();
@@ -283,11 +327,80 @@ export default {
     handleCloneFeature() {
       this.cloneFeature(this.selectedFeature);
     },
-    handleMergeSelectedFeatures() {
-      this.mergeSelectedFeatures();
+    async handleMergeSelectedFeatures() {
+      const newFeature = await mergeFeatures(
+        this.selectedFeature,
+        this.multiselectedFeatures
+      );
+
+      const updateFeatureAction = {
+        features: [newFeature],
+        type: 'draw.update',
+        action: 'features.merge'
+      };
+
+      this.updateDrawMode('simple_select');
+      this.applyChange(updateFeatureAction);
     },
     handleAddGeometryToFeature() {
       this.addGeometryToFeature();
+    },
+    async handleSplitMultifeature(
+      splitState,
+      featureBeingSplitted,
+      featureBeingSplittedParts,
+      splittedFeature
+    ) {
+      switch (splitState) {
+        case 'before_splitting':
+          this.featureBeingSplitted = featureBeingSplitted;
+
+          // this function calls draw.uncombineFeatures(),
+          // wich split the selected feature.
+          // After the splitting draw will call 'selection change'.
+          this.splitMultifeature();
+          break;
+        case 'after_splitting':
+          const featureBeingSplittedNewParts = featureBeingSplittedParts.filter(
+            feature => {
+              return feature.id !== splittedFeature.id;
+            }
+          );
+
+          const baseFeature = {
+            id: featureBeingSplitted.id,
+            type: featureBeingSplitted.type,
+            properties: featureBeingSplitted.properties,
+            geometry: featureBeingSplittedNewParts[0].geometry
+          };
+
+          const updatedFeatureBeingSplitted = await mergeFeatures(
+            baseFeature,
+            featureBeingSplittedNewParts
+          );
+
+          const updateFeatureAction = {
+            features: [updatedFeatureBeingSplitted],
+            type: 'draw.update',
+            action: 'features.merge'
+          };
+
+          this.applyChange(updateFeatureAction);
+
+          this.updateDrawMode('simple_select');
+
+          this.draw.delete(splittedFeature.id);
+          featureBeingSplittedParts.map(feature => {
+            this.draw.delete(feature.id);
+          });
+          this.handleSelectionchange({ features: [splittedFeature] });
+
+          this.cloneFeature(splittedFeature);
+
+          this.featureSplittingStep = 'before_splitting';
+        default:
+          break;
+      }
     },
     createTooltip(options) {
       if (this.tippy[0]) {
@@ -302,6 +415,46 @@ export default {
       });
     }
   }
+};
+
+const mergeFeatures = function(baseFeature, featureParts) {
+  let newGeometry = {};
+
+  switch (baseFeature.geometry.type) {
+    case 'Polygon':
+    case 'MultiPolygon':
+      let polygonsToUnion = [baseFeature, ...featureParts];
+
+      while (polygonsToUnion.length > 1) {
+        const args = polygonsToUnion.splice(0, 2);
+        polygonsToUnion.unshift(union(...args));
+      }
+
+      newGeometry = polygonsToUnion[0].geometry;
+
+      break;
+    case 'LineString':
+    case 'MultiLineString':
+      newGeometry = combine(featureCollection([baseFeature, ...featureParts]))
+        .features[0].geometry;
+
+      break;
+    case 'Point':
+    case 'MultiPoint':
+      newGeometry = combine(featureCollection([baseFeature, ...featureParts]))
+        .features[0].geometry;
+
+      break;
+    default:
+      break;
+  }
+
+  return {
+    id: baseFeature.id,
+    properties: baseFeature.properties,
+    type: 'Feature',
+    geometry: newGeometry
+  };
 };
 </script>
 

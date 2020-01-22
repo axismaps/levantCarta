@@ -57,7 +57,7 @@
         <compress-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
 
-      <el-button id="split-btn" @click="splitFeature" :disabled="shouldDrawToolBeAnable">
+      <el-button id="split-btn" @click="splitMultfeature" :disabled="shouldDrawToolBeAnable">
         <expand-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
     </div>
@@ -215,9 +215,9 @@ export default {
       console.log('merge-selected-features');
       this.$emit('merge-selected-features');
     },
-    splitFeature() {
+    splitMultfeature() {
       console.log('split-feature');
-      this.$emit('split-feature');
+      this.$emit('slip-multifeature');
     },
     cloneFeature() {
       console.log('clone-feature');

@@ -1,7 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import union from '@turf/union'
-import { featureCollection } from '@turf/helpers'
-import combine from '@turf/combine'
+
 
 export const state = () => ({
     map: null,
@@ -133,56 +131,6 @@ export const actions = {
         dispatch('changes/applyChange', changeAction)
 
     },
-    mergeSelectedFeatures({ dispatch, commit, state }) {
-        if (state.multiselectedFeatures.length === 0) return;
-
-        const baseFeature = this.state.selectedFeature
-        let newGeometry = {}
-
-        switch (baseFeature.geometry.type) {
-            case "Polygon", "MultiPolygon":
-
-                let polygonsToUnion = [baseFeature, ...state.multiselectedFeatures]
-
-                while (polygonsToUnion.length > 1) {
-                    const args = polygonsToUnion.splice(0, 2)
-                    polygonsToUnion.unshift(union(...args))
-
-                }
-
-                newGeometry = polygonsToUnion[0].geometry
-
-                break;
-            case "LineString", "MultiLineString":
-
-                newGeometry = combine(featureCollection([baseFeature, ...state.multiselectedFeatures])).features[0].geometry
-
-                break
-            case "Point", "MultiPoint":
-                newGeometry = combine(featureCollection([baseFeature, ...state.multiselectedFeatures])).features[0].geometry
-
-                break;
-            default:
-                break;
-        }
-
-        const featureToUpdate = {
-            id: baseFeature.id,
-            properties: baseFeature.properties,
-            "type": "Feature",
-            geometry: newGeometry
-        }
-
-        const changeAction = {
-            features: [featureToUpdate],
-            type: "draw.update",
-            action: "features.merge"
-        }
-
-        commit('UPDATE_DRAW_MODE', 'simple_select')
-        dispatch('changes/applyChange', changeAction)
-
-    },
 
     addGeometryToFeature({ state, commit }) {
         commit('UPDATE_DRAW_MODE', 'add_multipart_feature')
@@ -211,7 +159,12 @@ export const actions = {
 
 
     },
+    splitMultifeature({ state, commit }) {
+        commit('UPDATE_DRAW_MODE', 'split_multipart_feature')
+        const { draw } = state;
+        draw.uncombineFeatures()
 
+    },
     updateAttributeForm({ commit }, attributeForm) {
         commit('UPDATE_ATTRIBUTE_FORM', attributeForm)
         commit('UPDATE_EDITION_STATUS', true)
@@ -219,9 +172,7 @@ export const actions = {
     updateAttributeFormValidity({ commit }, status) {
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', status)
     },
-    //this action is commmited by mapbox
     updateSelectedFeature({ commit, state, dispatch }, features) {
-        if (state.drawMode === 'add_multipart_feature') return;
         if (features.length > 1) {
             commit('UPDATE_MULTISELECT_STATUS', true)
             commit('UPDATE_MULTISELECT_FEATURES', features)

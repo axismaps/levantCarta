@@ -112,7 +112,6 @@ export const actions = {
                          * the features used to generate de new merged feature need to be deleted here, 
                          */
                         draw.add(featureToUpdate)
-                        draw.changeMode('simple_select', { featureIds: [featureToUpdate.id] })
                         break
                     default:
                         break;
