@@ -15,7 +15,7 @@
         @add-new-feature="handleAddNewFeature"
         @clone-feature="handleCloneFeature"
         @merge-selected-features="handleMergeSelectedFeatures"
-        @add-geometry-to-feature="handleAddGeometryToFeature"
+        @add-geometry-to-feature="handleAddGeometryToFeature(geometryAddingState)"
         @slip-multifeature="handleSplitMultifeature(featureSplittingStep,selectedFeature)"
       />
     </div>
@@ -81,6 +81,7 @@ export default {
       featureBeingCreatedId: '',
       featureBeingSplitted: null,
       featureSplittingStep: 'before_splitting',
+      geometryAddingState: 'before_drawing',
       tippy: {}
     };
   },
@@ -234,7 +235,28 @@ export default {
     handleSelectionchange(e) {
       let { features } = e;
 
-      if (this.drawMode === 'add_multipart_feature') return;
+      console.log('seleção mudou de novo');
+      if (this.drawMode === 'add_multipart_feature') {
+        switch (this.geometryAddingState) {
+          case 'before_drawing':
+            this.geometryAddingState = 'drawing';
+            console.log('desenhando');
+            return;
+            break;
+          case 'drawing':
+            this.geometryAddingState = 'after_drawing';
+
+            this.handleAddGeometryToFeature(
+              this.geometryAddingState,
+              this.selectedFeature,
+              features
+            );
+            return;
+          default:
+            break;
+        }
+        return;
+      }
 
       /**
        * After splitting, draw is calling 'selection change',
@@ -309,6 +331,7 @@ export default {
         this.tippy[0].destroy();
         this.tippy = [];
       }
+      if (this.drawMode === 'add_multipart_feature') return; //the creation will be handle by the handleAddGeometryToFeature
       this.applyChange(e);
     },
     handleDrawUpdate(e) {
@@ -342,8 +365,47 @@ export default {
       this.updateDrawMode('simple_select');
       this.applyChange(updateFeatureAction);
     },
-    handleAddGeometryToFeature() {
-      this.addGeometryToFeature();
+    async handleAddGeometryToFeature(
+      geometryAddingState,
+      baseFeature,
+      newGeometryToAdd
+    ) {
+      switch (geometryAddingState) {
+        case 'before_drawing':
+          this.updateDrawMode('add_multipart_feature');
+          this.addGeometryToFeature();
+          return;
+          break;
+        case 'after_drawing':
+          const newFeature = await mergeFeatures(baseFeature, newGeometryToAdd);
+
+          this.updateDrawMode('simple_select');
+
+          this.draw.delete(baseFeature.id);
+
+          this.draw.add(newFeature);
+
+          this.draw.changeMode('simple_select', {
+            featureIds: [newFeature.id]
+          });
+
+          this.draw.delete(newGeometryToAdd[0].id);
+
+          this.handleSelectionchange({ features: [newFeature] });
+
+          const updateFeatureAction = {
+            features: [newFeature],
+            type: 'draw.update',
+            action: 'features.merge'
+          };
+
+          this.applyChange(updateFeatureAction);
+
+          this.geometryAddingState = 'before_drawing';
+          break;
+        default:
+          break;
+      }
     },
     async handleSplitMultifeature(
       splitState,

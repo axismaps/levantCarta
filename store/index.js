@@ -133,16 +133,12 @@ export const actions = {
     },
 
     addGeometryToFeature({ state, commit }) {
-        commit('UPDATE_DRAW_MODE', 'add_multipart_feature')
-
         /** TODO
          * 
          * editar estilo do parametro para parecer que esta acontecendo uma edição
          * 
          */
         const { draw, selectedFeature: { geometry: { type } } } = state
-
-        draw.setFeatureProperty(state.selectedFeature.id, 'isBeenEdited', true)
 
         switch (type) {
             case "Polygon", "MultiPolygon":
@@ -156,8 +152,6 @@ export const actions = {
             default:
                 break;
         }
-
-
     },
     splitMultifeature({ state, commit }) {
         commit('UPDATE_DRAW_MODE', 'split_multipart_feature')

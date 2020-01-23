@@ -29,13 +29,6 @@ export const actions = {
         const isAttributeFormValid = rootState.isAttributeFormValid
         const changeType = changeAction.type
 
-        if (rootState.drawMode === 'add_multipart_feature') {
-            commit('UPDATE_MULTISELECT_FEATURES', changeAction.features, { root: true })
-
-            draw.delete(changeAction.features[0].id)
-            await dispatch('mergeSelectedFeatures', null, { root: true })
-            return
-        }
 
         let featureToUpdate = changeAction.features[0];
         featureToUpdate = {
