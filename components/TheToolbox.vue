@@ -1,74 +1,113 @@
 <template>
   <div>
     <div id="toggle-sidebar-control" class="el-button-group btn-group">
-      <el-button v-if="isSidebarOpen" @click="toggleSidebar">
-        <collapse-left-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
-
-      <el-button v-else size="small" @click="toggleSidebar">
-        <collapse-rigth-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip
+        v-if="isSidebarOpen"
+        class="item"
+        effect="dark"
+        content="Close sidebar"
+        placement="right"
+      >
+        <el-button @click="toggleSidebar">
+          <collapse-left-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
+      <el-tooltip v-else class="item" effect="dark" content="Open sidebar" placement="right">
+        <el-button size="small" @click="toggleSidebar">
+          <collapse-rigth-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
     </div>
 
     <div id="draw-feature-control" class="el-button-group btn-group">
-      <el-button
-        id="add-point-btn"
-        :class="{ active: shouldDrawToolBeAnable }"
-        @click="addNewFeature"
-        v-if="activeLayer && activeLayer.geometry == 'point'"
-      >
-        <point-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
-      <el-button
-        id="add-line-btn"
-        :class="{ active: shouldDrawToolBeAnable }"
-        @click="addNewFeature"
-        v-if="activeLayer && activeLayer.geometry == 'line'"
-      >
-        <line-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
-      <el-button
-        id="add-polygon-btn"
-        :class="{ active: shouldDrawToolBeAnable }"
-        @click="addNewFeature"
-        v-if="activeLayer && activeLayer.geometry == 'polygon'"
-      >
-        <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip class="item" effect="dark" content="Draw point feature" placement="right">
+        <el-button
+          id="add-point-btn"
+          :class="{ active: shouldDrawToolBeAnable }"
+          @click="addNewFeature"
+          v-if="activeLayer && activeLayer.geometry == 'point'"
+        >
+          <point-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="Draw line feature" placement="right">
+        <el-button
+          id="add-line-btn"
+          :class="{ active: shouldDrawToolBeAnable }"
+          @click="addNewFeature"
+          v-if="activeLayer && activeLayer.geometry == 'line'"
+        >
+          <line-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="Draw polygon feature" placement="right">
+        <el-button
+          id="add-polygon-btn"
+          :class="{ active: shouldDrawToolBeAnable }"
+          @click="addNewFeature"
+          v-if="activeLayer && activeLayer.geometry == 'polygon'"
+        >
+          <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
 
-      <el-button
-        id="add-geo-btn"
-        :class="{ active: isAddSliplitMultipartToolActive }"
-        @click="addGeometry"
-        :disabled="!shouldAddSplitMultipartFeatureBeAnable"
-      >
-        <add-geo-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip class="item" effect="dark" content="Add geometry to feature" placement="right">
+        <el-button
+          id="add-geo-btn"
+          :class="{ active: isAddSliplitMultipartToolActive }"
+          @click="addGeometry"
+          :disabled="!shouldAddSplitMultipartFeatureBeAnable"
+        >
+          <add-geo-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
+
       <el-button id="sub-geo-btn" @click="subtractGeometry" :disabled="shouldDrawToolBeAnable">
         <sub-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
-      <el-button id="snap-btn" @click="toggleSnap" :disabled="shouldDrawToolBeAnable">
-        <snap-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip class="item" effect="dark" content="Toggle snap" placement="right">
+        <el-button id="snap-btn" @click="toggleSnap" :disabled="shouldDrawToolBeAnable">
+          <snap-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
     </div>
 
     <div id="splip/merge-controls" class="el-button-group btn-group">
-      <el-button id="merge-btn" @click="mergeSelectedFeatures" :disabled="!isMultiselect">
-        <compress-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip class="item" effect="dark" content="Merge selected features" placement="right">
+        <el-button id="merge-btn" @click="mergeSelectedFeatures" :disabled="!isMultiselect">
+          <compress-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
 
-      <el-button id="split-btn" @click="splitMultfeature" :disabled="shouldDrawToolBeAnable">
-        <expand-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip class="item" effect="dark" content="Split multipart feature" placement="right">
+        <el-button
+          id="split-btn"
+          @click="splitMultfeature"
+          :disabled="!shouldAddSplitMultipartFeatureBeAnable"
+        >
+          <expand-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
     </div>
 
     <div id="clone-control" class="el-button-group btn-group">
-      <el-button id="clone-btn" @click="cloneFeature" :disabled="!shouldCloneFeatureBeAnable">
-        <clone-icon viewBox="0 0 22 22" class="img-responsive" />
-      </el-button>
+      <el-tooltip class="item" effect="dark" content="Clone selected feature" placement="right">
+        <el-button id="clone-btn" @click="cloneFeature" :disabled="!shouldCloneFeatureBeAnable">
+          <clone-icon viewBox="0 0 22 22" class="img-responsive" />
+        </el-button>
+      </el-tooltip>
     </div>
+
     <div id="undo/delete-control" class="el-button-group btn-group">
-      <el-button slot="reference" size="mini" @click="undoDrawAction" icon="el-icon-refresh-left" />
+      <el-tooltip class="item" effect="dark" content="Undo draw action" placement="right">
+        <el-button
+          slot="reference"
+          size="mini"
+          @click="undoDrawAction"
+          icon="el-icon-refresh-left"
+        />
+      </el-tooltip>
+
       <el-popover placement="right" width="190" v-model="confirmDeleteVisibily">
         <p>
           Are you sure to delete
