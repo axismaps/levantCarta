@@ -66,7 +66,12 @@
         <sub-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-tooltip class="item" effect="dark" content="Toggle snap" placement="right">
-        <el-button id="snap-btn" @click="toggleSnap" :disabled="shouldDrawToolBeAnable">
+        <el-button
+          id="snap-btn"
+          :class="{ 'active-toggle': isSnapActive }"
+          @click="toggleSnap"
+          :disabled="shouldDrawToolBeAnable"
+        >
           <snap-icon viewBox="0 0 22 22" class="img-responsive" />
         </el-button>
       </el-tooltip>
@@ -99,14 +104,7 @@
     </div>
 
     <div id="undo/delete-control" class="el-button-group btn-group">
-      <el-tooltip class="item" effect="dark" content="Undo draw action" placement="right">
-        <el-button
-          slot="reference"
-          size="mini"
-          @click="undoDrawAction"
-          icon="el-icon-refresh-left"
-        />
-      </el-tooltip>
+      <el-button slot="reference" size="mini" @click="undoDrawAction" icon="el-icon-refresh-left" />
 
       <el-popover placement="right" width="190" v-model="confirmDeleteVisibily">
         <p>
@@ -193,7 +191,8 @@ export default {
       selectedFeature: 'selectedFeature',
       drawMode: 'drawMode',
       isMultiselect: 'isMultiselect',
-      isEditionInProgress: 'isEditionInProgress'
+      isEditionInProgress: 'isEditionInProgress',
+      isSnapActive: 'isSnapActive'
     }),
     shouldDrawToolBeAnable() {
       if (
@@ -288,6 +287,10 @@ export default {
 }
 .active:hover {
   cursor: pointer;
+}
+
+.active-toggle {
+  color: #2e90e6;
 }
 
 .btn-group button:not(:last-child) {
