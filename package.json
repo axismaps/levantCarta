@@ -18,6 +18,7 @@
     "@nuxtjs/pwa": "^3.0.0-0",
     "@nuxtjs/style-resources": "^1.0.0",
     "@turf/combine": "^6.0.1",
+    "@turf/explode": "^5.1.5",
     "@turf/union": "^6.0.3",
     "axios": "^0.19.0",
     "cross-env": "^5.2.0",
