@@ -130,33 +130,34 @@ export default {
        * @type {object}
        */
       map.on('mousemove', e => {
-        // if (this.isEditionInProgress) return;
         const feature = map.queryRenderedFeatures(e.point)[0];
-        if (!feature) return;
-
-        if (
-          this.mouseOverFeature === feature.properties.id ||
-          this.mouseOverFeature === feature.properties.parent
-        ) {
-          if (
-            feature.geometry.type === 'Point' &&
-            feature.properties.meta === 'vertex'
-          ) {
-            this.$emit('draw-mouseoverpoint', feature.geometry);
-          }
-
-          if (feature.properties.id) {
-            const coordinates = e.lngLat;
-            this.$emit('create-popup', {
-              coordinates,
-              id: feature.properties.id
-            });
-          } else {
+        if (!feature) {
+          if (this.mouseOverFeature !== null) {
+            this.mouseOverFeature = null;
             this.$emit('delete-popup');
+            this.$emit('mouse-leave-point');
           }
+
+          return;
+        } else if (feature.properties.id) {
+          const coordinates = e.lngLat;
+          this.$emit('create-popup', {
+            coordinates,
+            id: feature.properties.id
+          });
+
+          if (feature.geometry.type === 'Point') {
+            if (this.mouseOverFeature !== feature.properties.id) {
+              this.$emit('mouse-enter-point', feature.geometry);
+            }
+          } else {
+            if (this.mouseOverFeature !== feature.properties.id) {
+              this.$emit('mouse-leave-point');
+            }
+          }
+
+          this.mouseOverFeature = feature.properties.id;
         }
-        this.mouseOverFeature =
-          feature.properties.id || feature.properties.parent;
       });
 
       map.on('load', () => {
