@@ -17,6 +17,7 @@
         @merge-selected-features="handleMergeSelectedFeatures"
         @add-geometry-to-feature="handleAddGeometryToFeature(geometryAddingState)"
         @slip-multifeature="handleSplitMultifeature(featureSplittingStep,selectedFeature)"
+        @toggle-snap="handleToggleSnap"
       />
     </div>
     <mapbox
@@ -43,7 +44,8 @@
       @draw-create="handleDrawCreate"
       @draw-update="handleDrawUpdate"
       @draw-delete="handleDrawDelete"
-      @draw-mouseoverpoint="handleMouseOverPoint"
+      @mouse-enter-point="handleMouseOverPoint"
+      @mouse-leave-point="handleMouseLeavePoint"
       class="map"
     />
   </div>
@@ -52,16 +54,13 @@
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
 import Mapbox from '~/components/Mapbox.vue';
+import uuidv4 from 'uuid/v4';
 import TheToolbox from '~/components/TheToolbox';
 import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-
-import uuidv4 from 'uuid/v4';
-import union from '@turf/union';
-import { featureCollection } from '@turf/helpers';
-import combine from '@turf/combine';
+import { mergeFeatures, featuresToPoints } from '~/assets/lib/helpers';
 
 const API = process.env.API;
 
@@ -111,7 +110,8 @@ export default {
       isEditionInProgress: 'isEditionInProgress',
       drawMode: 'drawMode',
       selectedFeature: 'selectedFeature',
-      multiselectedFeatures: 'multiselectedFeatures'
+      multiselectedFeatures: 'multiselectedFeatures',
+      isSnapActive: 'isSnapActive'
     }),
     mapboxToken() {
       return process.env.mapboxToken;
@@ -130,7 +130,8 @@ export default {
       cloneFeature: 'cloneFeature',
       mergeSelectedFeatures: 'mergeSelectedFeatures',
       addGeometryToFeature: 'addGeometryToFeature',
-      splitMultifeature: 'splitMultifeature'
+      splitMultifeature: 'splitMultifeature',
+      updateSnapStatus: 'updateSnapStatus'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -232,6 +233,36 @@ export default {
         this.applyChange(change);
       }
     },
+    async handleToggleSnap(e) {
+      if (!this.isSnapActive) {
+        this.updateSnapStatus(true);
+        console.log(this.selectedFeature);
+        const allFeatures = await this.draw.getAll();
+        const points = await featuresToPoints(allFeatures);
+        console.log(points);
+        const snapLayer = {
+          id: 'snapLayer',
+          type: 'circle',
+          source: {
+            type: 'geojson',
+            data: points
+          },
+          layout: {},
+          paint: {
+            'circle-radius': 5,
+            'circle-color': '#007cbf'
+          }
+        };
+        this.map.addLayer(snapLayer);
+      } else {
+        this.updateSnapStatus(false);
+        this.map.removeLayer('snapLayer');
+        this.map.removeSource('snapLayer');
+      }
+    },
+    handleMouseLeavePoint() {
+      console.log('mouse leave point');
+    },
     handleSelectionchange(e) {
       let { features } = e;
 
@@ -331,7 +362,7 @@ export default {
         this.tippy[0].destroy();
         this.tippy = [];
       }
-      if (this.drawMode === 'add_multipart_feature') return; //the creation will be handle by the handleAddGeometryToFeature
+      if (this.drawMode === 'add_multipart_feature') return; //the creation will be handled by the handleAddGeometryToFeature
       this.applyChange(e);
     },
     handleDrawUpdate(e) {
@@ -341,6 +372,7 @@ export default {
       this.applyChange(e);
     },
     handleMouseOverPoint(point) {
+      console.log('mouse over point: ', point);
       if (this.tippy[0]) {
         this.createTooltip({
           content: 'Click again to finish drawing'
@@ -477,46 +509,6 @@ export default {
       });
     }
   }
-};
-
-const mergeFeatures = function(baseFeature, featureParts) {
-  let newGeometry = {};
-
-  switch (baseFeature.geometry.type) {
-    case 'Polygon':
-    case 'MultiPolygon':
-      let polygonsToUnion = [baseFeature, ...featureParts];
-
-      while (polygonsToUnion.length > 1) {
-        const args = polygonsToUnion.splice(0, 2);
-        polygonsToUnion.unshift(union(...args));
-      }
-
-      newGeometry = polygonsToUnion[0].geometry;
-
-      break;
-    case 'LineString':
-    case 'MultiLineString':
-      newGeometry = combine(featureCollection([baseFeature, ...featureParts]))
-        .features[0].geometry;
-
-      break;
-    case 'Point':
-    case 'MultiPoint':
-      newGeometry = combine(featureCollection([baseFeature, ...featureParts]))
-        .features[0].geometry;
-
-      break;
-    default:
-      break;
-  }
-
-  return {
-    id: baseFeature.id,
-    properties: baseFeature.properties,
-    type: 'Feature',
-    geometry: newGeometry
-  };
 };
 </script>
 

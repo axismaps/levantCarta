@@ -1,6 +1,5 @@
 import uuidv4 from 'uuid/v4';
 
-
 export const state = () => ({
     map: null,
     draw: {},
@@ -17,7 +16,8 @@ export const state = () => ({
     isEditionInProgress: false,
     isAttributeFormValid: false,
     isMultiselect: false,
-    multiselectedFeatures: []
+    multiselectedFeatures: [],
+    isSnapActive: false,
 })
 
 export const mutations = {
@@ -66,6 +66,10 @@ export const mutations = {
     UPDATE_MULTISELECT_FEATURES(state, features) {
         console.log('UPDATE_MULTISELECT_FEATURES', features)
         state.multiselectedFeatures = features
+    },
+    UPDATE_SNAP_STATUS(state, status) {
+        console.log('UPDATE_SNAP_STATUS', status)
+        state.isSnapActive = status
     }
 
 }
@@ -115,6 +119,12 @@ export const actions = {
         }
 
     },
+    updateSnapStatus({ commit }, status) {
+        commit('UPDATE_SNAP_STATUS', status);
+    },
+    /** 
+     * TODO: This can be refactor to a more genercit function, one that just create a new feature 
+     */
     cloneFeature({ commit, dispatch }, feature) {
 
         const newFeature = { ...feature, 'id': uuidv4() }
@@ -132,12 +142,10 @@ export const actions = {
 
     },
 
-    addGeometryToFeature({ state, commit }) {
-        /** TODO
-         * 
-         * editar estilo do parametro para parecer que esta acontecendo uma edição
-         * 
-         */
+    /** 
+     * TODO: This can be refactor to a more generic function, one that just start a new drawing
+     */
+    addGeometryToFeature({ state }) {
         const { draw, selectedFeature: { geometry: { type } } } = state
 
         switch (type) {
@@ -248,5 +256,8 @@ export const getters = {
     },
     multiselectedFeatures(state) {
         return state.multiselectedFeatures
+    },
+    isSnapActive(state) {
+        return state.isSnapActive
     }
 }
