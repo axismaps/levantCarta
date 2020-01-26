@@ -23,9 +23,10 @@
       <el-tooltip class="item" effect="dark" content="Draw point feature" placement="right">
         <el-button
           id="add-point-btn"
-          :class="{ active: shouldDrawToolBeAnable }"
+          :class="{ active: isDrawToolActive }"
           @click="addNewFeature"
           v-if="activeLayer && activeLayer.geometry == 'point'"
+          :disabled="!shouldDrawToolBeAnable"
         >
           <point-icon viewBox="0 0 22 22" class="img-responsive" />
         </el-button>
@@ -33,9 +34,10 @@
       <el-tooltip class="item" effect="dark" content="Draw line feature" placement="right">
         <el-button
           id="add-line-btn"
-          :class="{ active: shouldDrawToolBeAnable }"
+          :class="{ active: isDrawToolActive }"
           @click="addNewFeature"
           v-if="activeLayer && activeLayer.geometry == 'line'"
+          :disabled="!shouldDrawToolBeAnable"
         >
           <line-icon viewBox="0 0 22 22" class="img-responsive" />
         </el-button>
@@ -43,9 +45,10 @@
       <el-tooltip class="item" effect="dark" content="Draw polygon feature" placement="right">
         <el-button
           id="add-polygon-btn"
-          :class="{ active: shouldDrawToolBeAnable }"
+          :class="{ active: isDrawToolActive }"
           @click="addNewFeature"
           v-if="activeLayer && activeLayer.geometry == 'polygon'"
+          :disabled="!shouldDrawToolBeAnable"
         >
           <polygon-icon viewBox="0 0 22 22" class="img-responsive" />
         </el-button>
@@ -62,7 +65,7 @@
         </el-button>
       </el-tooltip>
 
-      <el-button id="sub-geo-btn" @click="subtractGeometry" :disabled="shouldDrawToolBeAnable">
+      <el-button id="sub-geo-btn" @click="subtractGeometry" :disabled="isDrawToolActive">
         <sub-geo-icon viewBox="0 0 22 22" class="img-responsive" />
       </el-button>
       <el-tooltip class="item" effect="dark" content="Toggle snap" placement="right">
@@ -70,7 +73,7 @@
           id="snap-btn"
           :class="{ 'active-toggle': isSnapActive }"
           @click="toggleSnap"
-          :disabled="shouldDrawToolBeAnable"
+          :disabled="isDrawToolActive"
         >
           <snap-icon viewBox="0 0 22 22" class="img-responsive" />
         </el-button>
@@ -194,13 +197,18 @@ export default {
       isEditionInProgress: 'isEditionInProgress',
       isSnapActive: 'isSnapActive'
     }),
-    shouldDrawToolBeAnable() {
+    isDrawToolActive() {
       if (
         this.drawMode === 'draw_line_string' ||
         this.drawMode === 'draw_point' ||
         this.drawMode === 'draw_polygon' ||
         this.isEditionInProgress
       ) {
+        return true;
+      }
+    },
+    shouldDrawToolBeAnable() {
+      if (this.selectedFeature === null) {
         return true;
       }
     },
