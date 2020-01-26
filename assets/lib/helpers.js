@@ -58,5 +58,53 @@ const featuresToPoints = function (features) {
     return points
 }
 
+/**
+ * Points to feature
+ * @param {Array>} points 
+ * @param {Object} baseFeature 
+ */
 
-export { mergeFeatures, featuresToPoints }
+const pointsToFeature = function (points, baseFeature) {
+    const { geometry: { type } } = baseFeature
+
+    if (points.length === 0) return baseFeature;
+
+    let geometry = []
+    if (type === 'Polygon') {
+        geometry = {
+            type: type,
+            coordinates: [points.slice().reverse().map((point) => {
+                if (point.type === 'draw.step') {
+                    return point.features[0].coordinates
+                }
+            })]
+        }
+
+        geometry.coordinates[0].push(geometry.coordinates[0][0]) // closes the LinearRing
+
+    } else if (type === 'LineString') {
+        geometry = {
+            type: 'LineString',
+            coordinates: points.slice().reverse().map((point) => {
+                if (point.type === 'draw.step') {
+                    return point.features[0].coordinates
+                }
+            })
+        }
+    }
+
+    return {
+        id: baseFeature.id,
+        type: "Feature",
+        properties: {
+            'approved': false,
+            'firstyear': baseFeature.properties.firstyear,
+            'lastyear': baseFeature.properties.lastyear,
+            'type': baseFeature.properties.type,
+            'tags': baseFeature.properties.tags
+        },
+        geometry: geometry
+    }
+}
+
+export { mergeFeatures, featuresToPoints, pointsToFeature }
