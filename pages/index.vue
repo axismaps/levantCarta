@@ -45,7 +45,7 @@
       @draw-update="handleDrawUpdate"
       @draw-delete="handleDrawDelete"
       @mouse-enter-point="handleMouseOverPoint"
-      @mouse-leave-point="handleMouseLeavePoint"
+      @mouse-leave-point="updateSnapPoint(null)"
       class="map"
     />
   </div>
@@ -60,7 +60,11 @@ import TheHeader from '~/components/TheHeader';
 import TheSidebar from '~/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { mergeFeatures, featuresToPoints } from '~/assets/lib/helpers';
+import {
+  mergeFeatures,
+  featuresToPoints,
+  pointsToFeature
+} from '~/assets/lib/helpers';
 
 const API = process.env.API;
 
@@ -131,7 +135,9 @@ export default {
       mergeSelectedFeatures: 'mergeSelectedFeatures',
       addGeometryToFeature: 'addGeometryToFeature',
       splitMultifeature: 'splitMultifeature',
-      updateSnapStatus: 'updateSnapStatus'
+      updateSnapStatus: 'updateSnapStatus',
+      updateSnapPoint: 'updateSnapPoint'
+      // pushFeatureBeingDrawnPoint: 'changes/pushFeatureBeingDrawnPoint'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -218,6 +224,7 @@ export default {
             }
           ]
         };
+        // this.pushFeatureBeingDrawnPoint(change);
         this.applyChange(change);
       } else if (this.drawMode === 'draw_line_string') {
         this.createTooltip('Click to continue drawing line');
@@ -230,13 +237,27 @@ export default {
             }
           ]
         };
+        // this.pushFeatureBeingDrawnPoint(change);
         this.applyChange(change);
       }
+      // else if (this.drawMode === 'add_multipart_feature') {
+      //   console.log('step do add multipart feature');
+      //   const change = {
+      //     type: 'draw.step',
+      //     features: [
+      //       {
+      //         type: this.selectedFeature.geometry.type,
+      //         coordinates: [e.lngLat.lng, e.lngLat.lat]
+      //       }
+      //     ]
+      //   };
+      //   this.pushFeatureBeingDrawnPoint(change);
+      //   this.applyChange(change);
+      // }
     },
     async handleToggleSnap(e) {
       if (!this.isSnapActive) {
         this.updateSnapStatus(true);
-        console.log(this.selectedFeature);
         const allFeatures = await this.draw.getAll();
         const points = await featuresToPoints(allFeatures);
         console.log(points);
@@ -266,12 +287,10 @@ export default {
     handleSelectionchange(e) {
       let { features } = e;
 
-      console.log('seleção mudou de novo');
       if (this.drawMode === 'add_multipart_feature') {
         switch (this.geometryAddingState) {
           case 'before_drawing':
             this.geometryAddingState = 'drawing';
-            console.log('desenhando');
             return;
             break;
           case 'drawing':
@@ -330,15 +349,17 @@ export default {
       }
     },
     handleModechange(e) {
-      /**
-       *TODO
-       *  autochange mode is actualy necessary?
-       */
-      // this.updateDrawMode(e.mode);
+      // /**
+      //  *TODO
+      //  *  autochange mode is actualy necessary? yes.
+      //  */
+      const mode = this.drawMode;
+      if (mode === 'split_multipart_feature') return;
+      if (mode === 'add_multipart_feature') return;
+      this.updateDrawMode(e.mode);
     },
     handleAddNewFeature() {
       const activeLayerType = this.activeLayer.geometry;
-
       switch (activeLayerType) {
         case 'point':
           this.createTooltip({ content: 'Click to add point' });
@@ -373,6 +394,8 @@ export default {
     },
     handleMouseOverPoint(point) {
       console.log('mouse over point: ', point);
+
+      this.updateSnapPoint(point);
       if (this.tippy[0]) {
         this.createTooltip({
           content: 'Click again to finish drawing'
@@ -450,11 +473,12 @@ export default {
           this.featureBeingSplitted = featureBeingSplitted;
 
           // this function calls draw.uncombineFeatures(),
-          // wich split the selected feature.
+          // witch split the selected feature.
           // After the splitting draw will call 'selection change'.
           this.splitMultifeature();
           break;
         case 'after_splitting':
+          //filter out the selected feature
           const featureBeingSplittedNewParts = featureBeingSplittedParts.filter(
             feature => {
               return feature.id !== splittedFeature.id;

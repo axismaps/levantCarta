@@ -18,6 +18,7 @@ export const state = () => ({
     isMultiselect: false,
     multiselectedFeatures: [],
     isSnapActive: false,
+    snapPoint: null
 })
 
 export const mutations = {
@@ -70,6 +71,10 @@ export const mutations = {
     UPDATE_SNAP_STATUS(state, status) {
         console.log('UPDATE_SNAP_STATUS', status)
         state.isSnapActive = status
+    },
+    UPDATE_SNAP_POINT(state, point) {
+        // console.log('UPDATE_SNAP_POINT', point)
+        state.snapPoint = point
     }
 
 }
@@ -174,6 +179,9 @@ export const actions = {
     updateAttributeFormValidity({ commit }, status) {
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', status)
     },
+    updateSnapPoint({ commit }, point) {
+        commit('UPDATE_SNAP_POINT', point)
+    },
     updateSelectedFeature({ commit, state, dispatch }, features) {
         if (features.length > 1) {
             commit('UPDATE_MULTISELECT_STATUS', true)
@@ -259,5 +267,9 @@ export const getters = {
     },
     isSnapActive(state) {
         return state.isSnapActive
+    },
+    snapPoint(state) {
+        return state.snapPoint
     }
+
 }
