@@ -14,11 +14,14 @@ export const state = () => ({
         approved: false
     },
     isEditionInProgress: false,
+    featureBeingDrawn: null,
+    geometryBeingDrawnPoints: [],
     isAttributeFormValid: false,
     isMultiselect: false,
     multiselectedFeatures: [],
     isSnapActive: false,
-    snapPoint: null
+    snapPoint: null,
+
 })
 
 export const mutations = {
@@ -75,7 +78,17 @@ export const mutations = {
     UPDATE_SNAP_POINT(state, point) {
         // console.log('UPDATE_SNAP_POINT', point)
         state.snapPoint = point
+    },
+    UPDATE_FEATURE_BEING_DRAWN(state, feature) {
+        state.featureBeingDrawn = feature
+    },
+    PUSH_GEOMETRY_BEING_DRAWN_POINT(state, point) {
+        state.geometryBeingDrawnPoints.push(point)
+    },
+    RESET_GEOMETRY_BEING_DRAWN_POINTS(state) {
+        state.geometryBeingDrawnPoints = []
     }
+
 
 }
 
@@ -127,6 +140,19 @@ export const actions = {
     updateSnapStatus({ commit }, status) {
         commit('UPDATE_SNAP_STATUS', status);
     },
+    updateFeatureBeingDrawn({ commit }, feature) {
+        console.log('UPDATE_FEATURE_BEING_DRAWN', feature)
+        commit('UPDATE_FEATURE_BEING_DRAWN', feature)
+    },
+    pushGeometryBeingDrawPoint({ commit }, point) {
+        console.log('PUSH_GEOMETRY_BEING_DRAWN_POINT', point)
+        commit('PUSH_GEOMETRY_BEING_DRAWN_POINT', point)
+    },
+    resetGeometryBeingDrawPoints({ commit }) {
+        console.log('RESET_GEOMETRY_BEING_DRAWN_POINTS')
+        commit('RESET_GEOMETRY_BEING_DRAWN_POINTS')
+    },
+
     /** 
      * TODO: This can be refactor to a more genercit function, one that just create a new feature 
      */
@@ -270,6 +296,12 @@ export const getters = {
     },
     snapPoint(state) {
         return state.snapPoint
+    },
+    geometryBeingDrawnPoints(state) {
+        return state.geometryBeingDrawnPoints
+    },
+    featureBeingDrawn(state) {
+        return state.featureBeingDrawn
     }
 
 }

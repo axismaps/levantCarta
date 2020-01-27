@@ -1,5 +1,3 @@
-// import { pointsToFeature } from '~/assets/lib/helpers';
-
 export const state = () => ({
     changes: [],
     pendingUndoChange: {},
@@ -19,13 +17,6 @@ export const mutations = {
     CLEAR_PENDING_CHANGE(state) {
         state.pendingUndoChange = {}
     },
-    // PUSH_FEATURE_POINT(state, point) {
-    //     console.log('PUSH_FEATURE_POINT', point)
-    //     state.featureBeingDrawnPoints.push(point)
-    // },
-    // RESET_FEATURE_POINTS(state) {
-    //     state.featureBeingDrawnPoints = []
-    // },
     UPDATE_FEATURE_SAVE_PENDING_STATUS(state, status) {
         state.isFeatureSavePending = status
     }
@@ -59,11 +50,6 @@ export const actions = {
                 break;
             case 'draw.step':
                 featureToUpdate.id = selectedFeature.id;
-                // console.log('step da feature', featureToUpdate)
-                // if (rootState.snapPoint !== null) {
-                //     console.log('atualizei o ponto: ', rootState.snapPoint.coordinates)
-                //     featureToUpdate.coordinates = rootState.snapPoint.coordinates
-                // }
 
                 featureToUpdate = {
                     ...featureToUpdate, properties: {
@@ -80,12 +66,15 @@ export const actions = {
 
                 draw.delete(featureToUpdate.id)
 
-                // if (state.featureBeingDrawnPoints.length > 0) {
-                //     featureToUpdate = pointsToFeature(state.featureBeingDrawnPoints, featureToUpdate)
-                // }
+                if (rootState.featureBeingDrawn !== null) {
+                    featureToUpdate = JSON.parse(JSON.stringify(rootState.featureBeingDrawn))
 
-                // console.log(featureToUpdate)
+                    commit('UPDATE_FEATURE_BEING_DRAWN', null, { root: true })
+                    commit('RESET_GEOMETRY_BEING_DRAWN_POINTS', null, { root: true })
+                }
+
                 featureToUpdate.id = selectedFeature.id;
+
                 draw.add(featureToUpdate)
                 draw.changeMode('simple_select', { featureIds: [featureToUpdate.id] })
 
@@ -123,7 +112,7 @@ export const actions = {
                         break;
                     case "features.merge":
                         /** TODO: 
-                         * the features used to generate de new merged feature need to be deleted here, 
+                         * the features used to generate the new merged feature need to be deleted here, 
                          */
                         console.log('merge feature')
                         draw.add(featureToUpdate)
@@ -150,7 +139,6 @@ export const actions = {
         }
 
         changeAction.features[0] = featureToUpdate
-        // commit('RESET_FEATURE_POINTS')
         commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer })
     },
     async undoChange({ commit, state, rootState, dispatch }) {
@@ -248,9 +236,7 @@ export const actions = {
 
         commit('CLEAR_PENDING_CHANGE')
     },
-    // pushFeatureBeingDrawnPoint({ commit }, point) {
-    //     commit('PUSH_FEATURE_POINT', point)
-    // }
+
 }
 
 const replaceFeature = async (draw, commit, dispatch, oldFeatureId, newFeature) => {

@@ -70,25 +70,22 @@ const pointsToFeature = function (points, baseFeature) {
     if (points.length === 0) return baseFeature;
 
     let geometry = []
-    if (type === 'Polygon') {
+    if (type === 'Polygon' || type === 'MultiPolygon') {
         geometry = {
             type: type,
             coordinates: [points.slice().reverse().map((point) => {
-                if (point.type === 'draw.step') {
-                    return point.features[0].coordinates
-                }
+
+                return point.coordinates
             })]
         }
 
         geometry.coordinates[0].push(geometry.coordinates[0][0]) // closes the LinearRing
 
-    } else if (type === 'LineString') {
+    } else if (type === 'LineString' || type === 'MultiLineString') {
         geometry = {
             type: 'LineString',
             coordinates: points.slice().reverse().map((point) => {
-                if (point.type === 'draw.step') {
-                    return point.features[0].coordinates
-                }
+                return point.coordinates
             })
         }
     }
