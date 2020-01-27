@@ -276,7 +276,6 @@ export default {
         }
 
         this.pushGeometryBeingDrawPoint(geometryPoint);
-        // this.geometryBeingDrawnPoints.push(geometryPoint);
 
         const baseFeature = {
           ...this.selectedFeature,
@@ -364,7 +363,7 @@ export default {
             this.handleAddGeometryToFeature(
               this.geometryAddingState,
               this.selectedFeature,
-              features
+              [this.featureBeingDrawn]
             );
             return;
           default:
@@ -508,7 +507,35 @@ export default {
             featureIds: [newFeature.id]
           });
 
-          this.draw.delete(newGeometryToAdd[0].id);
+          /**
+           * TODO,
+           * para a feature ser deletada eu preciso do id da feature que foi usada pra fazer essa feature, entretanto, em algum lugar,
+           * eu estou sobre escrevendo o id original pelo id da feature selecionada. O que é bom na hora de criar a feature, mas nao tão bom
+           * quando eu preciso fazer coisas genéricas. Considerar se isso deve mudar, ou se há outra maneira
+          // this.draw.delete(newGeometryToAdd[0].id);
+           *
+            O snap funciona da seguinte maneira:
+            o aplicativo cria pontos de apoio, quando o mouse esta sobre esses pontos o aplicativo atualiza seu status e salva a localização desse ponto.
+            ao criar ua nova feature todos os clicks são salvos e, caso o mouse esteja em cima de um ponto de apoio a localização do ponto de apoio é usada.
+            
+            Depois que o estado de desenho é finalizado o aplicativo vai desenhar uma nova feature usando os pontos que foram coletados.
+
+            Ou seja o snap é a soma de 4 sistemas:
+            - marcar pontos de apoio no mapa 
+            - salvar a posição do mouse quando esse estiver sobre um ponto de apoio
+            - quando em estado de desenho, salvar cada ponto de apoio usado para gerar a geometria e desenhar uma geometria nova com esses
+            esses pontos.
+            - ao finalizar o desenho apagar a geometria antiga e desenhar a nova.
+
+            algumas questões:
+            -Desenhar pontos de apoio é uma boa? Eles vão precisar ser atualizados.. 
+            eu podia ao invés desenhar somente o ponto que o mouse está em cima.
+            - Estou sentindo falta de uma maneira de dizer que o mouse está em cima de uma ponto... talvez eu tenha que desenhar um ponto
+            que o mouse esteja em cima.
+            - O sistema de desenho tá meio confuso... Eu posso talvez generalizar ele, criar uma grande função que desenha a geometria.
+            Acontece que agora eu desenho a geometria usando o draw, mas tenho que apagar e redesenhar. Talvez isso pudesse ser uma função.
+            Um objeto, talvez. Que gere a geometria e que tambem exponha sua API, caso eu queria mais controle.
+           */
 
           this.handleSelectionchange({ features: [newFeature] });
 
