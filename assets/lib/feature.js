@@ -3,6 +3,8 @@ import { featureCollection } from '@turf/helpers';
 import combine from '@turf/combine';
 import explode from '@turf/explode';
 
+import { mergeFeatures } from './helpers';
+
 const Feature = class {
   constructor(id, geometryType, properties) {
     this.id = id;
@@ -20,6 +22,10 @@ const Feature = class {
 
     newFeature._coordinatePoints = [...this.coordinatePoints, coordinate];
     return newFeature;
+  }
+
+  mergeFeature(feature) {
+    return mergeFeatures(feature, [this.feature]);
   }
 
   get coordinatePoints() {

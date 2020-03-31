@@ -53,18 +53,19 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
-import Mapbox from '~/components/Mapbox.vue';
+import Mapbox from '@/components/Mapbox.vue';
 import uuidv4 from 'uuid/v4';
-import TheToolbox from '~/components/TheToolbox';
-import TheHeader from '~/components/TheHeader';
-import TheSidebar from '~/components/TheSidebar';
+import TheToolbox from '@/components/TheToolbox';
+import TheHeader from '@/components/TheHeader';
+import TheSidebar from '@/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
+import { Feature } from '@/assets/lib/feature';
 import {
   mergeFeatures,
   featuresToPoints,
   pointsToFeature
-} from '~/assets/lib/helpers';
+} from '@/assets/lib/helpers';
 
 const API = process.env.API;
 
@@ -365,7 +366,7 @@ export default {
             this.handleAddGeometryToFeature(
               this.geometryAddingState,
               this.selectedFeature,
-              [this.featureBeingDrawn]
+              [this.featureBeingDrawn.feature]
             );
             return;
           default:
@@ -494,11 +495,21 @@ export default {
         case 'before_drawing':
           this.updateDrawMode('add_multipart_feature');
           this.addGeometryToFeature();
+
+          const newFeatureBeingDrawn = new Feature(
+            uuidv4(),
+            this.selectedFeature.geometry.type,
+            {}
+          );
+          this.updateFeatureBeingDrawn(newFeatureBeingDrawn);
+
           return;
           break;
         case 'after_drawing':
           const newFeature = await mergeFeatures(baseFeature, newGeometryToAdd);
+          // const newFeature = this.featureBeingDrawn.mergeFeature(baseFeature);
 
+          console.log('new fea to add', newFeature);
           this.updateDrawMode('simple_select');
 
           this.draw.delete(baseFeature.id);
