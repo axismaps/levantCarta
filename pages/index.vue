@@ -291,8 +291,6 @@ export default {
           e.lngLat.lat
         ]);
 
-        console.log(featureBeingDrawn);
-
         this.updateFeatureBeingDrawn(featureBeingDrawn);
       }
 
@@ -496,20 +494,22 @@ export default {
           this.updateDrawMode('add_multipart_feature');
           this.addGeometryToFeature();
 
-          const newFeatureBeingDrawn = new Feature(
-            uuidv4(),
-            this.selectedFeature.geometry.type,
-            {}
-          );
+          const geometryType =
+            this.selectedFeature.geometry.type === 'MultiLineString'
+              ? 'LineString'
+              : this.selectedFeature.geometry.type === 'MultiPolygon'
+              ? 'Polygon'
+              : 'Point';
+
+          const newFeatureBeingDrawn = new Feature(uuidv4(), geometryType, {});
+
           this.updateFeatureBeingDrawn(newFeatureBeingDrawn);
 
           return;
           break;
         case 'after_drawing':
-          const newFeature = await mergeFeatures(baseFeature, newGeometryToAdd);
-          // const newFeature = this.featureBeingDrawn.mergeFeature(baseFeature);
+          const newFeature = this.featureBeingDrawn.mergeFeature(baseFeature);
 
-          console.log('new fea to add', newFeature);
           this.updateDrawMode('simple_select');
 
           this.draw.delete(baseFeature.id);
