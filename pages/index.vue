@@ -319,18 +319,18 @@ export default {
         this.applyChange(change);
       }
     },
-    async handleToggleSnap(e) {
+    async handleToggleSnap() {
       if (!this.isSnapActive) {
         this.updateSnapStatus(true);
         const allFeatures = await this.draw.getAll();
-        const points = await featuresToPoints(allFeatures);
-        console.log(points);
+        const snapPoints = await featuresToPoints(allFeatures);
+        console.log(snapPoints);
         const snapLayer = {
           id: 'snapLayer',
           type: 'circle',
           source: {
             type: 'geojson',
-            data: points
+            data: snapPoints
           },
           layout: {},
           paint: {
