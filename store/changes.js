@@ -67,9 +67,9 @@ export const actions = {
         draw.delete(featureToUpdate.id);
 
         if (rootState.featureBeingDrawn !== null) {
-          featureToUpdate = JSON.parse(
-            JSON.stringify(rootState.featureBeingDrawn)
-          ); // deep copy
+          featureToUpdate = rootState.featureBeingDrawn.feature;
+
+          console.log('feature to update: ', featureToUpdate);
 
           commit('UPDATE_FEATURE_BEING_DRAWN', null, { root: true });
           commit('RESET_GEOMETRY_BEING_DRAWN_POINTS', null, { root: true });

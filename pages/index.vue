@@ -285,10 +285,12 @@ export default {
           }
         };
 
-        const featureBeingDrawn = pointsToFeature(
-          this.geometryBeingDrawnPoints,
-          baseFeature
-        );
+        const featureBeingDrawn = this.featureBeingDrawn.addCoordinate([
+          e.lngLat.lng,
+          e.lngLat.lat
+        ]);
+
+        console.log(featureBeingDrawn);
 
         this.updateFeatureBeingDrawn(featureBeingDrawn);
       }

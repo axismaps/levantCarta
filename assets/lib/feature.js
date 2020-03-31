@@ -12,7 +12,14 @@ const Feature = class {
   }
 
   addCoordinate(coordinate) {
-    this._coordinatePoints.push(coordinate);
+    const newFeature = new Feature(
+      this.id,
+      this._geometryType,
+      this.properties
+    );
+
+    newFeature._coordinatePoints = [...this.coordinatePoints, coordinate];
+    return newFeature;
   }
 
   get coordinatePoints() {
@@ -33,7 +40,7 @@ const Feature = class {
             .slice()
             .reverse()
             .map(point => {
-              return point.coordinates;
+              return point;
             })
         ];
 
@@ -45,7 +52,7 @@ const Feature = class {
           .slice()
           .reverse()
           .map(point => {
-            return point.coordinates;
+            return point;
           });
       default:
         break;

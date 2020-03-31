@@ -80,6 +80,7 @@ export const mutations = {
     state.snapPoint = point;
   },
   UPDATE_FEATURE_BEING_DRAWN(state, feature) {
+    console.log('UPDATE_FEATURE_BEING_DRAWN', feature);
     state.featureBeingDrawn = feature;
   },
   PUSH_GEOMETRY_BEING_DRAWN_POINT(state, point) {
@@ -120,6 +121,7 @@ export const actions = {
     const feature = new Feature(uuidv4(), geometryType, {});
     commit('UPDATE_EDITION_STATUS', true);
     commit('UPDATE_SELECTED_FEATURE', feature);
+    commit('UPDATE_FEATURE_BEING_DRAWN', feature);
     commit('UPDATE_DRAW_MODE', drawMode);
 
     draw.changeMode(drawMode);
@@ -128,7 +130,6 @@ export const actions = {
     commit('UPDATE_SNAP_STATUS', status);
   },
   updateFeatureBeingDrawn({ commit }, feature) {
-    console.log('UPDATE_FEATURE_BEING_DRAWN', feature);
     commit('UPDATE_FEATURE_BEING_DRAWN', feature);
   },
   pushGeometryBeingDrawPoint({ commit }, point) {
