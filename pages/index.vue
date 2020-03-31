@@ -508,7 +508,9 @@ export default {
           return;
           break;
         case 'after_drawing':
-          const newFeature = this.featureBeingDrawn.mergeFeature(baseFeature);
+          const newFeature = await this.featureBeingDrawn.mergeFeature(
+            baseFeature
+          );
 
           this.updateDrawMode('simple_select');
 
