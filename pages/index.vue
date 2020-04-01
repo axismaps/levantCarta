@@ -248,78 +248,36 @@ export default {
     extend the Mapbox component API to emmit such events...
     */
     handleMapClick(map, e) {
-      /**
-       * Se uma feature está sendo desenhada eu devo tanto salvar seus control points para o undo,
-       * mas tambem devo salvar a geometria que está sendo desenhada.
-       *
-       * Depois que eu der um update eu vou conferir se não há geometria sendo desenhada e se tiver vou usar essa geometria
-       * para recriar a geometria anterior.
-       *
-       * Outra opção é salvar os pontos da geometria que está sendo desenhada e usar esses pontos em qualquer lugar quando for necessário
-       *
-       */
+      if (!this.isGeometryBeingDrawn) return;
 
-      // Push geometryPoint to geometryBeingDrawnPoints
-      if (this.isGeometryBeingDrawn) {
-        const type = this.geometryBeingDrawnType;
-        let geometryPoint;
+      const clickPointLocation =
+        this.snapPoint !== null
+          ? this.snapPoint.coordinates
+          : [e.lngLat.lng, e.lngLat.lat];
 
-        if (this.snapPoint !== null) {
-          geometryPoint = {
-            type: type,
-            coordinates: this.snapPoint.coordinates
-          };
-        } else {
-          geometryPoint = {
-            type: type,
-            coordinates: [e.lngLat.lng, e.lngLat.lat]
-          };
-        }
+      const featureBeingDrawn = this.featureBeingDrawn.addCoordinate(
+        clickPointLocation
+      );
 
-        this.pushGeometryBeingDrawPoint(geometryPoint);
+      this.updateFeatureBeingDrawn(featureBeingDrawn);
 
-        const baseFeature = {
-          ...this.selectedFeature,
-          geometry: {
-            type: type,
-            coordinates: []
+      const geometryType = this.geometryBeingDrawnType;
+
+      this.createTooltip(`Click to continue drawing ${geometryType}`);
+
+      const changeAction = {
+        type: 'draw.step',
+        features: [
+          {
+            type: geometryType,
+            coordinates: clickPointLocation
           }
-        };
+        ]
+      };
 
-        const featureBeingDrawn = this.featureBeingDrawn.addCoordinate([
-          e.lngLat.lng,
-          e.lngLat.lat
-        ]);
-
-        this.updateFeatureBeingDrawn(featureBeingDrawn);
-      }
-
-      if (this.drawMode === 'draw_polygon') {
-        this.createTooltip({ content: 'Click to continue drawing polygon' });
-        const change = {
-          type: 'draw.step',
-          features: [
-            {
-              type: 'Polygon',
-              coordinates: [e.lngLat.lng, e.lngLat.lat]
-            }
-          ]
-        };
-        this.applyChange(change);
-      } else if (this.drawMode === 'draw_line_string') {
-        this.createTooltip('Click to continue drawing line');
-        const change = {
-          type: 'draw.step',
-          features: [
-            {
-              type: 'LineString',
-              coordinates: [e.lngLat.lng, e.lngLat.lat]
-            }
-          ]
-        };
-        this.applyChange(change);
-      }
+      this.applyChange(changeAction);
     },
+
     async handleToggleSnap() {
       if (!this.isSnapActive) {
         this.updateSnapStatus(true);
@@ -501,7 +459,11 @@ export default {
               ? 'Polygon'
               : 'Point';
 
-          const newFeatureBeingDrawn = new Feature(uuidv4(), geometryType, {});
+          const newFeatureBeingDrawn = new Feature(
+            this.selectedFeature.id,
+            geometryType,
+            {}
+          );
 
           this.updateFeatureBeingDrawn(newFeatureBeingDrawn);
 
@@ -512,11 +474,15 @@ export default {
             baseFeature
           );
 
-          this.updateDrawMode('simple_select');
+          // TODO: ta rolando uma corrida aqui...
 
+          this.updateDrawMode('simple_select');
+          console.log('antes de deletar');
           this.draw.delete(baseFeature.id);
+          console.log('antes de add');
 
           this.draw.add(newFeature);
+          console.log('antes de mudar o modo');
 
           this.draw.changeMode('simple_select', {
             featureIds: [newFeature.id]
@@ -552,7 +518,12 @@ export default {
             Um objeto, talvez. Que gere a geometria e que tambem exponha sua API, caso eu queria mais controle.
            */
 
+          //TODO: eu tenho que salvar a feature com o snap
+
+          console.log('antes de change selection');
+
           this.handleSelectionchange({ features: [newFeature] });
+          console.log('antes de applychange');
 
           const updateFeatureAction = {
             features: [newFeature],

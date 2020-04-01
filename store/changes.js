@@ -147,8 +147,20 @@ export const actions = {
             /** TODO:
              * the features used to generate the new merged feature need to be deleted here,
              */
-            console.log('merge feature');
-            draw.add(featureToUpdate);
+
+            // if (rootState.featureBeingDrawn !== null) {
+            //   featureToUpdate = rootState.featureBeingDrawn.feature;
+
+            //   console.log('feature to update: ', featureToUpdate);
+
+            //   commit('UPDATE_FEATURE_BEING_DRAWN', null, { root: true });
+            //   commit('RESET_GEOMETRY_BEING_DRAWN_POINTS', null, { root: true });
+            // }
+
+            // featureToUpdate.id = selectedFeature.id;
+
+            console.log('merge feature', featureToUpdate);
+            // draw.add(featureToUpdate);
             break;
           default:
             break;
