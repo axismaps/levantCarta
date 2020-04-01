@@ -457,7 +457,9 @@ export default {
               ? 'LineString'
               : this.selectedFeature.geometry.type === 'MultiPolygon'
               ? 'Polygon'
-              : 'Point';
+              : this.selectedFeature.geometry.type === 'MultiPoint'
+              ? 'Point'
+              : this.selectedFeature.geometry.type;
 
           const newFeatureBeingDrawn = new Feature(
             this.selectedFeature.id,
