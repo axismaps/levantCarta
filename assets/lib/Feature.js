@@ -3,7 +3,7 @@ import { featureCollection } from '@turf/helpers';
 import combine from '@turf/combine';
 import explode from '@turf/explode';
 
-import { mergeFeatures } from './helpers';
+import { mergeFeatures } from './Helpers';
 
 const Feature = class {
   constructor(id, geometryType, properties) {

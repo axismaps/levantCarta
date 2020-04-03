@@ -60,15 +60,15 @@ import TheHeader from '@/components/TheHeader';
 import TheSidebar from '@/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { Feature } from '@/assets/lib/feature';
+import { Feature } from '@/assets/lib/Feature';
 import {
   mergeFeatures,
   featuresToPoints,
   pointsToFeature
-} from '@/assets/lib/helpers';
+} from '@/assets/lib/Helpers';
+import { states, interpreter } from '@/assets/lib/StateMachine';
 
 const API = process.env.API;
-
 export default {
   components: {
     Mapbox,
@@ -78,6 +78,7 @@ export default {
   },
   data() {
     return {
+      aplicationState: 'idle',
       showSidebar: true,
       map: null,
       draw: null,
@@ -118,7 +119,6 @@ export default {
       multiselectedFeatures: 'multiselectedFeatures',
       isSnapActive: 'isSnapActive',
       snapPoint: 'snapPoint',
-      geometryBeingDrawnPoints: 'geometryBeingDrawnPoints',
       featureBeingDrawn: 'featureBeingDrawn'
     }),
     mapboxToken() {
@@ -126,6 +126,7 @@ export default {
     },
     isGeometryBeingDrawn() {
       if (
+        this.featureBeingDrawn ||
         this.drawMode === 'draw_polygon' ||
         this.drawMode === 'draw_line_string' ||
         this.drawMode === 'draw_point' ||
@@ -310,31 +311,27 @@ export default {
     handleSelectionchange(e) {
       let { features } = e;
 
-      if (this.drawMode === 'add_multipart_feature') {
-        switch (this.geometryAddingState) {
-          case 'before_drawing':
-            this.geometryAddingState = 'drawing';
-            return;
-            break;
-          case 'drawing':
-            this.geometryAddingState = 'after_drawing';
+      if (this.aplicationState === 'idle') {
+        this.updateSelectedFeature(features);
 
-            this.handleAddGeometryToFeature(
-              this.geometryAddingState,
-              this.selectedFeature,
-              [this.featureBeingDrawn.feature]
-            );
-            return;
-          default:
-            break;
+        if (features[0]) {
+          const updateFeatureAction = {
+            ...e
+          };
+
+          this.applyChange(e);
         }
         return;
       }
 
+      this.aplicationState = interpreter.next(this);
+
+      // OLD CODE BELOW
       /**
        * After splitting, draw is calling 'selection change',
        * so here we will handle the splitting state updating.
        */
+
       if (this.drawMode === 'split_multipart_feature') {
         switch (this.featureSplittingStep) {
           case 'before_splitting':
@@ -359,16 +356,6 @@ export default {
           default:
             break;
         }
-      }
-
-      this.updateSelectedFeature(features);
-
-      if (features[0]) {
-        const updateFeatureAction = {
-          ...e
-        };
-
-        this.applyChange(e);
       }
     },
     handleModechange(e) {
@@ -405,13 +392,15 @@ export default {
         this.tippy[0].destroy();
         this.tippy = [];
       }
-      if (this.drawMode === 'add_multipart_feature') return; //the creation will be handled by the handleAddGeometryToFeature
+      if (this.aplicationState !== 'idle') return;
       this.applyChange(e);
     },
     handleDrawUpdate(e) {
+      return;
       this.applyChange(e);
     },
     handleDrawDelete(e) {
+      return;
       this.applyChange(e);
     },
     handleMouseOverPoint(point) {
@@ -442,105 +431,17 @@ export default {
       this.updateDrawMode('simple_select');
       this.applyChange(updateFeatureAction);
     },
-    async handleAddGeometryToFeature(
-      geometryAddingState,
-      baseFeature,
-      newGeometryToAdd
-    ) {
-      switch (geometryAddingState) {
-        case 'before_drawing':
-          this.updateDrawMode('add_multipart_feature');
-          this.addGeometryToFeature();
 
-          const geometryType =
-            this.selectedFeature.geometry.type === 'MultiLineString'
-              ? 'LineString'
-              : this.selectedFeature.geometry.type === 'MultiPolygon'
-              ? 'Polygon'
-              : this.selectedFeature.geometry.type === 'MultiPoint'
-              ? 'Point'
-              : this.selectedFeature.geometry.type;
-
-          const newFeatureBeingDrawn = new Feature(
-            this.selectedFeature.id,
-            geometryType,
-            {}
-          );
-
-          this.updateFeatureBeingDrawn(newFeatureBeingDrawn);
-
-          return;
-          break;
-        case 'after_drawing':
-          const newFeature = await this.featureBeingDrawn.mergeFeature(
-            baseFeature
-          );
-
-          // TODO: ta rolando uma corrida aqui...
-
-          this.updateDrawMode('simple_select');
-          console.log('antes de deletar');
-          this.draw.delete(baseFeature.id);
-          console.log('antes de add');
-
-          this.draw.add(newFeature);
-          console.log('antes de mudar o modo');
-
-          this.draw.changeMode('simple_select', {
-            featureIds: [newFeature.id]
-          });
-
-          /**
-           * TODO,
-           * para a feature ser deletada eu preciso do id da feature que foi usada pra fazer essa feature, entretanto, em algum lugar,
-           * eu estou sobre escrevendo o id original pelo id da feature selecionada. O que é bom na hora de criar a feature, mas nao tão bom
-           * quando eu preciso fazer coisas genéricas. Considerar se isso deve mudar, ou se há outra maneira
-          // this.draw.delete(newGeometryToAdd[0].id);
-           *
-            O snap funciona da seguinte maneira:
-            o aplicativo cria pontos de apoio, quando o mouse esta sobre esses pontos o aplicativo atualiza seu status e salva a localização desse ponto.
-            ao criar ua nova feature todos os clicks são salvos e, caso o mouse esteja em cima de um ponto de apoio a localização do ponto de apoio é usada.
-            
-            Depois que o estado de desenho é finalizado o aplicativo vai desenhar uma nova feature usando os pontos que foram coletados.
-
-            Ou seja o snap é a soma de 4 sistemas:
-            - marcar pontos de apoio no mapa 
-            - salvar a posição do mouse quando esse estiver sobre um ponto de apoio
-            - quando em estado de desenho, salvar cada ponto de apoio usado para gerar a geometria e desenhar uma geometria nova com esses
-            esses pontos.
-            - ao finalizar o desenho apagar a geometria antiga e desenhar a nova.
-
-            algumas questões:
-            -Desenhar pontos de apoio é uma boa? Eles vão precisar ser atualizados.. 
-            eu podia ao invés desenhar somente o ponto que o mouse está em cima.
-            - Estou sentindo falta de uma maneira de dizer que o mouse está em cima de uma ponto... talvez eu tenha que desenhar um ponto
-            que o mouse esteja em cima.
-            - O sistema de desenho tá meio confuso... Eu posso talvez generalizar ele, criar uma grande função que desenha a geometria.
-            Acontece que agora eu desenho a geometria usando o draw, mas tenho que apagar e redesenhar. Talvez isso pudesse ser uma função.
-            Um objeto, talvez. Que gere a geometria e que tambem exponha sua API, caso eu queria mais controle.
-           */
-
-          //TODO: eu tenho que salvar a feature com o snap
-
-          console.log('antes de change selection');
-
-          this.handleSelectionchange({ features: [newFeature] });
-          console.log('antes de applychange');
-
-          const updateFeatureAction = {
-            features: [newFeature],
-            type: 'draw.update',
-            action: 'features.merge'
-          };
-
-          this.applyChange(updateFeatureAction);
-
-          this.geometryAddingState = 'before_drawing';
-          break;
-        default:
-          break;
-      }
+    handleAddGeometryToFeature() {
+      // console.log('eita..', interpreter.enter(this, 'add_geometry_to_feature'));
+      // this.aplicationState = 'idle_out';
+      this.aplicationState = 'add_geometry_to_feature.before_drawing';
+      this.aplicationState = interpreter.interpreter(
+        this,
+        'add_geometry_to_feature.before_drawing'
+      );
     },
+
     async handleSplitMultifeature(
       splitState,
       featureBeingSplitted,

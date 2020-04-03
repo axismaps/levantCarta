@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import { Feature } from '@/assets/lib/feature';
+import { Feature } from '~/assets/lib/Feature';
 
 export const state = () => ({
   map: null,
