@@ -199,11 +199,15 @@ export const actions = {
     commit('UPDATE_SNAP_POINT', point);
   },
   updateSelectedFeature({ commit, state, dispatch }, features) {
+    if (!Array.isArray(features)) {
+      throw 'Features need to be an array.';
+    }
     if (features.length > 1) {
       commit('UPDATE_MULTISELECT_STATUS', true);
       commit('UPDATE_MULTISELECT_FEATURES', features);
       commit('UPDATE_SELECTED_FEATURE', features[0]);
     } else if (!state.isEditionInProgress) {
+      console.log('eição em progresso');
       commit('UPDATE_MULTISELECT_STATUS', false);
       commit('UPDATE_MULTISELECT_FEATURES', []);
 
@@ -225,6 +229,7 @@ export const actions = {
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false);
       }
     } else if (state.isAttributeFormValid) {
+      console.log('attributeForm valid');
       const changeAction = {
         features: [state.selectedFeature],
         type: 'draw.update',

@@ -84,7 +84,7 @@ export default {
       draw: null,
       popup: null,
       featureBeingCreatedId: '',
-      featureBeingSplitted: null,
+      featureBeingSplit: null,
       featureSplittingStep: 'before_splitting',
       geometryAddingState: 'before_drawing',
       tippy: {}
@@ -310,7 +310,7 @@ export default {
     },
     handleSelectionchange(e) {
       let { features } = e;
-
+      console.log('selectionchange');
       if (this.aplicationState === 'idle') {
         this.updateSelectedFeature(features);
 
@@ -324,7 +324,11 @@ export default {
         return;
       }
 
-      this.aplicationState = interpreter.next(this);
+      this.aplicationState = interpreter.interpreter(
+        this,
+        this.aplicationState,
+        e
+      );
 
       // OLD CODE BELOW
       /**
@@ -332,31 +336,31 @@ export default {
        * so here we will handle the splitting state updating.
        */
 
-      if (this.drawMode === 'split_multipart_feature') {
-        switch (this.featureSplittingStep) {
-          case 'before_splitting':
-            this.featureSplittingStep = 'after_splitting';
-            break;
-          case 'after_splitting':
-            /**
-             * Selection change after splitting means that the feature to
-             * keep is already selected. So we will call handleSplitMultifeature
-             * again with the new state.
-             */
-            const featureSplited = features[0];
+      // if (this.drawMode === 'split_multipart_feature') {
+      //   switch (this.featureSplittingStep) {
+      //     case 'before_splitting':
+      //       this.featureSplittingStep = 'after_splitting';
+      //       break;
+      //     case 'after_splitting':
+      //       /**
+      //        * Selection change after splitting means that the feature to
+      //        * keep is already selected. So we will call handleSplitMultifeature
+      //        * again with the new state.
+      //        */
+      //       const featureSplited = features[0];
 
-            this.handleSplitMultifeature(
-              this.featureSplittingStep,
-              this.featureBeingSplitted,
-              this.multiselectedFeatures,
-              featureSplited
-            );
-            return;
-            break;
-          default:
-            break;
-        }
-      }
+      //       this.handleSplitMultifeature(
+      //         this.featureSplittingStep,
+      //         this.featureBeingSplit,
+      //         this.multiselectedFeatures,
+      //         featureSplited
+      //       );
+      //       return;
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      // }
     },
     handleModechange(e) {
       // /**
@@ -433,24 +437,30 @@ export default {
     },
 
     handleAddGeometryToFeature() {
-      // console.log('eita..', interpreter.enter(this, 'add_geometry_to_feature'));
-      // this.aplicationState = 'idle_out';
       this.aplicationState = 'add_geometry_to_feature.before_drawing';
       this.aplicationState = interpreter.interpreter(
         this,
-        'add_geometry_to_feature.before_drawing'
+        this.aplicationState
+      );
+    },
+    handleSplitMultifeature() {
+      this.aplicationState = 'split_multipart_feature.before_splitting';
+      this.aplicationState = interpreter.interpreter(
+        this,
+        this.aplicationState
       );
     },
 
-    async handleSplitMultifeature(
+    async _handleSplitMultifeature(
       splitState,
-      featureBeingSplitted,
-      featureBeingSplittedParts,
-      splittedFeature
+      featureBeingSplit,
+      featureBeingSplitParts,
+      splitFeature
     ) {
       switch (splitState) {
         case 'before_splitting':
-          this.featureBeingSplitted = featureBeingSplitted;
+          console.log('after:', featureBeingSplit);
+          this.featureBeingSplit = featureBeingSplit;
 
           // this function calls draw.uncombineFeatures(),
           // witch split the selected feature.
@@ -459,26 +469,26 @@ export default {
           break;
         case 'after_splitting':
           //filter out the selected feature
-          const featureBeingSplittedNewParts = featureBeingSplittedParts.filter(
+          const featureBeingSplitNewParts = featureBeingSplitParts.filter(
             feature => {
-              return feature.id !== splittedFeature.id;
+              return feature.id !== splitFeature.id;
             }
           );
 
           const baseFeature = {
-            id: featureBeingSplitted.id,
-            type: featureBeingSplitted.type,
-            properties: featureBeingSplitted.properties,
-            geometry: featureBeingSplittedNewParts[0].geometry
+            id: featureBeingSplit.id,
+            type: featureBeingSplit.type,
+            properties: featureBeingSplit.properties,
+            geometry: featureBeingSplitNewParts[0].geometry
           };
 
-          const updatedFeatureBeingSplitted = await mergeFeatures(
+          const updatedFeatureBeingSplit = await mergeFeatures(
             baseFeature,
-            featureBeingSplittedNewParts
+            featureBeingSplitNewParts
           );
 
           const updateFeatureAction = {
-            features: [updatedFeatureBeingSplitted],
+            features: [updatedFeatureBeingSplit],
             type: 'draw.update',
             action: 'features.merge'
           };
@@ -487,13 +497,13 @@ export default {
 
           this.updateDrawMode('simple_select');
 
-          this.draw.delete(splittedFeature.id);
-          featureBeingSplittedParts.map(feature => {
+          this.draw.delete(splitFeature.id);
+          featureBeingSplitParts.map(feature => {
             this.draw.delete(feature.id);
           });
-          this.handleSelectionchange({ features: [splittedFeature] });
+          this.handleSelectionchange({ features: [splitFeature] });
 
-          this.cloneFeature(splittedFeature);
+          this.cloneFeature(splitFeature);
 
           this.featureSplittingStep = 'before_splitting';
         default:
