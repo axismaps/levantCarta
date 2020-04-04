@@ -9,10 +9,6 @@ const states = {
     }
   },
   add_geometry_to_feature: {
-    switchTo: 'add_geometry_to_feature.before_drawing',
-    onEnter() {
-      return;
-    },
     before_drawing: {
       switchTo: 'add_geometry_to_feature.drawing',
       onEnter(app) {
@@ -66,7 +62,6 @@ const states = {
           type: 'draw.update',
           action: 'features.merge'
         };
-        console.log('é isso aqui?');
         app.applyChange(updateFeatureAction);
 
         return;
@@ -147,6 +142,43 @@ const states = {
         app.updateSelectedFeature([splitFeature]);
 
         return;
+      }
+    }
+  },
+  merge_feature: {
+    merging: {
+      switchTo: 'idle',
+      async onEnter(app) {
+        const newFeature = await delay(
+          mergeFeatures(app.selectedFeature, app.multiselectedFeatures)
+        );
+
+        const updateFeatureAction = {
+          features: [newFeature],
+          type: 'draw.update',
+          action: 'features.merge'
+        };
+
+        await delay(app.draw.delete(app.selectedFeature.id));
+        await delay(
+          app.multiselectedFeatures.map(feature => {
+            app.draw.delete(feature.id);
+          })
+        );
+
+        await delay(app.draw.add(newFeature));
+        await delay(
+          app.draw.changeMode('simple_select', {
+            featureIds: [newFeature.id]
+          })
+        );
+
+        app.updateSelectedFeature([]);
+        app.updateSelectedFeature([newFeature]);
+
+        app.updateDrawMode('simple_select');
+
+        app.applyChange(updateFeatureAction);
       }
     }
   }

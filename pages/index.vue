@@ -387,32 +387,25 @@ export default {
     handleCloneFeature() {
       this.cloneFeature(this.selectedFeature);
     },
+
     async handleMergeSelectedFeatures() {
-      const newFeature = await mergeFeatures(
-        this.selectedFeature,
-        this.multiselectedFeatures
-      );
-
-      const updateFeatureAction = {
-        features: [newFeature],
-        type: 'draw.update',
-        action: 'features.merge'
-      };
-
-      this.updateDrawMode('simple_select');
-      this.applyChange(updateFeatureAction);
-    },
-
-    handleAddGeometryToFeature() {
-      this.aplicationState = 'add_geometry_to_feature.before_drawing';
-      this.aplicationState = interpreter.interpreter(
+      this.aplicationState = 'merge_feature.merging';
+      this.aplicationState = await interpreter.interpreter(
         this,
         this.aplicationState
       );
     },
-    handleSplitMultifeature() {
+
+    async handleAddGeometryToFeature() {
+      this.aplicationState = 'add_geometry_to_feature.before_drawing';
+      this.aplicationState = await interpreter.interpreter(
+        this,
+        this.aplicationState
+      );
+    },
+    async handleSplitMultifeature() {
       this.aplicationState = 'split_multipart_feature.before_splitting';
-      this.aplicationState = interpreter.interpreter(
+      this.aplicationState = await interpreter.interpreter(
         this,
         this.aplicationState
       );
