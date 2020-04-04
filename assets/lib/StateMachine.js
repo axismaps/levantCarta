@@ -77,9 +77,7 @@ const states = {
     before_splitting: {
       switchTo: 'split_multipart_feature.splitting',
       onEnter(app) {
-        console.log('antes de splitting');
         app.featureBeingSplit = app.selectedFeature;
-        // app.splitMultifeature();
         app.draw.uncombineFeatures();
         return;
       }
@@ -89,7 +87,6 @@ const states = {
       onEnter(app, payload) {
         const { features } = payload;
 
-        console.log('payload', payload);
         console.log('select feature to keep');
 
         app.updateSelectedFeature(features);
@@ -104,7 +101,6 @@ const states = {
         const featureBeingSplit = app.featureBeingSplit;
         const splitFeature = features[0];
 
-        console.log('splitFeature', splitFeature);
         const featureBeingSplitParts = app.multiselectedFeatures;
 
         //filter out the selected feature
@@ -131,37 +127,24 @@ const states = {
           type: 'draw.update',
           action: 'features.merge'
         };
-        console.log('ou é isso aqui?');
         app.applyChange(updateFeatureAction);
 
-        // app.updateDrawMode('simple_select');
-        // app.draw.changeMode('simple_select');
-
-        await resolveAfter2Seconds(app.draw.delete(splitFeature.id));
-        await resolveAfter2Seconds(
+        await delay(app.draw.delete(splitFeature.id));
+        await delay(
           featureBeingSplitParts.map(feature => {
             app.draw.delete(feature.id);
           })
         );
-        await resolveAfter2Seconds(app.draw.add(updatedFeatureBeingSplit));
-        // app.handleSelectionchange({ features: [splitFeature] });
-
-        // console.log('antes de atualizar a selectedFeature');
-        console.log('antes de clonar ');
-        // app.updateSelectedFeature([splitFeature]);
-        // app.cloneFeature(splitFeature);
+        await delay(app.draw.add(updatedFeatureBeingSplit));
 
         const createFeatureAction = {
           features: [{ ...splitFeature, id: uuidv4() }],
           type: 'draw.create',
           action: 'feature.clone'
         };
-        console.log('antes de drawchange mode');
-        console.log('antes de appy chage');
         app.applyChange(createFeatureAction);
-        console.log('antes de update selectedFeature []');
-        console.log('depois de update selectedFeature []');
-        // app.updateSelectedFeature([splitFeature]);
+        app.updateSelectedFeature([]);
+        app.updateSelectedFeature([splitFeature]);
 
         return;
       }
@@ -227,7 +210,7 @@ const interpreter = {
   }
 };
 
-function resolveAfter2Seconds(x) {
+function delay(x) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(x);

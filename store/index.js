@@ -183,11 +183,6 @@ export const actions = {
         break;
     }
   },
-  splitMultifeature({ state, commit }) {
-    commit('UPDATE_DRAW_MODE', 'split_multipart_feature');
-    const { draw } = state;
-    draw.uncombineFeatures();
-  },
   updateAttributeForm({ commit }, attributeForm) {
     commit('UPDATE_ATTRIBUTE_FORM', attributeForm);
     commit('UPDATE_EDITION_STATUS', true);
