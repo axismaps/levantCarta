@@ -15,8 +15,8 @@
         @add-new-feature="handleAddNewFeature"
         @clone-feature="handleCloneFeature"
         @merge-selected-features="handleMergeSelectedFeatures"
-        @add-geometry-to-feature="handleAddGeometryToFeature(geometryAddingState)"
-        @slip-multifeature="handleSplitMultifeature(featureSplittingStep,selectedFeature)"
+        @add-geometry-to-feature="handleAddGeometryToFeature"
+        @slip-multifeature="handleSplitMultifeature"
         @toggle-snap="handleToggleSnap"
       />
     </div>
@@ -85,8 +85,6 @@ export default {
       popup: null,
       featureBeingCreatedId: '',
       featureBeingSplit: null,
-      featureSplittingStep: 'before_splitting',
-      geometryAddingState: 'before_drawing',
       tippy: {}
     };
   },
@@ -384,7 +382,6 @@ export default {
         });
       }
     },
-
     async handleCloneFeature() {
       this.aplicationState = 'clone_feature.cloning';
       this.aplicationState = await interpreter.interpreter(
@@ -392,7 +389,6 @@ export default {
         this.aplicationState
       );
     },
-
     async handleMergeSelectedFeatures() {
       this.aplicationState = 'merge_feature.merging';
       this.aplicationState = await interpreter.interpreter(
@@ -400,7 +396,6 @@ export default {
         this.aplicationState
       );
     },
-
     async handleAddGeometryToFeature() {
       this.aplicationState = 'add_geometry_to_feature.before_drawing';
       this.aplicationState = await interpreter.interpreter(
@@ -415,7 +410,6 @@ export default {
         this.aplicationState
       );
     },
-
     createTooltip(options) {
       if (this.tippy[0]) {
         this.tippy[0].destroy();
