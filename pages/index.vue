@@ -248,7 +248,7 @@ export default {
     extend the Mapbox component API to emmit such events...
     */
     handleMapClick(map, e) {
-      if (!this.isGeometryBeingDrawn) return;
+      if (!this.isGeometryBeingDrawn) return; //talvez eu nao possa fazer isso pq atualmente arrastar features nao ta salvando...
 
       const clickPointLocation =
         this.snapPoint !== null
@@ -384,8 +384,13 @@ export default {
         });
       }
     },
-    handleCloneFeature() {
-      this.cloneFeature(this.selectedFeature);
+
+    async handleCloneFeature() {
+      this.aplicationState = 'clone_feature.cloning';
+      this.aplicationState = await interpreter.interpreter(
+        this,
+        this.aplicationState
+      );
     },
 
     async handleMergeSelectedFeatures() {

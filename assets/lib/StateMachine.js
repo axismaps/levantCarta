@@ -181,6 +181,14 @@ const states = {
         app.applyChange(updateFeatureAction);
       }
     }
+  },
+  clone_feature: {
+    cloning: {
+      switchTo: 'idle',
+      async onEnter(app) {
+        app.cloneFeature(app.selectedFeature);
+      }
+    }
   }
 };
 
