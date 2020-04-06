@@ -10,13 +10,13 @@
       <the-toolbox
         class="toolbox"
         :isSidebarOpen="showSidebar"
-        @draw-init="handleDrawInit"
-        @toggle-sidebar="handleTogglesidebar"
+        @add-geometry-to-feature="handleAddGeometryToFeature"
         @add-new-feature="handleAddNewFeature"
         @clone-feature="handleCloneFeature"
+        @draw-init="handleDrawInit"
         @merge-selected-features="handleMergeSelectedFeatures"
-        @add-geometry-to-feature="handleAddGeometryToFeature"
         @slip-multifeature="handleSplitMultifeature"
+        @toggle-sidebar="handleTogglesidebar"
         @toggle-snap="handleToggleSnap"
       />
     </div>
@@ -35,17 +35,17 @@
         }"
       @create-popup="handleCreatePopup"
       @delete-popup="handleDeletePopup"
-      @popup-init="handleInitPopup"
+      @draw-create="handleDrawCreate"
+      @draw-delete="handleDrawDelete"
+      @draw-modechange="handleModechange"
+      @draw-selectionchange="handleSelectionchange"
+      @draw-update="handleDrawUpdate"
+      @map-click="handleMapClick"
       @map-init="handleMapInit"
       @map-load="handleMapLoad"
-      @map-click="handleMapClick"
-      @draw-selectionchange="handleSelectionchange"
-      @draw-modechange="handleModechange"
-      @draw-create="handleDrawCreate"
-      @draw-update="handleDrawUpdate"
-      @draw-delete="handleDrawDelete"
       @mouse-enter-point="handleMouseOverPoint"
       @mouse-leave-point="updateSnapPoint(null)"
+      @popup-init="handleInitPopup"
       class="map"
     />
   </div>
@@ -107,17 +107,17 @@ export default {
   },
   computed: {
     ...mapGetters({
-      layers: 'layers/items',
       activeLayer: 'layers/currentItem',
-      overlays: 'overlays/items',
       activeOverlay: 'overlays/currentItem',
-      isEditionInProgress: 'isEditionInProgress',
       drawMode: 'drawMode',
-      selectedFeature: 'selectedFeature',
-      multiselectedFeatures: 'multiselectedFeatures',
+      featureBeingDrawn: 'featureBeingDrawn',
+      isEditionInProgress: 'isEditionInProgress',
       isSnapActive: 'isSnapActive',
-      snapPoint: 'snapPoint',
-      featureBeingDrawn: 'featureBeingDrawn'
+      layers: 'layers/items',
+      multiselectedFeatures: 'multiselectedFeatures',
+      overlays: 'overlays/items',
+      selectedFeature: 'selectedFeature',
+      snapPoint: 'snapPoint'
     }),
     mapboxToken() {
       return process.env.mapboxToken;
@@ -156,21 +156,21 @@ export default {
   },
   methods: {
     ...mapActions({
-      setActiveOverlay: 'overlays/setCurrentItem',
-      enterDrawMode: 'enterDrawMode',
-      drawMode: 'drawMode',
-      setDraw: 'setDraw',
-      applyChange: 'changes/applyChange',
-      saveFeature: 'features/saveFeature',
-      updateSelectedFeature: 'updateSelectedFeature',
-      updateDrawMode: 'updateDrawMode',
-      cloneFeature: 'cloneFeature',
-      mergeSelectedFeatures: 'mergeSelectedFeatures',
       addGeometryToFeature: 'addGeometryToFeature',
-      updateSnapStatus: 'updateSnapStatus',
-      updateSnapPoint: 'updateSnapPoint',
+      applyChange: 'changes/applyChange',
+      cloneFeature: 'cloneFeature',
+      drawMode: 'drawMode',
+      enterDrawMode: 'enterDrawMode',
+      mergeSelectedFeatures: 'mergeSelectedFeatures',
+      pushGeometryBeingDrawPoint: 'pushGeometryBeingDrawPoint',
+      saveFeature: 'features/saveFeature',
+      setActiveOverlay: 'overlays/setCurrentItem',
+      setDraw: 'setDraw',
+      updateDrawMode: 'updateDrawMode',
       updateFeatureBeingDrawn: 'updateFeatureBeingDrawn',
-      pushGeometryBeingDrawPoint: 'pushGeometryBeingDrawPoint'
+      updateSelectedFeature: 'updateSelectedFeature',
+      updateSnapPoint: 'updateSnapPoint',
+      updateSnapStatus: 'updateSnapStatus'
     }),
     handleInitPopup(popup) {
       this.popup = popup;
