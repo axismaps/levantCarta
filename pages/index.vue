@@ -155,7 +155,6 @@ export default {
     ...mapActions({
       addGeometryToFeature: 'addGeometryToFeature',
       applyChange: 'changes/applyChange',
-      cloneFeature: 'cloneFeature',
       drawMode: 'drawMode',
       enterDrawMode: 'enterDrawMode',
       mergeSelectedFeatures: 'mergeSelectedFeatures',
