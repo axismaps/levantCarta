@@ -142,24 +142,6 @@ export const actions = {
   },
 
   /**
-   * TODO: This can be refactor to a more genercit function, one that just create a new feature
-   */
-  cloneFeature({ commit, dispatch }, feature) {
-    const newFeature = { ...feature, id: uuidv4() };
-
-    commit('UPDATE_SELECTED_FEATURE', newFeature);
-    commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', true);
-
-    const changeAction = {
-      features: [newFeature],
-      type: 'draw.create',
-      action: 'feature.clone'
-    };
-
-    dispatch('changes/applyChange', changeAction);
-  },
-
-  /**
    * TODO: This can be refactor to a more generic function, one that just start a new drawing
    */
   addGeometryToFeature({ state }) {
