@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid/v4';
+
 export const state = () => ({
   changes: [],
   pendingUndoChange: {},
@@ -64,49 +66,40 @@ export const actions = {
         };
         break;
       case 'draw.create':
-        draw.delete(featureToUpdate.id);
+        switch (changeAction.action) {
+          case 'feature.clone':
+            const newFeature = { ...featureToUpdate, id: uuidv4() };
 
-        if (rootState.featureBeingDrawn !== null) {
-          featureToUpdate = rootState.featureBeingDrawn.feature;
+            draw.add(newFeature);
+            console.log('antes de set feature');
+            draw
+              .setFeatureProperty(newFeature.id, 'name', attributeForm.name)
+              .setFeatureProperty(
+                newFeature.id,
+                'firstyear',
+                attributeForm.firstyear
+              )
+              .setFeatureProperty(
+                newFeature.id,
+                'lastyear',
+                attributeForm.lastyear
+              )
+              .setFeatureProperty(newFeature.id, 'type', attributeForm.type)
+              .setFeatureProperty(newFeature.id, 'tags', attributeForm.tags)
+              .setFeatureProperty(newFeature.id, 'approved', false);
 
-          commit('UPDATE_FEATURE_BEING_DRAWN', null, { root: true });
+            draw.changeMode('simple_select', { featureIds: [newFeature.id] });
+
+            await dispatch('features/saveFeature', newFeature, {
+              root: true
+            });
+
+            break;
+
+          default:
+            break;
         }
 
-        featureToUpdate.id = selectedFeature.id;
-
-        draw.add(featureToUpdate);
-        draw.changeMode('simple_select', { featureIds: [featureToUpdate.id] });
-
-        featureToUpdate.properties.approved = false;
-
-        commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', true);
-        commit('UPDATE_SELECTED_FEATURE', featureToUpdate, { root: true });
-
-        draw
-          .setFeatureProperty(featureToUpdate.id, 'name', attributeForm.name)
-          .setFeatureProperty(
-            featureToUpdate.id,
-            'firstyear',
-            attributeForm.firstyear
-          )
-          .setFeatureProperty(
-            featureToUpdate.id,
-            'lastyear',
-            attributeForm.lastyear
-          )
-          .setFeatureProperty(featureToUpdate.id, 'type', attributeForm.type)
-          .setFeatureProperty(featureToUpdate.id, 'tags', attributeForm.tags)
-          .setFeatureProperty(featureToUpdate.id, 'approved', false);
-
-        if (isAttributeFormValid) {
-          await dispatch('features/saveFeature', featureToUpdate, {
-            root: true
-          });
-          commit('UPDATE_FEATURE_SAVE_PENDING_STATUS', false);
-          commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true });
-          commit('UPDATE_EDITION_STATUS', false, { root: true });
-          // commit('CLEAR_ATTRIBUTE_FORM', null, { root: true })
-        }
         break;
       case 'draw.update':
         switch (changeAction.action) {

@@ -283,7 +283,15 @@ const states = {
     cloning: {
       switchTo: 'idle',
       async onEnter(app) {
-        app.cloneFeature(app.selectedFeature);
+        const newFeature = { ...app.selectedFeature, id: uuidv4() };
+
+        const changeAction = {
+          features: [newFeature],
+          type: 'draw.create',
+          action: 'feature.clone'
+        };
+
+        await app.applyChange(changeAction);
       }
     }
   }
