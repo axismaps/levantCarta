@@ -289,19 +289,15 @@ const states = {
   }
 };
 
-const interpreter = {
-  enter(app, state) {
-    const actualState = app.aplicationState;
-    if (actualState !== 'idle') {
-      console.log(`STATE MACHINE ERROR: App actual state must be idle.`);
-      return app.actualState;
-    }
-    app.aplicationState = 'idle_out';
-    console.log('enter state', state);
-    return this.interpreter(app, state);
-  },
-  next(app, payload) {
-    const actualState = app.aplicationState;
+const interpreter = async (app, actualState, payload) => {
+  console.log('actualState', actualState);
+  if (actualState === 'idle') {
+    console.log(`STATE MACHINE ERROR: Nothing to do, app is already idle`);
+    return actualState;
+  }
+  let newState = {};
+
+  try {
     let schema = states;
     const pList = actualState.split('.');
     const len = pList.length;
@@ -311,37 +307,12 @@ const interpreter = {
       if (!schema[element]) schema[element] = {};
       schema = schema[element];
     }
-
-    const nextState = schema[pList[len - 1]].switchTo;
-
-    console.log('nextState', nextState);
-    return this.interpreter(app, nextState, payload);
-  },
-  async interpreter(app, actualState, payload) {
-    console.log('actualState', actualState);
-    if (actualState === 'idle') {
-      console.log(`STATE MACHINE ERROR: Nothing to do, app is already idle`);
-      return actualState;
-    }
-    let newState = {};
-
-    try {
-      let schema = states;
-      const pList = actualState.split('.');
-      const len = pList.length;
-
-      for (let i = 0; i < len - 1; i++) {
-        const element = pList[i];
-        if (!schema[element]) schema[element] = {};
-        schema = schema[element];
-      }
-      newState = schema[pList[len - 1]].switchTo;
-      await schema[pList[len - 1]].onEnter(app, payload);
-      return newState;
-    } catch (error) {
-      console.log(`STATE MACHINE ERROR: ${error}`);
-      return actualState;
-    }
+    newState = schema[pList[len - 1]].switchTo;
+    await schema[pList[len - 1]].onEnter(app, payload);
+    return newState;
+  } catch (error) {
+    console.log(`STATE MACHINE ERROR: ${error}`);
+    return actualState;
   }
 };
 
