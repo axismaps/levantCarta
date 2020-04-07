@@ -70,7 +70,6 @@ export const actions = {
           featureToUpdate = rootState.featureBeingDrawn.feature;
 
           commit('UPDATE_FEATURE_BEING_DRAWN', null, { root: true });
-          commit('RESET_GEOMETRY_BEING_DRAWN_POINTS', null, { root: true });
         }
 
         featureToUpdate.id = selectedFeature.id;

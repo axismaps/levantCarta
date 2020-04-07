@@ -6,21 +6,40 @@ import explode from '@turf/explode';
 import { mergeFeatures } from './Helpers';
 
 const Feature = class {
-  constructor(id, geometryType, properties) {
+  constructor(id, geometryType, properties, isLocked) {
     this.id = id;
     this.properties = properties;
     this._geometryType = geometryType;
     this._coordinatePoints = [];
+    this.isLocked = isLocked;
   }
 
   addCoordinate(coordinate) {
-    const newFeature = new Feature(
+    let newFeature = new Feature(
       this.id,
       this._geometryType,
-      this.properties
+      this.properties,
+      this.isLocked
     );
 
-    newFeature._coordinatePoints = [...this.coordinatePoints, coordinate];
+    if (!this.isLocked) {
+      newFeature._coordinatePoints = [...this.coordinatePoints, coordinate];
+    } else {
+      newFeature._coordinatePoints = [...this.coordinatePoints];
+    }
+    return newFeature;
+  }
+
+  lockDrawing() {
+    let newFeature = new Feature(
+      this.id,
+      this._geometryType,
+      this.properties,
+      this.isLocked
+    );
+
+    newFeature._coordinatePoints = [...this.coordinatePoints];
+    newFeature.isLocked = true;
     return newFeature;
   }
 

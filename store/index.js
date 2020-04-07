@@ -2,10 +2,6 @@ import uuidv4 from 'uuid/v4';
 import { Feature } from '~/assets/lib/Feature';
 
 export const state = () => ({
-  map: null,
-  draw: {},
-  drawMode: 'simple_select',
-  selectedFeature: null,
   attributeForm: {
     name: null,
     firstyear: '',
@@ -14,13 +10,17 @@ export const state = () => ({
     tags: '',
     approved: false
   },
-  isEditionInProgress: false,
+  draw: {},
+  drawMode: 'simple_select',
   featureBeingDrawn: null,
   geometryBeingDrawnPoints: [],
   isAttributeFormValid: false,
+  isEditionInProgress: false,
   isMultiselect: false,
-  multiselectedFeatures: [],
   isSnapActive: false,
+  map: null,
+  multiselectedFeatures: [],
+  selectedFeature: null,
   snapPoint: null
 });
 

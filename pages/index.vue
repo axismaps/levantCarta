@@ -107,10 +107,12 @@ export default {
   },
   computed: {
     ...mapGetters({
+      attributeForm: 'attributeForm',
       activeLayer: 'layers/currentItem',
       activeOverlay: 'overlays/currentItem',
       drawMode: 'drawMode',
       featureBeingDrawn: 'featureBeingDrawn',
+      isAttributeFormValid: 'isAttributeFormValid',
       isEditionInProgress: 'isEditionInProgress',
       isSnapActive: 'isSnapActive',
       layers: 'layers/items',
@@ -240,11 +242,6 @@ export default {
         opacity / 100
       );
     },
-    /** 
-     TODO:
-    This handles 'in progress state' and it needs to be simplified. In progress drawing should be handled somewhere else, an option would be
-    extend the Mapbox component API to emmit such events...
-    */
     handleMapClick(map, e) {
       if (!this.isGeometryBeingDrawn) return; //talvez eu nao possa fazer isso pq atualmente arrastar features nao ta salvando...
 
@@ -305,9 +302,8 @@ export default {
     handleMouseLeavePoint() {
       console.log('mouse leave point');
     },
-    handleSelectionchange(e) {
+    async handleSelectionchange(e) {
       let { features } = e;
-      console.log('selectionchange');
       if (this.aplicationState === 'idle') {
         this.updateSelectedFeature(features);
 
@@ -321,7 +317,7 @@ export default {
         return;
       }
 
-      this.aplicationState = interpreter.interpreter(
+      this.aplicationState = await interpreter.interpreter(
         this,
         this.aplicationState,
         e
@@ -336,31 +332,16 @@ export default {
       if (mode === 'add_multipart_feature') return;
       this.updateDrawMode(e.mode);
     },
-    handleAddNewFeature() {
-      const activeLayerType = this.activeLayer.geometry;
-      switch (activeLayerType) {
-        case 'point':
-          this.createTooltip({ content: 'Click to add point' });
-          this.enterDrawMode('draw_point');
-          break;
-        case 'line':
-          this.createTooltip({ content: 'Click to start drawing line' });
-          this.enterDrawMode('draw_line_string');
-          break;
-        case 'polygon':
-          this.createTooltip({ content: 'Click to start drawing polygon' });
-          this.enterDrawMode('draw_polygon');
-          break;
-        default:
-          break;
-      }
-    },
-
-    handleDrawCreate(e) {
+    async handleDrawCreate(e) {
       if (this.tippy[0]) {
         this.tippy[0].destroy();
         this.tippy = [];
       }
+      this.aplicationState = await interpreter.interpreter(
+        this,
+        this.aplicationState,
+        e
+      );
       if (this.aplicationState !== 'idle') return;
       this.applyChange(e);
     },
@@ -381,6 +362,13 @@ export default {
           content: 'Click again to finish drawing'
         });
       }
+    },
+    async handleAddNewFeature() {
+      this.aplicationState = 'add_new_feature.before_drawing';
+      this.aplicationState = await interpreter.interpreter(
+        this,
+        this.aplicationState
+      );
     },
     async handleCloneFeature() {
       this.aplicationState = 'clone_feature.cloning';

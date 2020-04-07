@@ -8,6 +8,103 @@ const states = {
       console.log('some clean up?');
     }
   },
+  add_new_feature: {
+    before_drawing: {
+      switchTo: 'add_new_feature.drawing',
+      onEnter(app) {
+        // começa o draw, enterDrawMode(drawMode)
+
+        const activeLayerType = app.activeLayer.geometry;
+        switch (activeLayerType) {
+          case 'point':
+            app.createTooltip({ content: 'Click to add point' });
+            app.enterDrawMode('draw_point');
+            break;
+          case 'line':
+            app.createTooltip({ content: 'Click to start drawing line' });
+            app.enterDrawMode('draw_line_string');
+            break;
+          case 'polygon':
+            app.createTooltip({ content: 'Click to start drawing polygon' });
+            app.enterDrawMode('draw_polygon');
+            break;
+          default:
+            break;
+        }
+        return;
+      }
+    },
+    drawing: {
+      switchTo: 'add_new_feature.filling_form',
+      async onEnter(app, payload) {
+        const { features } = payload;
+        console.log('enter drawing');
+
+        app.updateFeatureBeingDrawn(app.featureBeingDrawn.lockDrawing());
+
+        const featureBeingDrawn = app.featureBeingDrawn.feature;
+
+        console.log('feature being drawn', featureBeingDrawn);
+        await delay(app.draw.delete(features[0].id));
+        await delay(app.draw.add(featureBeingDrawn));
+        await delay(
+          app.draw.changeMode('simple_select', {
+            featureIds: [featureBeingDrawn.id]
+          })
+        );
+
+        return;
+      }
+    },
+    filling_form: {
+      switchTo: 'idle',
+      async onEnter(app) {
+        // confirma se a form é válida
+        console.log('enter filling form');
+        const featureBeingDrawn = app.featureBeingDrawn.feature;
+
+        if (!app.isAttributeFormValid) {
+          await delay(
+            app.draw.changeMode('simple_select', {
+              featureIds: [featureBeingDrawn.id]
+            })
+          );
+          throw 'atribute form invalid';
+        }
+
+        const attributeForm = app.attributeForm;
+
+        featureBeingDrawn.properties = {
+          ...attributeForm,
+          approved: false
+        };
+
+        app.draw
+          .setFeatureProperty(featureBeingDrawn.id, 'name', attributeForm.name)
+          .setFeatureProperty(
+            featureBeingDrawn.id,
+            'firstyear',
+            attributeForm.firstyear
+          )
+          .setFeatureProperty(
+            featureBeingDrawn.id,
+            'lastyear',
+            attributeForm.lastyear
+          )
+          .setFeatureProperty(featureBeingDrawn.id, 'type', attributeForm.type)
+          .setFeatureProperty(featureBeingDrawn.id, 'tags', attributeForm.tags)
+          .setFeatureProperty(featureBeingDrawn.id, 'approved', false);
+        console.log('salvando', featureBeingDrawn);
+        app.saveFeature(featureBeingDrawn);
+
+        await delay(app.draw.changeMode('simple_select'));
+        app.updateFeatureBeingDrawn(null);
+        app.updateSelectedFeature([]);
+
+        return;
+      }
+    }
+  },
   add_geometry_to_feature: {
     before_drawing: {
       switchTo: 'add_geometry_to_feature.drawing',
@@ -220,7 +317,7 @@ const interpreter = {
     console.log('nextState', nextState);
     return this.interpreter(app, nextState, payload);
   },
-  interpreter(app, actualState, payload) {
+  async interpreter(app, actualState, payload) {
     console.log('actualState', actualState);
     if (actualState === 'idle') {
       console.log(`STATE MACHINE ERROR: Nothing to do, app is already idle`);
@@ -239,14 +336,12 @@ const interpreter = {
         schema = schema[element];
       }
       newState = schema[pList[len - 1]].switchTo;
-      schema[pList[len - 1]].onEnter(app, payload);
+      await schema[pList[len - 1]].onEnter(app, payload);
+      return newState;
     } catch (error) {
-      // console.log(`STATE MACHINE ERROR: ${error}`);
-      console.log(error);
-      newState = actualState;
+      console.log(`STATE MACHINE ERROR: ${error}`);
+      return actualState;
     }
-
-    return newState;
   }
 };
 
