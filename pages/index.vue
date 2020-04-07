@@ -237,7 +237,7 @@ export default {
         opacity / 100
       );
     },
-    handleMapClick(map, e) {
+    async handleMapClick(map, e) {
       if (!this.isGeometryBeingDrawn) return; //talvez eu nao possa fazer isso pq atualmente arrastar features nao ta salvando...
 
       const clickPointLocation =
@@ -265,7 +265,7 @@ export default {
         ]
       };
 
-      this.applyChange(changeAction);
+      await this.applyChange(changeAction);
     },
 
     async handleToggleSnap() {
@@ -307,7 +307,7 @@ export default {
             ...e
           };
 
-          this.applyChange(e);
+          await this.applyChange(e);
         }
         return;
       }
@@ -328,15 +328,15 @@ export default {
       }
       this.aplicationState = await interpreter(this, this.aplicationState, e);
       if (this.aplicationState !== 'idle') return;
-      this.applyChange(e);
+      await this.applyChange(e);
     },
-    handleDrawUpdate(e) {
+    async handleDrawUpdate(e) {
       return;
-      this.applyChange(e);
+      await this.applyChange(e);
     },
-    handleDrawDelete(e) {
+    async handleDrawDelete(e) {
       return;
-      this.applyChange(e);
+      await this.applyChange(e);
     },
     handleMouseOverPoint(point) {
       console.log('mouse over point: ', point);

@@ -159,7 +159,7 @@ const states = {
           type: 'draw.update',
           action: 'features.merge'
         };
-        app.applyChange(updateFeatureAction);
+        await app.applyChange(updateFeatureAction);
 
         return;
       }
@@ -219,7 +219,7 @@ const states = {
           type: 'draw.update',
           action: 'features.merge'
         };
-        app.applyChange(updateFeatureAction);
+        await app.applyChange(updateFeatureAction);
 
         await delay(app.draw.delete(splitFeature.id));
         await delay(
@@ -234,7 +234,7 @@ const states = {
           type: 'draw.create',
           action: 'feature.clone'
         };
-        app.applyChange(createFeatureAction);
+        await app.applyChange(createFeatureAction);
         app.updateSelectedFeature([]);
         app.updateSelectedFeature([splitFeature]);
 
@@ -275,7 +275,7 @@ const states = {
 
         app.updateDrawMode('simple_select');
 
-        app.applyChange(updateFeatureAction);
+        await app.applyChange(updateFeatureAction);
       }
     }
   },
