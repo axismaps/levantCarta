@@ -22,6 +22,7 @@
     </div>
     <mapbox
       id="map"
+      class="map"
       v-if="draw"
       :map-options="{
         style: 'mapbox://styles/mapbox/satellite-v9',
@@ -46,7 +47,6 @@
       @mouse-enter-point="handleMouseOverPoint"
       @mouse-leave-point="updateSnapPoint(null)"
       @popup-init="handleInitPopup"
-      class="map"
     />
   </div>
 </template>
@@ -129,7 +129,7 @@ export default {
         this.featureBeingDrawn ||
         this.drawMode === 'draw_polygon' ||
         this.drawMode === 'draw_line_string' ||
-        this.drawMode === 'draw_point' ||
+        this.drawMode === 'draw_point'
       ) {
         return true;
       }
