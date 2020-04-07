@@ -223,7 +223,7 @@ export default {
       }
     },
     isAddSliplitMultipartToolActive() {
-      return this.drawMode === 'add_multipart_feature';
+      // todo: draw mode do not exists anymore return this.drawMode === 'add_multipart_feature';
     }
   },
   methods: {

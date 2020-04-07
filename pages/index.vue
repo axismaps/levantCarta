@@ -130,17 +130,12 @@ export default {
         this.drawMode === 'draw_polygon' ||
         this.drawMode === 'draw_line_string' ||
         this.drawMode === 'draw_point' ||
-        this.drawMode === 'add_multipart_feature'
       ) {
         return true;
       }
     },
     geometryBeingDrawnType() {
       const drawMode = this.drawMode;
-
-      if (drawMode === 'add_multipart_feature') {
-        return this.selectedFeature.geometry.type;
-      }
 
       switch (drawMode) {
         case 'draw_polygon':
@@ -324,8 +319,6 @@ export default {
       //  *  autochange mode is actualy necessary? yes.
       //  */
       const mode = this.drawMode;
-      if (mode === 'split_multipart_feature') return;
-      if (mode === 'add_multipart_feature') return;
       this.updateDrawMode(e.mode);
     },
     async handleDrawCreate(e) {
