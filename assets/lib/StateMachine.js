@@ -39,6 +39,22 @@ const states = {
           throw 'atribute form invalid';
         }
 
+        app.draw
+          .setFeatureProperty(featureBeingEdit.id, 'name', attributeForm.name)
+          .setFeatureProperty(
+            featureBeingEdit.id,
+            'firstyear',
+            attributeForm.firstyear
+          )
+          .setFeatureProperty(
+            featureBeingEdit.id,
+            'lastyear',
+            attributeForm.lastyear
+          )
+          .setFeatureProperty(featureBeingEdit.id, 'type', attributeForm.type)
+          .setFeatureProperty(featureBeingEdit.id, 'tags', attributeForm.tags)
+          .setFeatureProperty(featureBeingEdit.id, 'approved', false);
+
         featureBeingEdit.properties = {
           ...attributeForm,
           approved: false
