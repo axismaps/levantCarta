@@ -297,7 +297,14 @@ const states = {
   }
 };
 
-const interpreter = async (app, actualState, payload) => {
+/**
+ * The transition function, which returns the state of the machine after the transition
+ * @param {Object} app
+ * @param {Object} actualState
+ * @param {Object} payload
+ *
+ */
+const transition = async (app, actualState, payload) => {
   console.log('actualState', actualState);
   if (actualState === 'idle') {
     console.log(`STATE MACHINE ERROR: Nothing to do, app is already idle`);
@@ -332,4 +339,4 @@ function delay(x) {
   });
 }
 
-export { states, interpreter };
+export { states, transition };

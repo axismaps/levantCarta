@@ -66,7 +66,7 @@ import {
   featuresToPoints,
   pointsToFeature
 } from '@/assets/lib/Helpers';
-import { states, interpreter } from '@/assets/lib/StateMachine';
+import { states, transition } from '@/assets/lib/StateMachine';
 
 const API = process.env.API;
 export default {
@@ -311,7 +311,7 @@ export default {
         return;
       }
 
-      this.aplicationState = await interpreter(this, this.aplicationState, e);
+      this.aplicationState = await transition(this, this.aplicationState, e);
     },
     handleModechange(e) {
       // /**
@@ -325,7 +325,7 @@ export default {
         this.tippy[0].destroy();
         this.tippy = [];
       }
-      this.aplicationState = await interpreter(this, this.aplicationState, e);
+      this.aplicationState = await transition(this, this.aplicationState, e);
       if (this.aplicationState !== 'idle') return;
       await this.applyChange(e);
     },
@@ -349,23 +349,23 @@ export default {
     },
     async handleAddNewFeature() {
       this.aplicationState = 'add_new_feature.before_drawing';
-      this.aplicationState = await interpreter(this, this.aplicationState);
+      this.aplicationState = await transition(this, this.aplicationState);
     },
     async handleCloneFeature() {
       this.aplicationState = 'clone_feature.cloning';
-      this.aplicationState = await interpreter(this, this.aplicationState);
+      this.aplicationState = await transition(this, this.aplicationState);
     },
     async handleMergeSelectedFeatures() {
       this.aplicationState = 'merge_feature.merging';
-      this.aplicationState = await interpreter(this, this.aplicationState);
+      this.aplicationState = await transition(this, this.aplicationState);
     },
     async handleAddGeometryToFeature() {
       this.aplicationState = 'add_geometry_to_feature.before_drawing';
-      this.aplicationState = await interpreter(this, this.aplicationState);
+      this.aplicationState = await transition(this, this.aplicationState);
     },
     async handleSplitMultifeature() {
       this.aplicationState = 'split_multipart_feature.before_splitting';
-      this.aplicationState = await interpreter(this, this.aplicationState);
+      this.aplicationState = await transition(this, this.aplicationState);
     },
     createTooltip(options) {
       if (this.tippy[0]) {
