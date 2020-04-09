@@ -8,6 +8,49 @@ const states = {
       console.log('some clean up?');
     }
   },
+  edit_feature: {
+    editing: {
+      switchTo: 'edit_feature.after_editing',
+      async onEnter(app, payload) {
+        const { features, action, type } = payload;
+        const featureBeingEdit = features[0];
+        if (featureBeingEdit) {
+          // TODO: só preciso salvar a mudança da feature aqui pra o undo funcionar
+          app.updateFeatureBeingDrawn(featureBeingEdit);
+          return Promise.reject('Edition still in progress');
+        }
+        return;
+      }
+    },
+    after_editing: {
+      switchTo: 'idle',
+      async onEnter(app) {
+        const featureBeingEdit = JSON.parse(
+          JSON.stringify(app.featureBeingDrawn)
+        );
+        const attributeForm = app.attributeForm;
+
+        if (!app.isAttributeFormValid) {
+          await delay(
+            app.draw.changeMode('simple_select', {
+              featureIds: [featureBeingEdit.id]
+            })
+          );
+          throw 'atribute form invalid';
+        }
+
+        featureBeingEdit.properties = {
+          ...attributeForm,
+          approved: false
+        };
+
+        await app.updateFeature(featureBeingEdit);
+
+        app.updateSelectedFeature([]);
+        app.updateFeatureBeingDrawn(null);
+      }
+    }
+  },
   add_new_feature: {
     before_drawing: {
       switchTo: 'add_new_feature.drawing',

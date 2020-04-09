@@ -71,7 +71,6 @@ export const actions = {
             const newFeature = { ...featureToUpdate, id: uuidv4() };
 
             draw.add(newFeature);
-            console.log('antes de set feature');
             draw
               .setFeatureProperty(newFeature.id, 'name', attributeForm.name)
               .setFeatureProperty(

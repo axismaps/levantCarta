@@ -163,6 +163,7 @@ export default {
       setActiveOverlay: 'overlays/setCurrentItem',
       setDraw: 'setDraw',
       updateDrawMode: 'updateDrawMode',
+      updateFeature: 'features/updateFeature',
       updateFeatureBeingDrawn: 'updateFeatureBeingDrawn',
       updateSelectedFeature: 'updateSelectedFeature',
       updateSnapPoint: 'updateSnapPoint',
@@ -237,34 +238,37 @@ export default {
       );
     },
     async handleMapClick(map, e) {
-      if (!this.isGeometryBeingDrawn) return; //talvez eu nao possa fazer isso pq atualmente arrastar features nao ta salvando...
+      if (!this.isGeometryBeingDrawn) return;
+      if (this.aplicationState === 'edit_feature.editing') return; // TODO: we should handle this logic to anable snap on feature editing
 
       const clickPointLocation =
         this.snapPoint !== null
           ? this.snapPoint.coordinates
           : [e.lngLat.lng, e.lngLat.lat];
 
-      const featureBeingDrawn = this.featureBeingDrawn.addCoordinate(
-        clickPointLocation
-      );
+      try {
+        const featureBeingDrawn = this.featureBeingDrawn.addCoordinate(
+          clickPointLocation
+        );
 
-      this.updateFeatureBeingDrawn(featureBeingDrawn);
+        this.updateFeatureBeingDrawn(featureBeingDrawn);
 
-      const geometryType = this.geometryBeingDrawnType;
+        const geometryType = this.geometryBeingDrawnType;
 
-      this.createTooltip(`Click to continue drawing ${geometryType}`);
+        this.createTooltip(`Click to continue drawing ${geometryType}`);
 
-      const changeAction = {
-        type: 'draw.step',
-        features: [
-          {
-            type: geometryType,
-            coordinates: clickPointLocation
-          }
-        ]
-      };
+        const changeAction = {
+          type: 'draw.step',
+          features: [
+            {
+              type: geometryType,
+              coordinates: clickPointLocation
+            }
+          ]
+        };
 
-      await this.applyChange(changeAction);
+        await this.applyChange(changeAction);
+      } catch (error) {}
     },
 
     async handleToggleSnap() {
@@ -300,18 +304,17 @@ export default {
       let { features } = e;
       if (this.aplicationState === 'idle') {
         this.updateSelectedFeature(features);
-
-        if (features[0]) {
-          const updateFeatureAction = {
-            ...e
-          };
-
-          await this.applyChange(e);
-        }
-        return;
+        this.aplicationState = 'edit_feature.editing';
+        this.aplicationState = await transition(this, this.aplicationState, e);
+      } else if (
+        !features[0] &&
+        this.aplicationState === 'edit_feature.editing'
+      ) {
+        this.aplicationState = 'edit_feature.after_editing';
+        this.aplicationState = await transition(this, this.aplicationState, e);
+      } else {
+        this.aplicationState = await transition(this, this.aplicationState, e);
       }
-
-      this.aplicationState = await transition(this, this.aplicationState, e);
     },
     handleModechange(e) {
       // /**
@@ -330,8 +333,7 @@ export default {
       await this.applyChange(e);
     },
     async handleDrawUpdate(e) {
-      return;
-      await this.applyChange(e);
+      this.aplicationState = await transition(this, this.aplicationState, e);
     },
     async handleDrawDelete(e) {
       return;
