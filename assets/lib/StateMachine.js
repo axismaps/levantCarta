@@ -13,13 +13,21 @@ const states = {
       switchTo: 'edit_feature.after_editing',
       async onEnter(app, payload) {
         const { features, action, type } = payload;
-        const featureBeingEdit = features[0];
-        if (featureBeingEdit) {
+        const featureToEdit = features[0];
+        const featureBeingEdit = app.featureBeingDrawn;
+
+        if (!featureToEdit) return;
+
+        if (!featureBeingEdit || featureBeingEdit.id === featureToEdit.id) {
           // TODO: só preciso salvar a mudança da feature aqui pra o undo funcionar
-          app.updateFeatureBeingDrawn(featureBeingEdit);
+          app.updateFeatureBeingDrawn(featureToEdit);
+          return Promise.reject('Edition still in progress');
+        } else {
+          app.draw.changeMode('simple_select', {
+            featureIds: [featureBeingEdit.id]
+          });
           return Promise.reject('Edition still in progress');
         }
-        return;
       }
     },
     after_editing: {
