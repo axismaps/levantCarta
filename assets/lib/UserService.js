@@ -18,9 +18,11 @@ async function login(username, password) {
   };
 
   try {
-    const user = await handleResponse(
-      fetch(`${API}/users/authenticate`, requestOptions)
-    );
+    // const user = await handleResponse(
+    //   fetch(`${API}/users/authenticate`, requestOptions)
+    // );
+
+    const user = await mockLogin(requestOptions);
 
     if (user.token) {
       localStorage.setItem('user', JSON.stringify(user));
@@ -71,5 +73,18 @@ async function handleResponse(response) {
     }
 
     return data;
+  });
+}
+
+function mockLogin(x) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const user = {
+        name: 'Davi',
+        token: 'fake-token'
+      };
+      resolve(user);
+      // reject('error');
+    }, 1200);
   });
 }

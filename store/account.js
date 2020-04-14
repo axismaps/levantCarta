@@ -1,4 +1,5 @@
 import { userService } from '@/assets/lib/UserService';
+import { Message } from 'element-ui';
 
 const user = JSON.parse(localStorage.getItem('user'));
 
@@ -38,14 +39,13 @@ export const actions = {
   async login({ dispatch, commit }, { username, password }) {
     commit('LOGIN_REQUEST', { username });
 
-    userService.login(username, password);
-
     try {
       const user = await userService.login(username, password);
       commit('LOGIN_SUCCESS', user);
+      this.$router.push({ path: '/' });
     } catch (error) {
       commit('LOGIN_FAILURE', error);
-      console.log('error.');
+      Message.error('Oops, login failed.');
     }
   },
   logout({ commit }) {
@@ -71,12 +71,12 @@ export const getters = {
     return state.user;
   },
   loggedIn(state) {
-    return state.loggedIn;
+    return state.status.loggedIn;
   },
   loggingIn(state) {
-    return state.loggingIn;
+    return state.status.loggingIn;
   },
   registering(state) {
-    return state.registering;
+    return state.status.registering;
   }
 };
