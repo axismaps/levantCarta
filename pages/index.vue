@@ -70,6 +70,7 @@ import { states, transition } from '@/assets/lib/StateMachine';
 
 const API = process.env.API;
 export default {
+  middleware: 'auth',
   components: {
     Mapbox,
     TheToolbox,
