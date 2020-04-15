@@ -47,6 +47,7 @@
       <el-button class="font-awesome-icon" type="text" circle>
         <font-awesome-icon :icon="['far', 'cog']" />
       </el-button>
+
       <el-button class="font-awesome-icon" type="text" circle>
         <font-awesome-icon :icon="['far', 'bell']" />
       </el-button>
@@ -140,6 +141,10 @@ export default {
 
   .connection {
     margin: 10px;
+  }
+
+  .el-dropdown {
+    margin-left: 10px;
   }
 
   .font-awesome-icon {
