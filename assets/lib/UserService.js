@@ -81,6 +81,7 @@ function mockLogin(x) {
     setTimeout(() => {
       const user = {
         name: 'Davi',
+        email: 'test@email.com',
         token: 'fake-token'
       };
       resolve(user);
