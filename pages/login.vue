@@ -52,11 +52,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ user: 'account/user', loggingIn: 'account/loggingIn' })
+    ...mapGetters({ user: 'auth/user', loggingIn: 'auth/loggingIn' })
   },
 
   methods: {
-    ...mapActions({ login: 'account/login', logout: 'account/logout' }),
+    ...mapActions({ login: 'auth/login', logout: 'auth/logout' }),
     submitForm(formName) {
       const { email, password } = this.form;
       this.$refs[formName].validate(async valid => {
