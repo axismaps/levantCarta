@@ -50,9 +50,15 @@
       <el-button class="font-awesome-icon" type="text" circle>
         <font-awesome-icon :icon="['far', 'bell']" />
       </el-button>
-      <el-button class="font-awesome-icon" type="text" circle>
-        <font-awesome-icon :icon="['far', 'user-circle']" />
-      </el-button>
+
+      <el-dropdown @command="handleCommand">
+        <el-button class="font-awesome-icon" type="text" circle>
+          <font-awesome-icon :icon="['far', 'user-circle']" />
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="logout">Logout</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -80,8 +86,19 @@ export default {
   methods: {
     ...mapActions({
       setActiveLayer: 'layers/setCurrentItem',
-      setCurrentYear: 'layers/setCurrentYear'
+      setCurrentYear: 'layers/setCurrentYear',
+      logout: 'auth/logout'
     }),
+    handleCommand(command) {
+      switch (command) {
+        case 'logout':
+          this.logout();
+          break;
+
+        default:
+          break;
+      }
+    },
     handleLayerSelect(layerId) {
       this.setActiveLayer(layerId);
     },

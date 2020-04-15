@@ -51,6 +51,7 @@ export const actions = {
   logout({ commit }) {
     userService.logout();
     commit('LOGOUT');
+    this.$router.push({ path: '/login' });
   },
   async register({ dispatch, commit }, user) {
     commit('REGISTER_REQUEST', user);
