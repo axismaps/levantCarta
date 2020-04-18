@@ -44,30 +44,19 @@
       </div>
     </div>
     <div class="section">
-      <el-button class="font-awesome-icon" type="text" circle>
-        <font-awesome-icon :icon="['far', 'cog']" />
-      </el-button>
-
-      <el-button class="font-awesome-icon" type="text" circle>
-        <font-awesome-icon :icon="['far', 'bell']" />
-      </el-button>
-
-      <el-dropdown @command="handleCommand">
-        <el-button class="font-awesome-icon" type="text" circle>
-          <font-awesome-icon :icon="['far', 'user-circle']" />
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="logout">Logout</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      <the-header-controls />
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import TheHeaderControls from './TheHeaderControls.vue';
 
 export default {
+  components: {
+    TheHeaderControls
+  },
   data() {
     return {
       basemap: '',
@@ -87,19 +76,9 @@ export default {
   methods: {
     ...mapActions({
       setActiveLayer: 'layers/setCurrentItem',
-      setCurrentYear: 'layers/setCurrentYear',
-      logout: 'auth/logout'
+      setCurrentYear: 'layers/setCurrentYear'
     }),
-    handleCommand(command) {
-      switch (command) {
-        case 'logout':
-          this.logout();
-          break;
 
-        default:
-          break;
-      }
-    },
     handleLayerSelect(layerId) {
       this.setActiveLayer(layerId);
     },
@@ -141,18 +120,6 @@ export default {
 
   .connection {
     margin: 10px;
-  }
-
-  .el-dropdown {
-    margin-left: 10px;
-  }
-
-  .font-awesome-icon {
-    color: #4a5568;
-    font-size: 17px;
-    &:hover {
-      color: $--color-primary;
-    }
   }
 
   .layerOpacityController {
