@@ -26,6 +26,12 @@ module.exports = {
         href:
           'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css',
         type: 'text/css'
+      },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
+        type: 'text/css'
       }
     ]
   },
@@ -43,7 +49,11 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: ['assets/style.scss', '@fortawesome/fontawesome-svg-core/styles.css'],
+  css: [
+    'assets/style.css',
+    'assets/style.scss',
+    '@fortawesome/fontawesome-svg-core/styles.css'
+  ],
   /*
    ** Plugins to load before mounting the App
    */
