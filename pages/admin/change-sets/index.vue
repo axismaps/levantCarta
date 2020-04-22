@@ -20,7 +20,7 @@
           ></el-option>
         </el-select>filtered by
         <el-select
-          style="width: 100px"
+          style="width: 130px"
           class="change-set-filter"
           v-model="filters.date"
           placeholder="Select"
@@ -32,7 +32,7 @@
             :label="item.label"
             :value="item.value"
           ></el-option>
-        </el-select>and
+        </el-select>done by
         <el-select
           style="width: 100px"
           class="change-set-filter"
@@ -50,20 +50,18 @@
       </p>
     </div>
     <div>
-      <!-- {{changeSets}} -->
       <el-card v-for="changeSet in changeSets" :key="changeSet.id" class="box-card" shadow="never">
         <div
           style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;"
         >
           <div style="display: flex; align-items: center;">
             <font-awesome-icon :icon="['far', 'user-circle']" />
-            <P style="margin-left: 5px">Submitted by {{changeSet.submitedBy}} on {{changeSet.date}}</P>
+            <P style="margin-left: 5px">Submitted by {{changeSet.user}} on {{changeSet.date}}</P>
           </div>
-          <div>
-            <el-button class="font-awesome-icon" type="text" circle>
-              <font-awesome-icon :icon="['far', 'ellipsis-h']" />
-            </el-button>
-          </div>
+          <admin-situational-menu
+            @close-change-set="handleCloseChangeSet(changeSet.id)"
+            @view-change-set="$router.push('./change-sets/'+changeSet.id)"
+          />
         </div>
         <div>
           <h4 style="margin-bottom: 10px">{{changeSet.title}}</h4>
@@ -77,17 +75,30 @@
 </template>
 
 <script>
+import AdminSituationalMenu from '~/components/AdminSituationalMenu';
 export default {
+  components: {
+    AdminSituationalMenu
+  },
   data() {
     return {
-      filters: { open: true, date: '05/20/2020', user: 'Davi' },
+      visibles: false,
+      filters: { open: true, date: null, user: null },
       options: {
         open: [
           { value: true, label: 'Open Change Sets' },
-          { value: false, label: 'Closed change sets' }
+          { value: false, label: 'Closed change sets' },
+          { value: null, label: 'All Change Sets' }
         ],
-        date: [{ value: 'All Time', label: 'All Time' }],
+        date: [
+          { value: null, label: 'All Time' },
+          { value: 7, label: 'Past Week' },
+          { value: 30, label: 'Past 30 days' },
+          { value: 60, label: 'Past 60 days' },
+          { value: 90, label: 'Past 90 days' }
+        ],
         user: [
+          { value: null, label: 'All Users' },
           { value: 'Davi', label: 'Davi' },
           { value: 'Pedro', label: 'Pedro' }
         ]
@@ -96,7 +107,7 @@ export default {
         {
           id: 1,
           open: true,
-          submitedBy: 'Davi',
+          user: 'Davi',
           date: '05/20/2020',
           geometryType: 'roads',
           title: 'Edits to roads in the Ain El Mreiseh neighborhood',
@@ -107,7 +118,7 @@ export default {
         {
           id: 2,
           open: false,
-          submitedBy: 'Davi',
+          user: 'Davi',
           date: '05/20/2020',
           geometryType: 'roads',
           title: 'Edits to roads in the Ain El Mreiseh neighborhood',
@@ -118,7 +129,7 @@ export default {
         {
           id: 3,
           open: false,
-          submitedBy: 'Pedro',
+          user: 'Pedro',
           date: '05/20/2020',
           geometryType: 'roads',
           title: 'Edits to roads in the Ain El Mreiseh neighborhood',
@@ -132,10 +143,24 @@ export default {
   computed: {
     changeSets() {
       const { open, date, user } = this.filters;
-      //   return { open, date, user };
-      return this.changeSetsData.filter(changeSet => {
-        return changeSet.submitedBy === user && changeSet.open === open;
+      const data = this.changeSetsData;
+
+      const byUser = data.filter(item => {
+        if (!user) return true;
+        return item.user === user;
       });
+
+      const byOpen = byUser.filter(item => {
+        if (!open) return true;
+        return item.open === open;
+      });
+
+      return byOpen;
+    }
+  },
+  methods: {
+    handleCloseChangeSet(changeSetId) {
+      console.log('close change set', changeSetId);
     }
   }
 };
