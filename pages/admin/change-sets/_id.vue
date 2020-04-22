@@ -81,7 +81,13 @@ export default {
     },
     handleApproveChange(index) {
       console.log('approve-change', index);
-    }
+    },
+    handleRevertChange(index) {
+      console.log('revert-change', index);
+    },
+    handleEditFeature(index) {
+      console.log('edit-feature', index);
+    },
     handleSelectionChange() {
       console.log('selection change');
     }
