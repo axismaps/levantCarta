@@ -59,6 +59,7 @@
             <P style="margin-left: 5px">Submitted by {{changeSet.user}} on {{changeSet.date}}</P>
           </div>
           <admin-situational-menu
+            controls="change-sets"
             @close-change-set="handleCloseChangeSet(changeSet.id)"
             @view-change-set="$router.push('./change-sets/'+changeSet.id)"
           />
