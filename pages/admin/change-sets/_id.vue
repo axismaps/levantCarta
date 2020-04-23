@@ -1,6 +1,11 @@
 <template>
   <div>
-    <admin-control-menu />
+    <admin-control-menu
+      :hasSelections="multipleSelection.length > 0"
+      @approve-selected="handleApproveSelected"
+      @revert-selected="handleRevertSelected"
+      @back="$router.push('/admin/change-sets/')"
+    />
     <br />
     <h4>Edits to {{changeSet.type}} in the {{changeSet.area}}</h4>
     <p>Submitted by {{changeSet.user}} on {{changeSet.date}}</p>
@@ -32,6 +37,7 @@
         </template>
       </el-table-column>
     </el-table>
+    {{multipleSelection}}
   </div>
 </template>
 
@@ -45,6 +51,7 @@ export default {
   },
   data() {
     return {
+      multipleSelection: [],
       changeSet: {
         type: 'roads',
         area: 'Ain El Mreiseh neighborhood',
@@ -88,8 +95,14 @@ export default {
     handleEditFeature(index) {
       console.log('edit-feature', index);
     },
-    handleSelectionChange() {
-      console.log('selection change');
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleRevertSelected() {
+      console.log('revert-selected');
+    },
+    handleApproveSelected() {
+      console.log('approve-selected');
     }
   }
 };

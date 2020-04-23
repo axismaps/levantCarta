@@ -61,7 +61,7 @@
           <admin-situational-menu
             controls="change-sets"
             @close-change-set="handleCloseChangeSet(changeSet.id)"
-            @view-change-set="$router.push('./change-sets/'+changeSet.id)"
+            @view-change-set="$router.push('/admin/change-sets/'+changeSet.id)"
           />
         </div>
         <div>
