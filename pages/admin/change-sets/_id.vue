@@ -13,7 +13,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="date" label="Date" width="95"></el-table-column>
+      <el-table-column prop="date" label="Date" width="95" sortable></el-table-column>
       <el-table-column prop="layer" label="Layer"></el-table-column>
       <el-table-column prop="feature" label="Feature" width="180"></el-table-column>
       <el-table-column prop="from" label="From"></el-table-column>
@@ -62,7 +62,7 @@ export default {
             edit: 'Create'
           },
           {
-            date: '2016-05-03',
+            date: '2017-05-03',
             layer: 'Roads',
             feature: 'No. 189, Grove St, Los Angeles',
             from: '1915',
