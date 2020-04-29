@@ -1,22 +1,22 @@
 <template>
   <div>
-    <div style="margin: 20px 0px">
-      <admin-control-menu />
+    <div style="margin-bottom: 20px;">
+      <admin-control-menu @back="$router.push(`/admin/change-sets/1`)" />
     </div>
-    <h2 style="margin: 14px 0px">Mei Ziadeh Street</h2>
-    <p style="margin: 14px 0px">Submitted by [username] on 05/20/2019</p>
+    <h2 style="margin: 14px 0px">{{change.originalFeature.properties.name}}</h2>
+    <p style="margin: 14px 0px">Submitted by {{change.submittedBy}} on {{change.createAt}}</p>
     <div style="display: flex; margin: 14px 0px">
       <div style="display: flex; align-items: center;">
         <font-awesome-icon :icon="['far', 'layer-group']" />
-        <p style="margin-left: 5px">Roads</p>
+        <p style="margin-left: 5px">{{change.layer}}</p>
       </div>
       <div style="display: flex; align-items: center; margin-left: 10px;">
         <font-awesome-icon :icon="['far', 'pencil']" />
-        <p style="margin-left: 5px">Delete</p>
+        <p style="margin-left: 5px">{{change.editType}}</p>
       </div>
       <div style="display: flex; align-items: center; margin-left: 10px; color: #25993E ">
         <font-awesome-icon :icon="['far', 'battery-full']" />
-        <p style="margin-left: 5px">Open</p>
+        <p style="margin-left: 5px">{{change.approvedStatus? 'Approved': 'Open'}}</p>
       </div>
     </div>
     <hr style="margin: 20px 0px" />
@@ -85,7 +85,7 @@
         style="margin-bottom: 28px"
         placeholder="Add a comment"
         suffix-icon="el-icon-chat-round"
-        v-model="input1"
+        v-model="comments"
       ></el-input>
       <h4 style="margin: 14px 0px">Comments</h4>
       <div>
@@ -109,10 +109,24 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import AdminControlMenu from '@/components/AdminControlMenu.vue';
 export default {
   components: {
     AdminControlMenu
+  },
+  data() {
+    return {
+      comments: ''
+    };
+  },
+  async fetch({ store, params }) {
+    await store.dispatch('changeSets/setChangeById', params.id);
+  },
+  computed: {
+    ...mapGetters({
+      change: 'changeSets/change'
+    })
   }
 };
 </script>

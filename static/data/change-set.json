@@ -1,0 +1,38 @@
+{
+  "id": 1,
+  "type": "roads",
+  "title": "Ain El Mreiseh neighborhood",
+  "description": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+  "user": "Davi",
+  "createAt": "05/20/2020",
+  "changes": [
+    {
+      "id": 1,
+      "createAt": "2016-05-03",
+      "layer": "Roads",
+      "approvedStatus": false,
+      "editType": "Create",
+      "comments": [],
+      "originalFeature": {
+        "id": "12",
+        "properties": {
+          "name": "No. 189, Grove St, Los Angeles",
+          "from": 1915,
+          "to": 2019,
+          "type": "Secondary"
+        },
+        "geometry": {}
+      },
+      "newFeature": {
+        "id": "12",
+        "properties": {
+          "name": "No. 189, Grove St, Los Angeles",
+          "from": 1915,
+          "to": 2017,
+          "type": "Secondary"
+        },
+        "geometry": {}
+      }
+    }
+  ]
+}

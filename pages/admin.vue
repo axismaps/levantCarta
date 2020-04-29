@@ -2,7 +2,7 @@
   <div>
     <admin-header />
     <el-row type="flex" justify="center">
-      <el-col :span="14">
+      <el-col :span="15">
         <nuxt-child />
       </el-col>
     </el-row>
@@ -10,10 +10,15 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 import AdminHeader from '@/components/AdminHeader';
 export default {
   components: {
     AdminHeader
+  },
+  created() {
+    this.$store.dispatch('changeSets/setAllChangeSets');
   }
 };
 </script>

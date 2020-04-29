@@ -77,6 +77,8 @@
 
 <script>
 import AdminSituationalMenu from '~/components/AdminSituationalMenu';
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   components: {
     AdminSituationalMenu
@@ -103,46 +105,50 @@ export default {
           { value: 'Davi', label: 'Davi' },
           { value: 'Pedro', label: 'Pedro' }
         ]
-      },
-      changeSetsData: [
-        {
-          id: 1,
-          open: true,
-          user: 'Davi',
-          date: '05/20/2020',
-          geometryType: 'roads',
-          title: 'Edits to roads in the Ain El Mreiseh neighborhood',
-          description:
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.',
-          changes: [1, 2, 3, 4, 5, 6]
-        },
-        {
-          id: 2,
-          open: false,
-          user: 'Davi',
-          date: '05/20/2020',
-          geometryType: 'roads',
-          title: 'Edits to roads in the Ain El Mreiseh neighborhood',
-          description:
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-          changes: [1, 2, 3, 4, 5, 6]
-        },
-        {
-          id: 3,
-          open: false,
-          user: 'Pedro',
-          date: '05/20/2020',
-          geometryType: 'roads',
-          title: 'Edits to roads in the Ain El Mreiseh neighborhood',
-          description:
-            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-          changes: [1, 2, 3, 4, 5, 6]
-        }
-      ]
+      }
+      // changeSetsData: [
+      //   {
+      //     id: 1,
+      //     open: true,
+      //     user: 'Davi',
+      //     date: '05/20/2020',
+      //     geometryType: 'roads',
+      //     title: 'Edits to roads in the Ain El Mreiseh neighborhood',
+      //     description:
+      //       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.',
+      //     changes: [1, 2, 3, 4, 5, 6]
+      //   },
+      //   {
+      //     id: 2,
+      //     open: false,
+      //     user: 'Davi',
+      //     date: '05/20/2020',
+      //     geometryType: 'roads',
+      //     title: 'Edits to roads in the Ain El Mreiseh neighborhood',
+      //     description:
+      //       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+      //     changes: [1, 2, 3, 4, 5, 6]
+      //   },
+      //   {
+      //     id: 3,
+      //     open: false,
+      //     user: 'Pedro',
+      //     date: '05/20/2020',
+      //     geometryType: 'roads',
+      //     title: 'Edits to roads in the Ain El Mreiseh neighborhood',
+      //     description:
+      //       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+      //     changes: [1, 2, 3, 4, 5, 6]
+      //   }
+      // ]
     };
   },
   computed: {
+    ...mapGetters({
+      changeSetsData: 'changeSets/changeSets'
+    }),
     changeSets() {
+      return this.changeSetsData; //TODO: Fix filter
       const { open, date, user } = this.filters;
       const data = this.changeSetsData;
 
