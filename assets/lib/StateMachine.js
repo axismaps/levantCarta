@@ -44,7 +44,7 @@ const states = {
               featureIds: [featureBeingEdit.id]
             })
           );
-          throw 'atribute form invalid';
+          throw 'attritube form invalid';
         }
 
         app.draw
@@ -136,7 +136,7 @@ const states = {
               featureIds: [featureBeingDrawn.id]
             })
           );
-          throw 'atribute form invalid';
+          throw 'attritube form invalid';
         }
 
         const attributeForm = app.attributeForm;
