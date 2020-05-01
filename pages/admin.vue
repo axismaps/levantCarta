@@ -25,6 +25,6 @@ export default {
 
 <style scoped>
 .el-row {
-  padding-top: 42px;
+  padding-top: 100px;
 }
 </style>

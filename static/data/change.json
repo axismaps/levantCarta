@@ -3,7 +3,7 @@
   "createAt": "2016-05-03",
   "layer": "Roads",
   "approvedStatus": false,
-  "editType": "create",
+  "editType": "edit",
   "submittedBy": "Davi",
   "comments": [],
   "originalFeature": {

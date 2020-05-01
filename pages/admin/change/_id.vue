@@ -12,7 +12,7 @@
       </div>
       <div style="display: flex; align-items: center; margin-left: 10px;">
         <font-awesome-icon :icon="['far', 'pencil']" />
-        <p style="margin-left: 5px">{{change.editType}}</p>
+        <p style="margin-left: 5px; text-transform: capitalize;">{{change.editType}}</p>
       </div>
       <div style="display: flex; align-items: center; margin-left: 10px; color: #25993E ">
         <font-awesome-icon :icon="['far', 'battery-full']" />
