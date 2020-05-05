@@ -166,8 +166,12 @@ export default {
     }
   },
   methods: {
-    handleCloseChangeSet(changeSetId) {
-      console.log('close change set', changeSetId);
+    ...mapActions({
+      closeChangeSet: 'changeSets/closeChangeSet'
+    }),
+    async handleCloseChangeSet(changeSetId) {
+      // console.log('close change set', changeSetId);
+      this.closeChangeSet(changeSetId);
     }
   }
 };

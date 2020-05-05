@@ -4,6 +4,7 @@
       :hasSelections="multipleSelection.length > 0"
       @approve-selected="handleApproveSelected"
       @revert-selected="handleRevertSelected"
+      @close-change-set="handleCloseChangeSet"
       @back="$router.push('/admin/change-sets/')"
     />
     <br />
@@ -35,9 +36,9 @@
         <template slot-scope="scope">
           <AdminSituationalMenu
             @view-feature="handleViewFeature(scope.$index, changeSet.changes)"
-            @approve-change="handleApproveChange(scope.$index)"
-            @revert-change="handleRevertChange(scope.$index)"
-            @edit-feature="handleEditFeature(scope.$index)"
+            @approve-change="handleApproveChange(scope.$index,changeSet.changes)"
+            @revert-change="handleRevertChange(scope.$index,changeSet.changes)"
+            @edit-feature="handleEditFeature(scope.$index,changeSet.changes)"
           />
         </template>
       </el-table-column>
@@ -69,16 +70,25 @@ export default {
     })
   },
   methods: {
-    handleViewFeature(index, tableData) {
-      console.log('view feature', index, tableData);
+    ...mapActions({
+      closeChangeSet: 'changeSets/closeChangeSet',
+      approveChange: '_changes/approveChange',
+      revertChange: '_changes/revertChange',
+      bulkApproveChanges: '_changes/bulkApproveChanges',
+      bulkRevertChanges: '_changes/bulkRevertChanges'
+    }),
 
+    handleCloseChangeSet() {
+      this.closeChangeSet(this.changeSet.id);
+    },
+    handleViewFeature(index, tableData) {
       this.$router.push({ path: `/admin/change/${tableData[index].id}` });
     },
-    handleApproveChange(index) {
-      console.log('approve-change', index);
+    handleApproveChange(index, tableData) {
+      this.approveChange(tableData[index].id);
     },
-    handleRevertChange(index) {
-      console.log('revert-change', index);
+    handleRevertChange(index, tableData) {
+      this.revertChange(tableData[index].id);
     },
     handleEditFeature(index) {
       console.log('edit-feature', index);
@@ -87,10 +97,12 @@ export default {
       this.multipleSelection = val;
     },
     handleRevertSelected() {
-      console.log('revert-selected');
+      const changes = this.multipleSelection;
+      this.bulkApproveChanges(changes);
     },
     handleApproveSelected() {
-      console.log('approve-selected');
+      const changes = this.multipleSelection;
+      this.bulkRevertChanges(changes);
     }
   }
 };

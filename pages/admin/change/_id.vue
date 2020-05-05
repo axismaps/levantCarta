@@ -1,7 +1,14 @@
 <template>
   <div>
     <div style="margin-bottom: 20px;">
-      <admin-control-menu @back="$router.push(`/admin/change-sets/1`)" />
+      <admin-control-menu
+        :isSingleChangeView="true"
+        :isLoading="isLoading"
+        @approve-change="handleApproveChange"
+        @revert-change="handleRevertChange"
+        @edit-change="handleEditChange"
+        @back="$router.push(`/admin/change-sets/1`)"
+      />
     </div>
     <h2 style="margin: 14px 0px">{{change.originalFeature.properties.name}}</h2>
     <p style="margin: 14px 0px">Submitted by {{change.submittedBy}} on {{change.createAt}}</p>
@@ -69,12 +76,28 @@ export default {
     };
   },
   async fetch({ store, params }) {
-    await store.dispatch('changeSets/setChangeById', params.id);
+    await store.dispatch('_changes/setChangeById', params.id);
   },
   computed: {
     ...mapGetters({
-      change: 'changeSets/change'
+      change: '_changes/change',
+      isLoading: '_changes/isLoading'
     })
+  },
+  methods: {
+    ...mapActions({
+      approveChange: '_changes/approveChange',
+      revertChange: '_changes/revertChange'
+    }),
+    handleApproveChange() {
+      const changeId = this.$route.params.id;
+      this.approveChange(changeId);
+    },
+    handleRevertChange() {
+      const changeId = this.$route.params.id;
+      this.revertChange(changeId);
+    },
+    handleEditChange() {}
   }
 };
 </script>

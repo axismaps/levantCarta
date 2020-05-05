@@ -30,15 +30,14 @@ export const actions = {
       commit('GET_CHANGE_SETS_FAILURE');
     }
   },
-  async setChangeById({ commit }, changeId) {
-    commit('LOADING_REQUEST');
+  async closeChangeSet({ commit }, changeSetId) {
+    // commit('LOADING_REQUEST');
     try {
-      const change = await changeSetsService.getChangeById(changeId);
-      console.log('change', change);
-      commit('GET_CHANGE_SUCCESS', change);
-    } catch (error) {
-      commit('GET_CHANGE_FAILURE');
-    }
+      //TODO: closeChangeSet logic
+      Message.success('Change set closed successfully.');
+
+      console.log('closing change set:', changeSetId);
+    } catch (error) {}
   }
 };
 
@@ -78,8 +77,5 @@ export const getters = {
   },
   changeSet(state) {
     return state.changeSet;
-  },
-  change(state) {
-    return state.change;
   }
 };
