@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <p class="debug-container">
+      stateMachine: {{aplicationState}}
+      <br />
+      isEditionInProgress: {{isEditionInProgress}}
+    </p>
     <the-header
       class="header"
       @set-active-overlay="handleSetActiveOverlay"
@@ -258,17 +263,18 @@ export default {
 
         this.createTooltip(`Click to continue drawing ${geometryType}`);
 
-        const changeAction = {
-          type: 'draw.step',
-          features: [
-            {
-              type: geometryType,
-              coordinates: clickPointLocation
-            }
-          ]
-        };
+        //TODO: rewrite undo logic
+        // const changeAction = {
+        //   type: 'draw.step',
+        //   features: [
+        //     {
+        //       type: geometryType,
+        //       coordinates: clickPointLocation
+        //     }
+        //   ]
+        // };
 
-        await this.applyChange(changeAction);
+        // await this.applyChange(changeAction);
       } catch (error) {}
     },
 
@@ -386,7 +392,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.debug-container {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1000;
+  display: block;
+  position: fixed;
+  background-color: aliceblue;
+  right: 10px;
+  top: 300px;
+}
 .container {
   display: grid;
   grid-template-columns: 60px repeat(4, 1fr);
@@ -397,16 +414,16 @@ export default {
 
 .map {
   grid-area: 2 / 1 / 6 / 6;
-  height: calc(100vh - #{$header-height});
+  height: calc(100vh - var(--header-height));
 }
 .sidebar {
   display: flex;
   height: 100%;
   z-index: 5;
   grid-area: 2 / 1 / 6 / 2;
-  .toolbox {
-    margin: 25px 15px;
-  }
+}
+.toolbox {
+  margin: 25px 15px;
 }
 .header {
   grid-area: 1 / 1 / 2 / 6;
