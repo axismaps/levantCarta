@@ -76,18 +76,18 @@ export default {
     };
   },
   async fetch({ store, params }) {
-    await store.dispatch('_changes/setChangeById', params.id);
+    await store.dispatch('changes/setChangeById', params.id);
   },
   computed: {
     ...mapGetters({
-      change: '_changes/change',
-      isLoading: '_changes/isLoading'
+      change: 'changes/change',
+      isLoading: 'changes/isLoading'
     })
   },
   methods: {
     ...mapActions({
-      approveChange: '_changes/approveChange',
-      revertChange: '_changes/revertChange'
+      approveChange: 'changes/approveChange',
+      revertChange: 'changes/revertChange'
     }),
     handleApproveChange() {
       const changeId = this.$route.params.id;

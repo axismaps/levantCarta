@@ -1,10 +1,9 @@
 const API = '/data/change-sets.json';
+// o change set é a reunião das ultimas mudanças nao validadas.
 
 export const changeSetsService = {
   getAllChangeSets,
-  getChangeById,
-  getChangeSetById,
-  patchChange
+  getChangeSetById
 };
 
 async function getAllChangeSets() {
@@ -23,17 +22,6 @@ async function getAllChangeSets() {
   }
 }
 
-async function getChangeById(id) {
-  try {
-    const requestOptions = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    };
-    const res = await fetch('/data/change.json', requestOptions);
-    return res.json();
-  } catch (error) {}
-}
-
 async function getChangeSetById(id) {
   try {
     console.log('getting change set by id', id);
@@ -47,13 +35,5 @@ async function getChangeSetById(id) {
     return res.json();
   } catch (error) {
     return Promise.reject(error);
-  }
-}
-
-async function patchChange(change) {
-  try {
-    console.log('patch', change);
-  } catch (error) {
-    return promise.reject(error);
   }
 }

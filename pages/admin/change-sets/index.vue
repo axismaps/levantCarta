@@ -148,7 +148,7 @@ export default {
       changeSetsData: 'changeSets/changeSets'
     }),
     changeSets() {
-      return this.changeSetsData; //TODO: Fix filter
+      return this.changeSetsData; //FIXME: Fix filter
       const { open, date, user } = this.filters;
       const data = this.changeSetsData;
 

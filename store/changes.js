@@ -1,208 +1,163 @@
-export const state = () => ({
-  changes: [],
-  pendingUndoChange: {},
-  featureBeingDrawnPoints: [],
-  isFeatureSavePending: false
-});
+import { changeService } from '@/assets/lib/ChangeService';
 
-export const mutations = {
-  PUSH_CHANGE(state, change) {
-    console.log('PUSH_CHANGE', change);
-    state.changes.push(change);
-  },
-  POP_CHANGE(state) {
-    state.pendingUndoChange = state.changes[state.changes.length - 1];
-    state.changes.pop();
-  },
-  CLEAR_PENDING_CHANGE(state) {
-    state.pendingUndoChange = {};
-  },
-  UPDATE_FEATURE_SAVE_PENDING_STATUS(state, status) {
-    state.isFeatureSavePending = status;
-  }
+import { Message } from 'element-ui';
+
+export const state = {
+  changes: [],
+  change: {},
+  isLoading: false
 };
+
+// TODO:
+// -salvar a mudança dos desenhos com o model novo, originalFeature e a newFeature
+// -simplificar o undo, no sentido de apenas salvar a ultima mudança, foda-se...
+// -o undo pode ser integrado ao revert? ponderar...
 
 export const actions = {
-  async applyChange({ commit, rootState, dispatch }, changeAction) {
-    const currentLayer = rootState.layers.currentItem.id;
-    const attributeForm = rootState.attributeForm;
-    const changeType = changeAction.type;
-
-    let featureToUpdate = changeAction.features[0];
-    featureToUpdate = {
-      ...featureToUpdate,
-      properties: {
-        name: attributeForm.name,
-        firstyear: attributeForm.firstyear,
-        lastyear: attributeForm.lastyear,
-        type: attributeForm.type,
-        tags: attributeForm.tags || '',
-        approved: attributeForm.approved
-      }
-    };
-
-    delete changeAction.target; //changeAction.target is a map object instance returned by mapbox-draw, we dont need it so it is been deleted to free memory
-
-    switch (changeType) {
-      case 'draw.create':
-        break;
-      case 'draw.update':
-        await dispatch('features/updateFeature', featureToUpdate, {
-          root: true
-        });
-        break;
-      case 'draw.delete':
-        commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true });
-        commit('UPDATE_EDITION_STATUS', false, { root: true });
-        commit('CLEAR_ATTRIBUTE_FORM', null, { root: true });
-        commit('UPDATE_SELECTED_FEATURE', null, { root: true });
-      default:
-        break;
+  async setChangeById({ commit }, changeId) {
+    commit('LOADING_REQUEST');
+    try {
+      const change = await changeService.getChangeById(changeId);
+      console.log('change', change);
+      commit('GET_CHANGE_SUCCESS', change);
+    } catch (error) {
+      commit('GET_CHANGE_FAILURE');
     }
-
-    changeAction.features[0] = featureToUpdate;
-    commit('PUSH_CHANGE', { ...changeAction, layer: currentLayer });
   },
-  async undoChange({ commit, state, rootState, dispatch }) {
-    commit('POP_CHANGE');
-    const { pendingUndoChange, changes } = state;
+  async approveChange({ commit }, changeId) {
+    commit('LOADING_REQUEST');
+    try {
+      const change = {
+        //TODO: approve change logic
+        // changeStatus may be more than a flag
+        approvedStatus: true
+      };
+      await changeService.patchChange(change);
 
-    if (!pendingUndoChange) {
-      console.log('Nothing to undo');
-      return;
+      console.log(`Change ${changeId} approved successfully`);
+      commit('LOADING_SUCCESS');
+
+      Message.success('Change approved successfully.');
+    } catch (error) {
+      Message.error('Change could not be approved. An error occurred.');
     }
+  },
+  async revertChange({ commit }, changeId) {
+    commit('LOADING_REQUEST');
+    try {
+      const change = {
+        //TODO: revert change logic,
+        // changeStatus may be more than a flag
+      };
+      await changeService.patchChange(change);
 
-    const draw = rootState.draw;
-
-    switch (pendingUndoChange.type) {
-      case 'draw.step':
-        let geometry = [];
-
-        if (pendingUndoChange.features[0].type === 'Polygon') {
-          geometry = {
-            type: pendingUndoChange.features[0].type,
-            coordinates: [
-              changes
-                .slice()
-                .reverse()
-                .map(change => {
-                  if (change.type === 'draw.step') {
-                    return change.features[0].coordinates;
-                  }
-                })
-            ]
-          };
-
-          geometry.coordinates[0].push(geometry.coordinates[0][0]); // closes the LinearRing
-        } else if (pendingUndoChange.features[0].type === 'LineString') {
-          geometry = {
-            type: 'LineString',
-            coordinates: changes
-              .slice()
-              .reverse()
-              .map(change => {
-                if (change.type === 'draw.step') {
-                  return change.features[0].coordinates;
-                }
-              })
-          };
-        }
-
-        const feature = {
-          id: pendingUndoChange.features[0].id,
-          type: 'Feature',
-          properties: {
-            approved: false,
-            firstyear: rootState.attributeForm.firstyear,
-            lastyear: rootState.attributeForm.lastyear,
-            type: rootState.attributeForm.type,
-            tags: rootState.attributeForm.tags
-          },
-          geometry: geometry
-        };
-
-        draw.changeMode('simple_select', {
-          featureIds: [pendingUndoChange.features[0].id]
-        });
-        commit('UPDATE_SELECTED_FEATURE', feature, { root: true });
-        commit('UPDATE_EDITION_STATUS', true, { root: true });
-
-        draw.delete(pendingUndoChange.features[0].id);
-        try {
-          draw.add(feature);
-          draw.changeMode('simple_select', {
-            featureIds: [pendingUndoChange.features[0].id]
-          });
-          commit('UPDATE_SELECTED_FEATURE', feature, { root: true });
-          commit('UPDATE_EDITION_STATUS', true, { root: true });
-        } catch (error) {
-          //if a feature is not created, the behavior is the same as a deletion
-          commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true });
-          commit('UPDATE_EDITION_STATUS', false, { root: true });
-          commit('CLEAR_ATTRIBUTE_FORM', null, { root: true });
-          commit('UPDATE_SELECTED_FEATURE', null, { root: true });
-        }
-
-        break;
-      case 'draw.create':
-        // draw.delete(pendingUndoChange.features[0].id)
-        break;
-      case 'draw.update':
-        //search the change stack from top to bottom
-        for (let i = changes.length - 1; i >= 0; i--) {
-          if (changes[i].features[0].id === pendingUndoChange.features[0].id) {
-            if (pendingUndoChange.action) {
-              replaceFeature(
-                draw,
-                commit,
-                dispatch,
-                pendingUndoChange.features[0].id,
-                changes[i].features[0]
-              );
-            } else {
-              replaceFeature(
-                draw,
-                commit,
-                dispatch,
-                pendingUndoChange.features[0].id,
-                pendingUndoChange.features[0]
-              );
-            }
-            break;
-          }
-        }
-
-        break;
-      default:
-        break;
+      console.log(`Change ${changeId} reverted successfully`);
+      Message.success('Change reverted successfully.');
+      commit('LOADING_SUCCESS');
+    } catch (error) {
+      Message.error('Change could not be reverted. An error occurred.');
     }
+  },
+  async bulkApproveChanges({ commit }, changes) {
+    try {
+      console.log(changes);
+      Message.success('Selected changes approved successfully.');
+    } catch (error) {
+      //TODO: handle error
+    }
+  },
+  async bulkRevertChanges({ commit }, changes) {
+    try {
+      console.log(changes);
 
-    commit('CLEAR_PENDING_CHANGE');
+      Message.success('Selected changes reverted successfully.');
+    } catch (error) {
+      //TODO: handle error
+    }
+  },
+  async createFeature({ commit }, feature) {
+    commit('LOADING_REQUEST');
+
+    try {
+      const change = {
+        editType: 'create',
+        approvedStatus: false,
+        newFeature: feature
+      };
+
+      await changeService.createChange(change);
+      commit('CREATE_CHANGE_SUCCESS');
+    } catch (error) {
+      //TODO: handle error
+    }
+  },
+
+  async deleteFeature({ commit }, feature) {
+    commit('LOADING_REQUEST');
+
+    try {
+      const change = {
+        editType: 'delete',
+        approvedStatus: false,
+        oldFeature: feature.id, //TODO: ainda é preciso atualizar essa lógica para requisitar a feature antiga. (feature service... provavelmente)
+        newFeature: null
+      };
+
+      await changeService.createChange(change);
+      commit('CREATE_CHANGE_SUCCESS');
+    } catch (error) {
+      //TODO: handle error
+    }
+  },
+  async editFeature({ commit }, feature) {
+    commit('LOADING_REQUEST');
+
+    try {
+      const change = {
+        editType: 'edit',
+        approvedStatus: false,
+        oldFeature: feature.id,
+        newFeature: feature
+      };
+
+      await changeService.createChange(change);
+      commit('CREATE_CHANGE_SUCCESS');
+    } catch (error) {
+      //TODO: handle error
+    }
+  },
+  async undoChange({}) {
+    console.log('undoChange');
   }
 };
 
-const replaceFeature = async (
-  draw,
-  commit,
-  dispatch,
-  oldFeatureId,
-  newFeature
-) => {
-  draw.delete(oldFeatureId);
+export const mutations = {
+  LOADING_REQUEST(state) {
+    state.isLoading = true;
+    console.log('is loading', state.isLoading);
+  },
+  LOADING_SUCCESS(state) {
+    state.isLoading = false;
+  },
+  GET_CHANGE_SUCCESS(state, change) {
+    state.isLoading = false;
+    state.change = change;
+  },
+  GET_CHANGE_FAILURE(state) {
+    state.isLoading = false;
+    state.change = {};
+  },
+  CREATE_CHANGE_SUCCESS(state) {
+    console.log('CREATE_CHANGE_SUCCESS');
+    state.isLoading = false;
+  }
+};
 
-  try {
-    draw.add(newFeature);
-    commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true });
-    commit('UPDATE_EDITION_STATUS', false, { root: true });
-    commit('CLEAR_ATTRIBUTE_FORM', null, { root: true });
-    commit('UPDATE_SELECTED_FEATURE', null, { root: true });
-
-    await dispatch('features/updateFeature', newFeature, { root: true });
-  } catch (error) {
-    //if a feature is not created, the behavior is the same as a deletion
-    commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false, { root: true });
-    commit('UPDATE_EDITION_STATUS', false, { root: true });
-    commit('CLEAR_ATTRIBUTE_FORM', null, { root: true });
-    commit('UPDATE_SELECTED_FEATURE', null, { root: true });
+export const getters = {
+  change(state) {
+    return state.change;
+  },
+  isLoading(state) {
+    return state.isLoading;
   }
 };

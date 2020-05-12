@@ -33,7 +33,7 @@ export const actions = {
   async closeChangeSet({ commit }, changeSetId) {
     // commit('LOADING_REQUEST');
     try {
-      //TODO: closeChangeSet logic
+      //TODO: closeChangeSet logic, diz respeito ao bulk edit nas mudanças -> changes/Bulkapprove
       Message.success('Change set closed successfully.');
 
       console.log('closing change set:', changeSetId);

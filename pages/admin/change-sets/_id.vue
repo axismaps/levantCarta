@@ -72,10 +72,10 @@ export default {
   methods: {
     ...mapActions({
       closeChangeSet: 'changeSets/closeChangeSet',
-      approveChange: '_changes/approveChange',
-      revertChange: '_changes/revertChange',
-      bulkApproveChanges: '_changes/bulkApproveChanges',
-      bulkRevertChanges: '_changes/bulkRevertChanges'
+      approveChange: 'changes/approveChange',
+      revertChange: 'changes/revertChange',
+      bulkApproveChanges: 'changes/bulkApproveChanges',
+      bulkRevertChanges: 'changes/bulkRevertChanges'
     }),
 
     handleCloseChangeSet() {
