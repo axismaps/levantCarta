@@ -160,8 +160,10 @@ export default {
   methods: {
     ...mapActions({
       addGeometryToFeature: 'addGeometryToFeature',
-      applyChange: 'changes/applyChange',
+      createFeature: 'changes/createFeature',
+      deleteFeature: 'changes/deleteFeature',
       drawMode: 'drawMode',
+      editFeature: 'changes/editFeature',
       enterDrawMode: 'enterDrawMode',
       mergeSelectedFeatures: 'mergeSelectedFeatures',
       pushGeometryBeingDrawPoint: 'pushGeometryBeingDrawPoint',
@@ -245,7 +247,7 @@ export default {
     },
     async handleMapClick(map, e) {
       if (!this.isGeometryBeingDrawn) return;
-      if (this.aplicationState === 'edit_feature.editing') return; // TODO: we should handle this logic to anable snap on feature editing
+      if (this.aplicationState === 'edit_feature.editing') return; // FIXME: we should handle this logic to anable snap on feature editing
 
       const clickPointLocation =
         this.snapPoint !== null
@@ -263,7 +265,7 @@ export default {
 
         this.createTooltip(`Click to continue drawing ${geometryType}`);
 
-        //TODO: rewrite undo logic
+        //FIXME: rewrite undo logic
         // const changeAction = {
         //   type: 'draw.step',
         //   features: [
@@ -337,14 +339,13 @@ export default {
       }
       this.aplicationState = await transition(this, this.aplicationState, e);
       if (this.aplicationState !== 'idle') return;
-      await this.applyChange(e);
     },
     async handleDrawUpdate(e) {
       this.aplicationState = await transition(this, this.aplicationState, e);
     },
     async handleDrawDelete(e) {
+      //TODO: state machine
       return;
-      await this.applyChange(e);
     },
     handleMouseOverPoint(point) {
       console.log('mouse over point: ', point);

@@ -205,7 +205,7 @@ export const actions = {
         commit('UPDATE_ATTRIBUTE_FORM_VALIDITY', false);
       }
     } else if (state.isAttributeFormValid) {
-      // TODO: essa lógica está relacionada com a edição de uma feature, talvez possa sair.
+      // FIXME: essa lógica está relacionada com a edição de uma feature, talvez possa sair.
 
       // console.log('attributeForm valid');
       // const changeAction = {

@@ -19,7 +19,7 @@ const states = {
         if (!featureToEdit) return;
 
         if (!featureBeingEdit || featureBeingEdit.id === featureToEdit.id) {
-          // TODO: só preciso salvar a mudança da feature aqui pra o undo funcionar
+          // TODO: Aqui eu posso salvar um step e ter o undo da feature funcionando....
           app.updateFeatureBeingDrawn(featureToEdit);
           return Promise.reject('Edition still in progress');
         } else {
@@ -68,9 +68,7 @@ const states = {
           approved: false
         };
 
-        //TODO: Isso aqui na verdade tem que ser uma mudança, tem que passar pelo change.
-        // é uma simples atualização.
-        //  TODO: await app.updateFeature(featureBeingEdit);
+        await app.editFeature(featureBeingEdit);
 
         app.updateSelectedFeature([]);
         app.updateFeatureBeingDrawn(null);
@@ -128,8 +126,6 @@ const states = {
     filling_form: {
       switchTo: 'idle',
       async onEnter(app) {
-        // confirma se a form é válida
-        console.log('enter filling form');
         const featureBeingDrawn = app.featureBeingDrawn.feature;
 
         if (!app.isAttributeFormValid) {
@@ -164,9 +160,7 @@ const states = {
           .setFeatureProperty(featureBeingDrawn.id, 'tags', attributeForm.tags)
           .setFeatureProperty(featureBeingDrawn.id, 'approved', false);
 
-        //TODO: isso aqui tem que ser uma mudança. Criar feature.
-        // console.log('salvando', featureBeingDrawn);
-        // app.saveFeature(featureBeingDrawn);
+        await app.createFeature(featureBeingDrawn);
 
         await delay(app.draw.changeMode('simple_select'));
         app.updateFeatureBeingDrawn(null);
@@ -225,13 +219,7 @@ const states = {
 
         app.handleSelectionchange({ features: [newFeature] });
 
-        //TODO: aplicar a mudança aqui. adicionar geometria é basicamente aplicar uma mudança de geometria.
-        // const updateFeatureAction = {
-        //   features: [newFeature],
-        //   type: 'draw.update',
-        //   action: 'features.merge'
-        // };
-        // await app.applyChange(updateFeatureAction);
+        await app.editFeature(newFeature);
 
         return;
       }
@@ -314,9 +302,8 @@ const states = {
         app.updateSelectedFeature([]);
         app.updateSelectedFeature([splitFeature]);
 
-        //TODO: split multi parte são duas operações:
-        //Uma mudança de geometria
-        //Criar uma nova geometria
+        await app.createFeature(newFeature);
+        await app.editFeature(updatedFeatureBeingSplit);
 
         return;
       }
@@ -349,13 +336,8 @@ const states = {
 
         app.updateDrawMode('simple_select');
 
-        //TODO: aplicar mudança aqui. merge é deletar uma feature e modificar a geometria de outra.
-        // const updateFeatureAction = {
-        //   features: [newFeature],
-        //   type: 'draw.update',
-        //   action: 'features.merge'
-        // };
-        // await app.applyChange(updateFeatureAction);
+        await app.deleteFeature(selectedFeature);
+        await app.editFeature(newFeature);
       }
     }
   },
@@ -379,7 +361,7 @@ const states = {
           .setFeatureProperty(newFeature.id, 'tags', attributeForm.tags)
           .setFeatureProperty(newFeature.id, 'approved', false);
 
-        //TODO: aplicar a mudança aqui. clonar é basicamente criar uma nova feature
+        app.createFeature(newFeature);
       }
     }
   }
