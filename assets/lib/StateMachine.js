@@ -174,7 +174,7 @@ const states = {
     before_drawing: {
       switchTo: 'add_geometry_to_feature.drawing',
       onEnter(app) {
-        app.addGeometryToFeature();
+        app.addGeometryToFeature(); //TODO: remover essa função da store e transferir para cá.
 
         const geometryType =
           app.selectedFeature.geometry.type === 'MultiLineString'

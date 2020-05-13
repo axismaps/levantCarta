@@ -2,6 +2,7 @@ export const changeService = {
   createChange,
   deleteChange,
   getChangeById,
+  getUnsubmittedChanges,
   patchChange
 };
 
@@ -28,6 +29,17 @@ async function getChangeById(id) {
       headers: { 'Content-Type': 'application/json' }
     };
     const res = await fetch('/data/change.json', requestOptions);
+    return res.json();
+  } catch (error) {}
+}
+
+async function getUnsubmittedChanges() {
+  try {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    const res = await fetch('/data/changes.json', requestOptions);
     return res.json();
   } catch (error) {}
 }

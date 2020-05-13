@@ -38,13 +38,15 @@
         <el-button icon="el-icon-view" type="info" plain></el-button>
       </div>
 
-      <div id="opacity-slider" class="layerOpacityController">
+      <div id="opacity-slider" class="opacity-slider">
         <p>{{layerOpacity}}%</p>
         <el-slider v-model="layerOpacity" @change="handleSetOverlayOpacity"></el-slider>
       </div>
     </div>
     <div class="section">
-      <the-header-controls />
+      <the-header-submit-screen />
+
+      <the-header-controls style="margin-left: 20px" />
     </div>
   </div>
 </template>
@@ -52,10 +54,12 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import TheHeaderControls from './TheHeaderControls.vue';
+import TheHeaderSubmitScreen from './TheHeaderSubmitScreen.vue';
 
 export default {
   components: {
-    TheHeaderControls
+    TheHeaderControls,
+    TheHeaderSubmitScreen
   },
   data() {
     return {
@@ -95,9 +99,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .header {
-  min-height: $header-height;
+  min-height: var(--header-height);
   width: 100%;
   z-index: 6;
   background-color: rgb(255, 255, 255);
@@ -106,32 +110,31 @@ export default {
   align-items: center;
   padding: 0px 20px;
   justify-content: space-between;
+}
+.section {
+  display: flex;
+}
+.form-input-with-ctrl-btn {
+  padding-left: 30px;
+}
 
-  .section {
-    display: flex;
-  }
-  .form-input-with-ctrl-btn {
-    padding-left: 30px;
-  }
+.el-date-editor.el-input {
+  width: 140px;
+}
 
-  .el-date-editor.el-input {
-    width: 140px;
-  }
+.connection {
+  margin: 10px;
+}
 
-  .connection {
-    margin: 10px;
-  }
-
-  .layerOpacityController {
-    display: flex;
-    align-items: center;
-    p {
-      text-align: center;
-      width: 90px;
-    }
-    .el-slider {
-      min-width: 150px;
-    }
-  }
+.opacity-slider {
+  display: flex;
+  align-items: center;
+}
+p {
+  text-align: center;
+  width: 90px;
+}
+.el-slider {
+  min-width: 150px;
 }
 </style>

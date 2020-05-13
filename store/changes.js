@@ -4,14 +4,32 @@ import { Message } from 'element-ui';
 
 export const state = {
   changes: [],
+  unsubmittedChanges: [], //TODO: ao adicionar uma nova mudança eu tenho que dar um fetch nas que nao foram enviadas...
   change: {},
   isLoading: false
 };
-
 // TODO:
-// -salvar a mudança dos desenhos com o model novo, originalFeature e a newFeature
+/** Adicionar lógica para lidar com o changeSet. vai funcionar da seguinte maneira:
+ * o usuário vai fazer uma mudança, editar algo, o app vai criar uma mudança
+ * num estado de approvedStatus: false, então o app vai ter que verificar essas
+ * mudanças para o usuário logado e vai dizer que tem mudanças ainda fora do changeSet...
+ * bem na verdade essas mudanças tem que estar sem change set... tem que ter uma flag
+ * dizendo que elas não fazem parte de um changeSet.
+ *
+ * ChangeSet:
+ * changeSets são simples, basta o aplicativo verificar mudanças ainda nao comitadas...
+ *
+ * Mapinha: ainda falta.. nao esquecer..
+ *
+ * Statemachine:
+ * Ela ainda nao está funcionando corretamente. Tem algum problema com a seleção. isso tem que ser
+ * corrigido até quinta feira
+ *
+ */
+
+// UNDO:
 // -simplificar o undo, no sentido de apenas salvar a ultima mudança, foda-se...
-// -o undo pode ser integrado ao revert? ponderar...
+// -o undo pode ser integrado ao revertChange? ponderar... oq é o undo dentro da lógica do revertChange?
 
 export const actions = {
   async setChangeById({ commit }, changeId) {
@@ -22,6 +40,15 @@ export const actions = {
       commit('GET_CHANGE_SUCCESS', change);
     } catch (error) {
       commit('GET_CHANGE_FAILURE');
+    }
+  },
+  async setUnsubmittedChanges({ commit }) {
+    commit('LOADING_REQUEST');
+    try {
+      const changes = await changeService.getUnsubmittedChanges();
+      commit('GET_UNSUBMITTED_CHANGES_SUCCESS', changes);
+    } catch (error) {
+      // TODO: handle error
     }
   },
   async approveChange({ commit }, changeId) {
@@ -75,7 +102,7 @@ export const actions = {
       //TODO: handle error
     }
   },
-  async createFeature({ commit }, feature) {
+  async createFeature({ commit, dispatch }, feature) {
     commit('LOADING_REQUEST');
 
     try {
@@ -86,13 +113,14 @@ export const actions = {
       };
 
       await changeService.createChange(change);
+      await dispatch('setUnsubmittedChanges');
       commit('CREATE_CHANGE_SUCCESS');
     } catch (error) {
       //TODO: handle error
     }
   },
 
-  async deleteFeature({ commit }, feature) {
+  async deleteFeature({ commit, dispatch }, feature) {
     commit('LOADING_REQUEST');
 
     try {
@@ -104,12 +132,14 @@ export const actions = {
       };
 
       await changeService.createChange(change);
+      await dispatch('setUnsubmittedChanges');
+
       commit('CREATE_CHANGE_SUCCESS');
     } catch (error) {
       //TODO: handle error
     }
   },
-  async editFeature({ commit }, feature) {
+  async editFeature({ commit, dispatch }, feature) {
     commit('LOADING_REQUEST');
 
     try {
@@ -121,6 +151,8 @@ export const actions = {
       };
 
       await changeService.createChange(change);
+      await dispatch('setUnsubmittedChanges');
+
       commit('CREATE_CHANGE_SUCCESS');
     } catch (error) {
       //TODO: handle error
@@ -150,6 +182,11 @@ export const mutations = {
   CREATE_CHANGE_SUCCESS(state) {
     console.log('CREATE_CHANGE_SUCCESS');
     state.isLoading = false;
+  },
+  GET_UNSUBMITTED_CHANGES_SUCCESS(state, changes) {
+    console.log('GET_UNSUBMITTED_CHANGES_SUCCESS');
+    state.isLoading = false;
+    state.unsubmittedChanges = changes;
   }
 };
 
@@ -159,5 +196,11 @@ export const getters = {
   },
   isLoading(state) {
     return state.isLoading;
+  },
+  unsubmittedChanges(state) {
+    return state.unsubmittedChanges;
+  },
+  hasUnsubmittedChanges(state) {
+    return state.unsubmittedChanges.length > 0;
   }
 };

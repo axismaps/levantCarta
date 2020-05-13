@@ -38,6 +38,15 @@ export const actions = {
 
       console.log('closing change set:', changeSetId);
     } catch (error) {}
+  },
+  async submitNewChangeSet({ commit }, changeSet) {
+    commit('LOADING_REQUEST');
+    try {
+      await changeSetsService.createChangeSet(changeSet);
+      commit('CREATE_CHANGE_SET_SUCCESS');
+    } catch (error) {
+      //TODO: handle error
+    }
   }
 };
 
@@ -61,13 +70,11 @@ export const mutations = {
     state.status.loading = false;
     state.changeSet = {};
   },
-  GET_CHANGE_SUCCESS(state, change) {
+  CREATE_CHANGE_SET_SUCCESS(state) {
     state.status.loading = false;
-    state.change = change;
   },
-  GET_CHANGE_FAILURE(state) {
+  CREATE_CHANGE_SET_SUCCESS_FAILURE(state) {
     state.status.loading = false;
-    state.change = {};
   }
 };
 

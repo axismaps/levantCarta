@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "createAt": "2016-05-03",
+    "layer": "Roads",
+    "approvedStatus": false,
+    "editType": "edit",
+    "submittedBy": "Davi",
+    "comments": [],
+    "originalFeature": {
+      "id": "12",
+      "properties": {
+        "name": "No. 189, Grove St, Los Angeles",
+        "from": 1915,
+        "to": 2019,
+        "type": "Secondary",
+        "tags": [
+          { "id": 1, "name": "Surface", "value": "Paved" },
+          { "id": 2, "name": "Use", "value": "Construction" },
+          { "id": 2, "name": "Test", "value": "value" }
+        ]
+      },
+      "geometry": {}
+    },
+    "newFeature": {
+      "id": "12",
+      "properties": {
+        "name": "No. 189, Grove St, Los Angeles",
+        "from": 1915,
+        "to": 2017,
+        "type": "Secondary",
+        "tags": [
+          { "id": 1, "name": "Surface", "value": "Unpaved" },
+          { "id": 2, "name": "Use", "value": "Construction" },
+          { "id": 2, "name": "Test", "value": "Another value" }
+        ]
+      },
+      "geometry": {}
+    }
+  }
+]

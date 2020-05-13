@@ -2,10 +2,18 @@ const API = '/data/change-sets.json';
 // o change set é a reunião das ultimas mudanças nao validadas.
 
 export const changeSetsService = {
+  createChangeSet,
   getAllChangeSets,
   getChangeSetById
 };
 
+async function createChangeSet(changeSet) {
+  try {
+    console.log('creating new changeSet', changeSet);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
 async function getAllChangeSets() {
   try {
     console.log('getting all change sets');
