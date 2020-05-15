@@ -91,11 +91,6 @@ export default {
 
     this.initPopup();
   },
-  computed: {
-    ...mapGetters({
-      isEditionInProgress: 'isEditionInProgress'
-    })
-  },
   methods: {
     mapInit() {
       //Mapbox GL access token

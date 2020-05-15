@@ -10,7 +10,11 @@
             <el-input type="textarea" v-model="form.description"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="success" @click="submitForm('form')">Submit Changes</el-button>
+            <el-button
+              type="success"
+              @click="submitForm('form')"
+              :loading="isLoading"
+            >Submit Changes</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -55,7 +59,8 @@ export default {
   computed: {
     ...mapGetters({
       unsubmittedChanges: 'changes/unsubmittedChanges',
-      hasUnsubmittedChanges: 'changes/hasUnsubmittedChanges'
+      hasUnsubmittedChanges: 'changes/hasUnsubmittedChanges',
+      isLoading: 'changeSets/isLoading'
     })
   },
   methods: {
@@ -72,7 +77,6 @@ export default {
           };
           this.submitNewChangeSet(changeSet);
         } else {
-          console.log('error submit!!');
           return false;
         }
       });

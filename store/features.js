@@ -11,7 +11,7 @@ export const state = () => ({
 
 export const mutations = {
   SET_FEATURES(state, features) {
-    state.features.push(features);
+    state.features = features;
   },
   UPDATE_CURRENT_FEATURES(state, features) {
     state.currentFeatures = features;
@@ -29,11 +29,14 @@ export const actions = {
     loading.close();
 
     commit('UPDATE_CURRENT_FEATURES', { ...featureCollection, layerId });
-    commit('SET_FEATURES', { ...featureCollection, layerId });
+    commit('SET_FEATURES', featureCollection.features);
     commit('layers/LOAD_LAYER', layerId, { root: true });
 
     rootState.draw.deleteAll();
     rootState.draw.add(featureCollection);
+  },
+  async getFeatureById({ commit, state }, id) {
+    return state.features.filter(feature => feature.id === id)[0];
   },
   async saveFeature({}, feature) {
     const request = {
@@ -51,6 +54,7 @@ export const actions = {
       await axios.post(`${API}/make/feature`, request);
     } catch (error) {
       console.log(error.response);
+      // TODO: handle error
     }
   },
   async updateFeature({ rootState }, feature) {
@@ -69,7 +73,13 @@ export const actions = {
         request
       );
     } catch (error) {
-      console.log(error.response);
+      return Promise.reject(error);
     }
+  }
+};
+
+export const getters = {
+  features(state) {
+    return state.features;
   }
 };

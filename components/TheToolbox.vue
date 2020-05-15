@@ -246,27 +246,21 @@ export default {
       this.$emit('add-new-feature');
     },
     addGeometry() {
-      console.log('add-geometry');
       this.$emit('add-geometry-to-feature');
     },
     subtractGeometry() {
-      console.log('subtract-geometry');
       this.$emit('subtract-geometry');
     },
     toggleSnap() {
-      console.log('toggle-snap');
       this.$emit('toggle-snap');
     },
     mergeSelectedFeatures() {
-      console.log('merge-selected-features');
       this.$emit('merge-selected-features');
     },
     splitMultfeature() {
-      console.log('split-feature');
       this.$emit('slip-multifeature');
     },
     cloneFeature() {
-      console.log('clone-feature');
       this.$emit('clone-feature');
     },
     trash() {

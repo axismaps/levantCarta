@@ -1,14 +1,11 @@
 import { changeSetsService } from '@/assets/lib/ChangeSetsService';
-import { userService } from '@/assets/lib/UserService';
 
 import { Message } from 'element-ui';
 
 export const state = {
-  changes: [],
   changeSets: [],
   changeSet: {},
-  change: {},
-  status: {}
+  isLoading: false
 };
 
 export const actions = {
@@ -35,14 +32,15 @@ export const actions = {
     try {
       //TODO: closeChangeSet logic, diz respeito ao bulk edit nas mudanças -> changes/Bulkapprove
       Message.success('Change set closed successfully.');
-
-      console.log('closing change set:', changeSetId);
     } catch (error) {}
   },
-  async submitNewChangeSet({ commit }, changeSet) {
+  async submitNewChangeSet({ commit, dispatch }, changeSet) {
     commit('LOADING_REQUEST');
     try {
       await changeSetsService.createChangeSet(changeSet);
+      await dispatch('changes/setUnsubmittedChanges', null, { root: true });
+      Message.success('Change set submitted successfully.');
+
       commit('CREATE_CHANGE_SET_SUCCESS');
     } catch (error) {
       //TODO: handle error
@@ -52,29 +50,32 @@ export const actions = {
 
 export const mutations = {
   LOADING_REQUEST(state) {
-    state.status.loading = true;
+    console.log('LOADING_REQUEST');
+    state.isLoading = true;
   },
   GET_CHANGE_SETS_SUCCESS(state, changeSets) {
-    state.status.loading = false;
+    state.isLoading = false;
     state.changeSets = changeSets;
   },
   GET_CHANGE_SETS_FAILURE(state) {
-    state.status.loading = false;
+    state.isLoading = false;
     state.changeSets = [];
   },
   GET_CHANGE_SET_SUCCESS(state, changeSet) {
-    state.status.loading = false;
+    state.isLoading = false;
     state.changeSet = changeSet;
   },
   GET_CHANGE_SET_FAILURE(state) {
-    state.status.loading = false;
+    state.isLoading = false;
     state.changeSet = {};
   },
   CREATE_CHANGE_SET_SUCCESS(state) {
-    state.status.loading = false;
+    console.log('CREATE_CHANGE_SET_SUCCESS');
+    state.isLoading = false;
   },
   CREATE_CHANGE_SET_SUCCESS_FAILURE(state) {
-    state.status.loading = false;
+    console.log('CREATE_CHANGE_SET_SUCCESS_FAILURE');
+    state.isLoading = false;
   }
 };
 
@@ -84,5 +85,8 @@ export const getters = {
   },
   changeSet(state) {
     return state.changeSet;
+  },
+  isLoading(state) {
+    return state.isLoading;
   }
 };

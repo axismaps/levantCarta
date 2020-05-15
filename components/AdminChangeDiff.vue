@@ -12,13 +12,13 @@
           <span class="div1 grid-table-name">From</span>
           <span class="div2">
             <tableField
-              :items="generateTag(originalFeature.properties.from, newFeature.properties.from)"
+              :items="generateTag(originalFeature.properties.firstyear, newFeature.properties.firstyear)"
             />
           </span>
           <span class="div3 grid-table-name">To</span>
           <span class="div4">
             <tableField
-              :items="generateTag(originalFeature.properties.to, newFeature.properties.to)"
+              :items="generateTag(originalFeature.properties.lastyear, newFeature.properties.lastyear)"
             />
           </span>
           <span class="div5 grid-table-name">Type</span>

@@ -207,7 +207,6 @@ export const actions = {
     } else if (state.isAttributeFormValid) {
       // FIXME: essa lógica está relacionada com a edição de uma feature, talvez possa sair.
 
-      // console.log('attributeForm valid');
       // const changeAction = {
       //   features: [state.selectedFeature],
       //   type: 'draw.update',

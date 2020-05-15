@@ -50,7 +50,12 @@
       </p>
     </div>
     <div>
-      <el-card v-for="changeSet in changeSets" :key="changeSet.id" class="box-card" shadow="never">
+      <el-card
+        v-for="changeSet in changeSets"
+        :key="changeSet.id"
+        style="margin-bottom: 10px"
+        shadow="never"
+      >
         <div
           style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;"
         >
@@ -170,7 +175,6 @@ export default {
       closeChangeSet: 'changeSets/closeChangeSet'
     }),
     async handleCloseChangeSet(changeSetId) {
-      // console.log('close change set', changeSetId);
       this.closeChangeSet(changeSetId);
     }
   }

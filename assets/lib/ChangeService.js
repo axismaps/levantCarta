@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 export const changeService = {
   createChange,
   deleteChange,
@@ -8,13 +9,29 @@ export const changeService = {
 
 async function createChange(change) {
   try {
-    const requestOptions = {
-      method: 'CREATE',
-      headers: { 'Content-Type': 'application/json' }
+    change = {
+      id: uuidv4(),
+      createAt: '2016-05-03',
+      layer: 'Roads',
+      approvedStatus: false,
+      isSubmitted: false,
+      submittedBy: 'User',
+      comments: [],
+      ...change
     };
-    const res = await fetch('/data/change.json', requestOptions);
-    return res.json();
-  } catch (error) {}
+
+    let changes = localStorage.getItem('changes');
+
+    if (changes) {
+      changes = JSON.parse(changes);
+      changes.push(change);
+      localStorage.setItem('changes', JSON.stringify(changes));
+    } else {
+      localStorage.setItem('changes', JSON.stringify([change]));
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function deleteChange(id) {
@@ -24,30 +41,52 @@ async function deleteChange(id) {
 
 async function getChangeById(id) {
   try {
-    const requestOptions = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    };
-    const res = await fetch('/data/change.json', requestOptions);
-    return res.json();
+    let changes = localStorage.getItem('changes');
+    if (!changes) {
+      return null;
+    }
+    changes = JSON.parse(changes);
+    console.log(changes.filter(change => change.id === id)[0]);
+    return changes.filter(change => change.id === id)[0];
   } catch (error) {}
 }
 
 async function getUnsubmittedChanges() {
   try {
-    const requestOptions = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    };
-    const res = await fetch('/data/changes.json', requestOptions);
-    return res.json();
+    let changes = localStorage.getItem('changes');
+    if (!changes) {
+      return [];
+    }
+    changes = JSON.parse(changes);
+    return changes.filter(change => change.isSubmitted === false);
   } catch (error) {}
 }
 
 async function patchChange(change) {
   try {
-    console.log('patch', change);
+    let changes = localStorage.getItem('changes');
+    if (!changes) {
+      return [];
+    }
+    changes = JSON.parse(changes);
+    console.log('changes', changes);
+
+    changes = changes.filter(i => i.id !== change.id);
+    console.log('changes sem a change', changes);
+
+    changes.push(change);
+    console.log('changes com a change', changes);
+
+    localStorage.setItem('changes', JSON.stringify([change]));
   } catch (error) {
     return promise.reject(error);
   }
+}
+
+function delay(x) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x);
+    }, 1000);
+  });
 }

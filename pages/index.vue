@@ -1,10 +1,13 @@
 <template>
   <div class="container">
-    <p class="debug-container">
+    <div class="debug-container">
       stateMachine: {{aplicationState}}
       <br />
       isEditionInProgress: {{isEditionInProgress}}
-    </p>
+      <br />
+      {{features.length}}
+      <pre>{{features}}</pre>
+    </div>
     <the-header
       class="header"
       @set-active-overlay="handleSetActiveOverlay"
@@ -126,7 +129,8 @@ export default {
       multiselectedFeatures: 'multiselectedFeatures',
       overlays: 'overlays/items',
       selectedFeature: 'selectedFeature',
-      snapPoint: 'snapPoint'
+      snapPoint: 'snapPoint',
+      features: 'features/features'
     }),
     mapboxToken() {
       return process.env.mapboxToken;
@@ -396,6 +400,7 @@ export default {
 
 <style scoped>
 .debug-container {
+  height: 400px;
   margin: 10px;
   padding: 10px;
   border-radius: 10px;

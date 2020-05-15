@@ -9,7 +9,7 @@
     />
     <br />
     <h4>Edits to {{changeSet.type}} in the {{changeSet.title}}</h4>
-    <p>Submitted by {{changeSet.user}} on {{changeSet.createAt}}</p>
+    <p>Submitted by {{changeSet.submittedBy}} on {{changeSet.createAt}}</p>
     <br />
     <hr />
 
@@ -21,10 +21,10 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="createAt" label="Date" width="95" sortable></el-table-column>
       <el-table-column prop="layer" label="Layer"></el-table-column>
-      <el-table-column prop="originalFeature.properties.name" label="Feature" width="180"></el-table-column>
-      <el-table-column prop="originalFeature.properties.from" label="From"></el-table-column>
-      <el-table-column prop="originalFeature.properties.to" label="To"></el-table-column>
-      <el-table-column prop="originalFeature.properties.type" label="Type" width="85"></el-table-column>
+      <el-table-column prop="newFeature.properties.name" label="Feature" width="180"></el-table-column>
+      <el-table-column prop="newFeature.properties.firstyear" label="From"></el-table-column>
+      <el-table-column prop="newFeature.properties.lastyear" label="To"></el-table-column>
+      <el-table-column prop="fakeType" label="Type" width="85"></el-table-column>
       <el-table-column prop="approvedStatus" label="Status" width="90">
         <template slot-scope="scope">
           <span v-if="scope.row.approvedStatus">Approved</span>
@@ -58,6 +58,7 @@ export default {
   },
   data() {
     return {
+      fakeType: 'type',
       multipleSelection: []
     };
   },

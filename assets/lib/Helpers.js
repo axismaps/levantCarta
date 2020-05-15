@@ -10,7 +10,6 @@ const mergeFeatures = function(baseFeature, featureParts) {
   switch (baseFeature.geometry.type) {
     case 'Polygon':
     case 'MultiPolygon':
-      console.log('feature parts', featureParts);
       let polygonsToUnion = [baseFeature, ...featureParts];
 
       while (polygonsToUnion.length > 1) {

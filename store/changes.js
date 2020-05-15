@@ -4,7 +4,7 @@ import { Message } from 'element-ui';
 
 export const state = {
   changes: [],
-  unsubmittedChanges: [], //TODO: ao adicionar uma nova mudança eu tenho que dar um fetch nas que nao foram enviadas...
+  unsubmittedChanges: [],
   change: {},
   isLoading: false
 };
@@ -36,7 +36,6 @@ export const actions = {
     commit('LOADING_REQUEST');
     try {
       const change = await changeService.getChangeById(changeId);
-      console.log('change', change);
       commit('GET_CHANGE_SUCCESS', change);
     } catch (error) {
       commit('GET_CHANGE_FAILURE');
@@ -51,17 +50,25 @@ export const actions = {
       // TODO: handle error
     }
   },
-  async approveChange({ commit }, changeId) {
+  async approveChange({ commit, state }, changeId) {
     commit('LOADING_REQUEST');
     try {
-      const change = {
-        //TODO: approve change logic
-        // changeStatus may be more than a flag
+      let changes = localStorage.getItem('changes');
+      changes = JSON.parse(changes);
+
+      console.log('approve', changeId);
+      console.log('changes', changes);
+
+      let change = changes.filter(change => change.id === changeId)[0];
+
+      console.log('change buscada', change);
+      change = {
+        ...change,
         approvedStatus: true
       };
+      console.log('change aprovada', change);
       await changeService.patchChange(change);
 
-      console.log(`Change ${changeId} approved successfully`);
       commit('LOADING_SUCCESS');
 
       Message.success('Change approved successfully.');
@@ -78,7 +85,6 @@ export const actions = {
       };
       await changeService.patchChange(change);
 
-      console.log(`Change ${changeId} reverted successfully`);
       Message.success('Change reverted successfully.');
       commit('LOADING_SUCCESS');
     } catch (error) {
@@ -87,7 +93,6 @@ export const actions = {
   },
   async bulkApproveChanges({ commit }, changes) {
     try {
-      console.log(changes);
       Message.success('Selected changes approved successfully.');
     } catch (error) {
       //TODO: handle error
@@ -95,8 +100,6 @@ export const actions = {
   },
   async bulkRevertChanges({ commit }, changes) {
     try {
-      console.log(changes);
-
       Message.success('Selected changes reverted successfully.');
     } catch (error) {
       //TODO: handle error
@@ -109,6 +112,7 @@ export const actions = {
       const change = {
         editType: 'create',
         approvedStatus: false,
+        originalFeature: null,
         newFeature: feature
       };
 
@@ -124,11 +128,19 @@ export const actions = {
     commit('LOADING_REQUEST');
 
     try {
+      const originalFeature = await dispatch(
+        'features/getFeatureById',
+        feature.id,
+        {
+          root: true
+        }
+      );
+
       const change = {
         editType: 'delete',
         approvedStatus: false,
-        oldFeature: feature.id, //TODO: ainda é preciso atualizar essa lógica para requisitar a feature antiga. (feature service... provavelmente)
-        newFeature: null
+        originalFeature: originalFeature, //TODO: ainda é preciso atualizar essa lógica para requisitar a feature antiga. (feature service... provavelmente)
+        newFeature: feature
       };
 
       await changeService.createChange(change);
@@ -143,10 +155,19 @@ export const actions = {
     commit('LOADING_REQUEST');
 
     try {
+      const originalFeature = await dispatch(
+        'features/getFeatureById',
+        feature.id,
+        {
+          root: true
+        }
+      );
+
+      console.log('originalFeature', originalFeature);
       const change = {
         editType: 'edit',
         approvedStatus: false,
-        oldFeature: feature.id,
+        originalFeature,
         newFeature: feature
       };
 
@@ -160,13 +181,13 @@ export const actions = {
   },
   async undoChange({}) {
     console.log('undoChange');
+    //TODO: undo change logic here
   }
 };
 
 export const mutations = {
   LOADING_REQUEST(state) {
     state.isLoading = true;
-    console.log('is loading', state.isLoading);
   },
   LOADING_SUCCESS(state) {
     state.isLoading = false;

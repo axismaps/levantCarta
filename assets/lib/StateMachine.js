@@ -105,13 +105,11 @@ const states = {
       switchTo: 'add_new_feature.filling_form',
       async onEnter(app, payload) {
         const { features } = payload;
-        console.log('enter drawing');
 
         app.updateFeatureBeingDrawn(app.featureBeingDrawn.lockDrawing());
 
         const featureBeingDrawn = app.featureBeingDrawn.feature;
 
-        console.log('feature being drawn', featureBeingDrawn);
         await delay(app.draw.delete(features[0].id));
         await delay(app.draw.add(featureBeingDrawn));
         await delay(
@@ -238,8 +236,6 @@ const states = {
       switchTo: 'split_multipart_feature.after_splitting',
       onEnter(app, payload) {
         const { features } = payload;
-
-        console.log('select feature to keep');
 
         app.updateSelectedFeature(features);
         return;

@@ -7,10 +7,10 @@
         @approve-change="handleApproveChange"
         @revert-change="handleRevertChange"
         @edit-change="handleEditChange"
-        @back="$router.push(`/admin/change-sets/1`)"
+        @back="$router.push(`/admin/change-sets/`)"
       />
     </div>
-    <h2 style="margin: 14px 0px">{{change.originalFeature.properties.name}}</h2>
+    <h2 style="margin: 14px 0px">{{change.newFeature.properties.name}}</h2>
     <p style="margin: 14px 0px">Submitted by {{change.submittedBy}} on {{change.createAt}}</p>
     <div style="display: flex; margin: 14px 0px">
       <div style="display: flex; align-items: center;">
