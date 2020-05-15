@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <div class="debug-container">
+    <!-- <div class="debug-container">
       stateMachine: {{aplicationState}}
       <br />
       isEditionInProgress: {{isEditionInProgress}}
       <br />
       {{features.length}}
       <pre>{{features}}</pre>
-    </div>
+    </div>-->
     <the-header
       class="header"
       @set-active-overlay="handleSetActiveOverlay"
@@ -75,6 +75,12 @@ import {
   pointsToFeature
 } from '@/assets/lib/Helpers';
 import { states, transition } from '@/assets/lib/StateMachine';
+
+import changeSets from '@/assets/changeSets';
+import changes from '@/assets/changes';
+
+localStorage.setItem('changeSets', JSON.stringify(changeSets));
+localStorage.setItem('changes', JSON.stringify(changes));
 
 const API = process.env.API;
 export default {

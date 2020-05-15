@@ -595,13 +595,13 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-#map {
+<style scoped>
+/* #map {
   width: 100%;
 }
 .mapboxgl-canvas {
   width: 100%;
   padding: 0px;
   margin: 0px;
-}
+} */
 </style>

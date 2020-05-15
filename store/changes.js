@@ -50,6 +50,9 @@ export const actions = {
       // TODO: handle error
     }
   },
+  async clearUnsubmittedChanges({ commit }) {
+    commit('CLEAR_UNSUBMITTED_CHANGES');
+  },
   async approveChange({ commit, state }, changeId) {
     commit('LOADING_REQUEST');
     try {
@@ -186,6 +189,9 @@ export const actions = {
 };
 
 export const mutations = {
+  CLEAR_UNSUBMITTED_CHANGES(state) {
+    state.unsubmittedChanges = [];
+  },
   LOADING_REQUEST(state) {
     state.isLoading = true;
   },

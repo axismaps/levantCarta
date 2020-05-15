@@ -65,17 +65,19 @@ export default {
   },
   methods: {
     ...mapActions({
-      submitNewChangeSet: 'changeSets/submitNewChangeSet'
+      submitNewChangeSet: 'changeSets/submitNewChangeSet',
+      clearUnsubmittedChanges: 'changes/clearUnsubmittedChanges'
     }),
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           const changeSet = {
             title: this.form.title,
             description: this.form.description,
             changes: this.unsubmittedChanges
           };
-          this.submitNewChangeSet(changeSet);
+          await this.submitNewChangeSet(changeSet);
+          await this.clearUnsubmittedChanges();
         } else {
           return false;
         }

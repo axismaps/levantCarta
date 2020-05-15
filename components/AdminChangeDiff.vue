@@ -1,9 +1,25 @@
 <template>
   <div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 28px">
+    <div
+      style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 0.3fr;column-gap: 25px;"
+    >
       <div>
         <h3 style="margin: 14px 0px">Geography</h3>
         <admin-change-diff-tags :tags="geometryTags" />
+        <div style="margin: 14px 0px; height: 100%; width: 100%">
+          <mapbox
+            id="map-diff"
+            class="map"
+            :map-options="{
+            container: 'map-diff',
+        style: 'mapbox://styles/mapbox/satellite-v9',
+        accessToken: mapboxToken, 
+        center: [35.50411547, 33.89508665],
+        zoom: 14}"
+            @map-init="handleMapInit"
+            @map-load="addDiffGeometries"
+          />
+        </div>
       </div>
       <div>
         <h3 style="margin: 14px 0px">Attritubes</h3>
@@ -56,14 +72,18 @@
 <script>
 import AdminChangeDiffTags from '@/components/AdminChangeDiffTags';
 import AdminChangeDiffTableField from '@/components/AdminChangeDiffTableField.vue';
+import Mapbox from '@/components/Mapbox.vue';
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 
 export default {
   components: {
     AdminChangeDiffTags,
-    tableField: AdminChangeDiffTableField
+    tableField: AdminChangeDiffTableField,
+    Mapbox
   },
   data() {
     return {
+      map: null,
       editType: 'edit'
     };
   },
@@ -104,6 +124,9 @@ export default {
         default:
           break;
       }
+    },
+    mapboxToken() {
+      return process.env.mapboxToken;
     }
   },
   methods: {
@@ -130,10 +153,78 @@ export default {
         default:
           break;
       }
+    },
+    handleMapInit(map) {
+      this.map = map;
+    },
+    addDiffGeometries() {
+      const originalFeatureLayer = {
+        id: 'originalFeatureLayer',
+        type: featureGeoType(this.originalFeature),
+        source: {
+          type: 'geojson',
+          data: this.originalFeature
+        },
+        paint: geoTypeToPaint(featureGeoType(this.newFeature), '#5A6FE3')
+      };
+      const newFeatureLayer = {
+        id: 'newFeatureLayer',
+        type: featureGeoType(this.newFeature),
+        source: {
+          type: 'geojson',
+          data: this.newFeature
+        },
+        paint: geoTypeToPaint(featureGeoType(this.newFeature), '#2DB84B')
+      };
+      this.map.addLayer(newFeatureLayer);
+      this.map.addLayer(originalFeatureLayer);
+
+      // Geographic coordinates of the LineString
+      // var coordinates = this.newFeature.geometry.coordinates[0];
+
+      // var bounds = coordinates.reduce(function(bounds, coord) {
+      //   return bounds.extend(coord);
+      // }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+      // this.map.fitBounds(bounds, {
+      //   padding: 140
+      // });
     }
   }
 };
+
+const featureGeoType = feature => {
+  switch (feature.geometry.type) {
+    case 'MultiLineString':
+    case 'LineString':
+      return 'line';
+    case 'Polygon':
+    case 'MultiPolygon':
+      return 'fill';
+    default:
+      break;
+  }
+};
+const geoTypeToPaint = (type, color) => {
+  switch (type) {
+    case 'line':
+      return {
+        'line-color': color,
+        'line-width': 5
+      };
+      break;
+    case 'fill':
+      return {
+        'fill-color': color,
+        'fill-outline-color': color,
+        'fill-opacity': 0.35
+      };
+    default:
+      break;
+  }
+};
 </script>
+
 
 <style scoped>
 .attritubes-table {
@@ -195,5 +286,9 @@ export default {
 .grid-table-name {
   background-color: #edf2f7;
   font-weight: bold;
+}
+.map {
+  height: 100%;
+  max-height: 350px;
 }
 </style>

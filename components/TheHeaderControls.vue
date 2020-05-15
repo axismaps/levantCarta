@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <el-button class="font-awesome-icon" type="text" circle>
+    <el-button
+      class="font-awesome-icon"
+      type="text"
+      @click="$router.push('/admin/change-sets/')"
+      circle
+    >
       <font-awesome-icon :icon="['far', 'cog']" />
     </el-button>
 

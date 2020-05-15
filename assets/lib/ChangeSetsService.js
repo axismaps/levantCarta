@@ -61,3 +61,11 @@ async function getChangeSetById(id) {
     return Promise.reject(error);
   }
 }
+
+function delay(x) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x);
+    }, 1000);
+  });
+}
