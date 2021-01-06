@@ -3,6 +3,17 @@ import { featureCollection } from '@turf/helpers';
 import combine from '@turf/combine';
 import explode from '@turf/explode';
 
+/**
+ * This class is responsible for managing the feature creation process.
+ * This class is necessary because we need to handle the snap system, and for that
+ * we use this class to keep track of the snap points.
+ * After the drawing is finished we call meargeFeature with the original feature from mapbox.draw
+ * as the base feature and this class will merge the "snaped" geometry
+ * with the base feature properties and id returning a new feature.
+ *
+ * OBS: This returns a new object without modifying the original one to be inline with vuex.
+ */
+
 import { mergeFeatures } from './Helpers';
 
 const Feature = class {
