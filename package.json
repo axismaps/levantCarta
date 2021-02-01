@@ -49,6 +49,7 @@
     "jest": "^24.1.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
+    "sequelize-cli": "^6.2.0",
     "vue-jest": "^4.0.0-0",
     "vue-styleguidist": "^3.24.2",
     "vue-svg-loader": "^0.12.0"
