@@ -23,7 +23,7 @@ export const actions = {
     const loading = Loading.service({ fullscreen: true });
 
     const { data: featureCollection } = await axios.get(
-      `${API}/get/features/${layerId}`
+      `${API}/feature/${layerId}`
     );
 
     loading.close();
@@ -40,20 +40,21 @@ export const actions = {
   },
   async saveFeature({}, feature) {
     const request = {
-      type: feature.properties.type,
-      dataType: 'geojson',
-      data: {
-        id: feature.id,
-        properties: feature.properties,
-        geometry: feature.geometry
-      }
+      id: feature.id,
+      properties: feature.properties,
+      geometry: feature.geometry
     };
 
     console.log('CREATING FEATURE: ', request);
     try {
-      await axios.post(`${API}/make/feature`, request);
+      const response = await axios.post(
+        `${API}/feature/${feature.id}`,
+        request
+      );
+
+      console.log('response: ', response);
     } catch (error) {
-      console.log(error.response);
+      console.log('Deu erro', error.response);
       // TODO: handle error
     }
   },
@@ -62,17 +63,20 @@ export const actions = {
     const featureId = feature.id;
 
     const request = {
-      ...feature.properties,
-      geom: feature.geometry
+      id: featureId,
+      properties: feature.properties,
+      geometry: feature.geometry
     };
 
     console.log('SAVING FEATURE: ', request);
     try {
-      await axios.post(
-        `${API}/update/feature/${layerId}/${featureId}`,
+      const response = await axios.patch(
+        `${API}/feature/${featureId}`,
         request
       );
+      console.log('update response', response);
     } catch (error) {
+      console.log(error);
       return Promise.reject(error);
     }
   }

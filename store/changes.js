@@ -120,6 +120,9 @@ export const actions = {
       };
 
       await changeService.createChange(change);
+      // await dispatch('features/saveFeature', feature, { root: true });
+      // await dispatch('features/updateFeature', feature, { root: true });
+
       await dispatch('setUnsubmittedChanges');
       commit('CREATE_CHANGE_SUCCESS');
     } catch (error) {
