@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Loading } from 'element-ui';
 
-const API = process.env.API;
+import { featuresService } from './services/FeaturesService';
 
 export const state = () => ({
   features: [],
@@ -22,8 +22,8 @@ export const actions = {
   async setFeaturesFromLayer({ commit, state, rootState }, layerId) {
     const loading = Loading.service({ fullscreen: true });
 
-    const { data: featureCollection } = await axios.get(
-      `${API}/feature/${layerId}`
+    const featureCollection = await featuresService.getFeaturesByLayerId(
+      layerId
     );
 
     loading.close();
@@ -47,19 +47,14 @@ export const actions = {
 
     console.log('CREATING FEATURE: ', request);
     try {
-      const response = await axios.post(
-        `${API}/feature/${feature.id}`,
-        request
-      );
-
+      const response = await featuresService.post(feature.id, request);
       console.log('response: ', response);
     } catch (error) {
-      console.log('Deu erro', error.response);
+      console.log('Error', error.response);
       // TODO: handle error
     }
   },
   async updateFeature({ rootState }, feature) {
-    const layerId = rootState.layers.currentItem.id;
     const featureId = feature.id;
 
     const request = {
@@ -70,10 +65,8 @@ export const actions = {
 
     console.log('SAVING FEATURE: ', request);
     try {
-      const response = await axios.patch(
-        `${API}/feature/${featureId}`,
-        request
-      );
+      const response = await featuresService.update(featureId, request);
+
       console.log('update response', response);
     } catch (error) {
       console.log(error);
