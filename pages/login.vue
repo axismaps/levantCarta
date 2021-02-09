@@ -4,15 +4,30 @@
       <div class="login-header">
         <h1>Welcome</h1>
       </div>
-      <el-form label-position="top" :rules="rules" label-width="10px" ref="form" :model="form">
+      <el-form
+        label-position="top"
+        :rules="rules"
+        label-width="10px"
+        ref="form"
+        :model="form"
+      >
         <el-form-item label="Email" prop="email">
           <el-input v-model="form.email" type="email" />
         </el-form-item>
         <el-form-item label="Password" prop="password">
-          <el-input v-model="form.password" type="password" autocomplete="off" />
+          <el-input
+            v-model="form.password"
+            type="password"
+            autocomplete="off"
+          />
         </el-form-item>
         <el-form-item class="el-form-btn">
-          <el-button type="primary" :loading="loggingIn" @click="submitForm('form')">Login</el-button>
+          <el-button
+            type="primary"
+            :loading="loggingIn"
+            @click="submitForm('form')"
+            >Login</el-button
+          >
         </el-form-item>
       </el-form>
     </el-card>
@@ -25,52 +40,52 @@ export default {
   data() {
     return {
       form: {
-        email: 'test@email.com',
-        password: 'password'
+        email: 'admin@leventcarta.org',
+        password: 'admin',
       },
       rules: {
         email: [
           {
             required: true,
             message: 'Please input email address',
-            trigger: 'blur'
+            trigger: 'blur',
           },
           {
             type: 'email',
             message: 'Please input correct email address',
-            trigger: ['blur', 'change']
-          }
+            trigger: ['blur', 'change'],
+          },
         ],
         password: [
           {
             required: true,
             message: 'Please input password',
-            trigger: 'blur'
-          }
-        ]
-      }
+            trigger: 'blur',
+          },
+        ],
+      },
     };
   },
   computed: {
-    ...mapGetters({ user: 'auth/user', loggingIn: 'auth/loggingIn' })
+    ...mapGetters({ user: 'auth/user', loggingIn: 'auth/loggingIn' }),
   },
 
   methods: {
     ...mapActions({ login: 'auth/login', logout: 'auth/logout' }),
     submitForm(formName) {
       const { email, password } = this.form;
-      this.$refs[formName].validate(async valid => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           try {
-            this.login(email, password);
+            this.login({ username: email, password });
           } catch (error) {}
         } else {
           console.log('error submit!!');
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

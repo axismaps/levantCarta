@@ -1,4 +1,5 @@
-const API = '...';
+import axios from 'axios';
+const API = process.env.API;
 
 export const userService = {
   login,
@@ -11,19 +12,20 @@ export const userService = {
 };
 
 async function login(username, password) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  };
+  // const requestOptions = {
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ username: username, password: password })
+  // };
 
   try {
-    // const user = await handleResponse(
-    //   fetch(`${API}/users/authenticate`, requestOptions)
-    // );
+    const response = await axios.post(
+      // `https://beirut.georio.levantcarta.org/login`,
+      `http://localhost:5000/login`,
+      { email: username, password: password }
+      // { withCredentials: true }
+    );
 
-    const user = await mockLogin(requestOptions);
-
+    console.log(response);
     if (user.token) {
       localStorage.setItem('user', JSON.stringify(user));
     }
@@ -59,7 +61,8 @@ async function update() {}
 async function _delete() {}
 
 async function handleResponse(response) {
-  return response.text().then(text => {
+  return await response.text().then(text => {
+    console.log(text);
     const data = text && JSON.parse(text);
     if (!response.ok) {
       if (response.status === 401) {
