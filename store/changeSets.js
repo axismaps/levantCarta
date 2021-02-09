@@ -1,4 +1,4 @@
-import { changeSetsService } from '@/assets/lib/ChangeSetsService';
+import { changeSetsService } from '~/store/services/ChangeSetsService';
 
 import { Message } from 'element-ui';
 
