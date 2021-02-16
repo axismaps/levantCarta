@@ -18,6 +18,10 @@
   "production": {
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "ssl": {
+      "require": true,
+      "rejectUnauthorized": false
+    }
   }
 }
