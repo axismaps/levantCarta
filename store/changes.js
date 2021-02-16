@@ -1,4 +1,4 @@
-import { changeService } from '@/assets/lib/ChangeService';
+import { changeService } from '~/store/services/ChangeService';
 
 import { Message } from 'element-ui';
 

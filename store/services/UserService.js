@@ -19,17 +19,16 @@ async function login(username, password) {
 
   try {
     const response = await axios.post(
-      // `https://beirut.georio.levantcarta.org/login`,
       `http://localhost:5000/login`,
-      { email: username, password: password }
-      // { withCredentials: true }
+      { email: username, password: password },
+      { withCredentials: true }
     );
 
-    console.log(response);
-    if (user.token) {
-      localStorage.setItem('user', JSON.stringify(user));
-    }
-    return user;
+    // console.log(response);
+    // if (user.token) {
+    //   localStorage.setItem('user', JSON.stringify(user));
+    // }
+    return response;
   } catch (error) {
     return Promise.reject(error);
   }

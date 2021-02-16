@@ -1,4 +1,4 @@
-import { userService } from '@/assets/lib/UserService';
+import { userService } from '~/store/services/UserService';
 import { Message } from 'element-ui';
 
 const user = JSON.parse(localStorage.getItem('user'));
@@ -38,7 +38,6 @@ export const mutations = {
 export const actions = {
   async login({ dispatch, commit }, { username, password }) {
     commit('LOGIN_REQUEST', { username });
-
     try {
       const user = await userService.login(username, password);
       commit('LOGIN_SUCCESS', user);
