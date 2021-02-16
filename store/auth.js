@@ -41,7 +41,7 @@ export const actions = {
     try {
       const user = await userService.login(username, password);
       commit('LOGIN_SUCCESS', user);
-      this.$router.push({ path: '/' });
+      this.$router.push({ path: '/edit' });
     } catch (error) {
       commit('LOGIN_FAILURE', error);
       Message.error('Oops, login failed.');

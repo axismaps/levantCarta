@@ -12,11 +12,6 @@ export const userService = {
 };
 
 async function login(username, password) {
-  // const requestOptions = {
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ username: username, password: password })
-  // };
-
   try {
     const response = await axios.post(
       `${API}/login`,
@@ -24,10 +19,6 @@ async function login(username, password) {
       { withCredentials: true }
     );
 
-    // console.log(response);
-    // if (user.token) {
-    //   localStorage.setItem('user', JSON.stringify(user));
-    // }
     return response;
   } catch (error) {
     return Promise.reject(error);
@@ -75,19 +66,5 @@ async function handleResponse(response) {
     }
 
     return data;
-  });
-}
-
-function mockLogin(x) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const user = {
-        name: 'Davi',
-        email: 'test@email.com',
-        token: 'fake-token'
-      };
-      resolve(user);
-      // reject('error');
-    }, 1200);
   });
 }
