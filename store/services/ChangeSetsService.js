@@ -1,7 +1,8 @@
-const API = '/data/change-sets.json';
-import uuidv4 from 'uuid/v4';
+import axios from 'axios';
 
-// o change set é a reunião das ultimas mudanças nao validadas.
+const API = process.env.API;
+
+import uuidv4 from 'uuid/v4';
 
 export const changeSetsService = {
   createChangeSet,
@@ -20,52 +21,38 @@ async function createChangeSet(changeSet) {
       ...changeSet
     };
 
-    let changeSets = localStorage.getItem('changeSets');
-
-    if (changeSets) {
-      changeSets = JSON.parse(changeSets);
-      changeSets.push(changeSet);
-      localStorage.setItem('changeSets', JSON.stringify(changeSets));
-    } else {
-      localStorage.setItem('changeSets', JSON.stringify([changeSet]));
-    }
-    return changeSets;
+    const response = await axios.post(`${API}/changeset`, changeSet, {
+      withCredentials: true
+    });
+    console.log(response);
   } catch (error) {
+    console.error(error);
     return Promise.reject(error);
   }
 }
 async function getAllChangeSets() {
   try {
-    let changeSets = localStorage.getItem('changeSets');
-
-    if (changeSets) {
-      changeSets = JSON.parse(changeSets);
-      return changeSets;
-    } else {
-      return [];
-    }
+    const {
+      data: { response }
+    } = await axios.get(`${API}/changeset`, {
+      withCredentials: true
+    });
+    return response;
   } catch (error) {
+    console.log(error);
     return Promise.reject(error);
   }
 }
 
 async function getChangeSetById(id) {
   try {
-    let changeSets = localStorage.getItem('changeSets');
-    if (!changeSets) {
-      return null;
-    }
-    changeSets = JSON.parse(changeSets);
-    return changeSets.filter(changeSet => changeSet.id === id)[0];
+    const {
+      data: { response }
+    } = await axios.get(`${API}/changeset/${id}`, {
+      withCredentials: true
+    });
+    return response;
   } catch (error) {
     return Promise.reject(error);
   }
-}
-
-function delay(x) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(x);
-    }, 1000);
-  });
 }

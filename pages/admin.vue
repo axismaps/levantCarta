@@ -15,11 +15,11 @@ import { mapActions, mapGetters } from 'vuex';
 import AdminHeader from '@/components/AdminHeader';
 export default {
   components: {
-    AdminHeader
+    AdminHeader,
   },
   created() {
     this.$store.dispatch('changeSets/setAllChangeSets');
-  }
+  },
 };
 </script>
 
