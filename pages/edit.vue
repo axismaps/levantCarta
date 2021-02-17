@@ -14,7 +14,10 @@
       @set-overlay-opacity="handleSetOverlayOpacity"
     />
     <div class="sidebar">
-      <the-sidebar v-show="showSidebar" @add-new-feature="handleAddNewFeature" />
+      <the-sidebar
+        v-show="showSidebar"
+        @add-new-feature="handleAddNewFeature"
+      />
       <the-toolbox
         class="toolbox"
         :isSidebarOpen="showSidebar"
@@ -34,14 +37,14 @@
       v-if="draw"
       :map-options="{
         style: 'mapbox://styles/mapbox/satellite-v9',
-        accessToken: mapboxToken, 
+        accessToken: mapboxToken,
         center: [35.50411547, 33.89508665],
         zoom: 14,
-        }"
+      }"
       :geolocate-control="{
         show: true,
-        position: 'top-right'
-        }"
+        position: 'top-right',
+      }"
       @create-popup="handleCreatePopup"
       @delete-popup="handleDeletePopup"
       @draw-create="handleDrawCreate"
@@ -62,18 +65,12 @@
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
 import Mapbox from '@/components/Mapbox.vue';
-import uuidv4 from 'uuid/v4';
 import TheToolbox from '@/components/TheToolbox';
 import TheHeader from '@/components/TheHeader';
 import TheSidebar from '@/components/TheSidebar';
 import tippy, { followCursor } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { Feature } from '@/assets/lib/Feature';
-import {
-  mergeFeatures,
-  featuresToPoints,
-  pointsToFeature
-} from '@/assets/lib/Helpers';
+import { featuresToPoints } from '@/assets/lib/Helpers';
 import { states, transition } from '@/assets/lib/StateMachine';
 
 import changeSets from '@/assets/changeSets';
@@ -89,7 +86,7 @@ export default {
     Mapbox,
     TheToolbox,
     TheHeader,
-    TheSidebar
+    TheSidebar,
   },
   data() {
     return {
@@ -100,12 +97,12 @@ export default {
       popup: null,
       featureBeingCreatedId: '',
       featureBeingSplit: null,
-      tippy: {}
+      tippy: {},
     };
   },
   async fetch(context) {
     const {
-      data: { response: layers }
+      data: { response: layers },
     } = await axios.get(`${API}/get/layers`);
 
     const { data: overlays } = await axios.get('/data/overlays.json');
@@ -119,7 +116,7 @@ export default {
     },
     selectedFeature() {
       this.showSidebar = true;
-    }
+    },
   },
   computed: {
     ...mapGetters({
@@ -136,7 +133,7 @@ export default {
       overlays: 'overlays/items',
       selectedFeature: 'selectedFeature',
       snapPoint: 'snapPoint',
-      features: 'features/features'
+      features: 'features/features',
     }),
     mapboxToken() {
       return process.env.mapboxToken;
@@ -166,27 +163,28 @@ export default {
         default:
           break;
       }
-    }
+    },
   },
   methods: {
     ...mapActions({
       addGeometryToFeature: 'addGeometryToFeature',
-      createFeature: 'changes/createFeature',
-      deleteFeature: 'changes/deleteFeature',
+      // createFeature: 'changes/createFeature',
+      // deleteFeature: 'changes/deleteFeature',
       drawMode: 'drawMode',
-      editFeature: 'changes/editFeature',
+      // editFeature: 'changes/editFeature',
       enterDrawMode: 'enterDrawMode',
       mergeSelectedFeatures: 'mergeSelectedFeatures',
       pushGeometryBeingDrawPoint: 'pushGeometryBeingDrawPoint',
-      saveFeature: 'features/saveFeature',
+      createFeature: 'features/createFeature',
       setActiveOverlay: 'overlays/setCurrentItem',
       setDraw: 'setDraw',
       updateDrawMode: 'updateDrawMode',
-      updateFeature: 'features/updateFeature',
+      editFeature: 'features/editFeature',
+      deleteFeature: 'features/deleteFeature',
       updateFeatureBeingDrawn: 'updateFeatureBeingDrawn',
       updateSelectedFeature: 'updateSelectedFeature',
       updateSnapPoint: 'updateSnapPoint',
-      updateSnapStatus: 'updateSnapStatus'
+      updateSnapStatus: 'updateSnapStatus',
     }),
     handleInitPopup(popup) {
       this.popup = popup;
@@ -198,7 +196,7 @@ export default {
           feature.id
         ).properties;
 
-        const { title: typeTitle } = this.activeLayer.Types.find(el => {
+        const { title: typeTitle } = this.activeLayer.Types.find((el) => {
           return el.id === type;
         });
         const description = `<span style="color: grey">Name: </span> ${name}
@@ -236,12 +234,12 @@ export default {
       this.showSidebar = !this.showSidebar;
     },
     loadOverlays(map) {
-      this.overlays.map(overlay => {
+      this.overlays.map((overlay) => {
         map.addLayer({
           ...overlay,
           paint: {
-            'raster-opacity': 0
-          }
+            'raster-opacity': 0,
+          },
         });
       });
     },
@@ -302,13 +300,13 @@ export default {
           type: 'circle',
           source: {
             type: 'geojson',
-            data: snapPoints
+            data: snapPoints,
           },
           layout: {},
           paint: {
             'circle-radius': 5,
-            'circle-color': '#007cbf'
-          }
+            'circle-color': '#007cbf',
+          },
         };
         this.map.addLayer(snapLayer);
       } else {
@@ -364,7 +362,7 @@ export default {
       this.updateSnapPoint(point);
       if (this.tippy[0]) {
         this.createTooltip({
-          content: 'Click again to finish drawing'
+          content: 'Click again to finish drawing',
         });
       }
     },
@@ -397,10 +395,10 @@ export default {
         ...options,
         trigger: 'mouseenter focus click',
         followCursor: true,
-        plugins: [followCursor]
+        plugins: [followCursor],
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

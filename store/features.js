@@ -38,7 +38,7 @@ export const actions = {
   async getFeatureById({ commit, state }, id) {
     return state.features.filter(feature => feature.id === id)[0];
   },
-  async saveFeature({}, feature) {
+  async createFeature({}, feature) {
     const request = {
       id: feature.id,
       properties: feature.properties,
@@ -54,7 +54,7 @@ export const actions = {
       // TODO: handle error
     }
   },
-  async updateFeature({ rootState }, feature) {
+  async editFeature({ rootState }, feature) {
     const featureId = feature.id;
 
     const request = {
@@ -72,6 +72,9 @@ export const actions = {
       console.log(error);
       return Promise.reject(error);
     }
+  },
+  async deleteFeature({}, feature) {
+    console.log('TODO: deleate feature', feature);
   }
 };
 
