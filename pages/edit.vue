@@ -108,7 +108,8 @@ export default {
     const { data: overlays } = await axios.get('/data/overlays.json');
     context.store.dispatch('overlays/setItems', overlays);
     context.store.dispatch('layers/setItems', layers);
-    context.store.dispatch('changes/setUnsubmittedChanges');
+    //TODO: isso nao vai ser mais necessário
+    // context.store.dispatch('changes/setUnsubmittedChanges');
   },
   watch: {
     drawMode() {

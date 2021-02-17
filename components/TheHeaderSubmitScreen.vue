@@ -1,8 +1,19 @@
 <template>
   <div>
-    <el-popover v-if="hasUnsubmittedChanges" placement="bottom" width="310" trigger="click">
+    <el-popover
+      v-if="hasUnsubmittedChanges"
+      placement="bottom"
+      width="310"
+      trigger="click"
+    >
       <div>
-        <el-form :model="form" :rules="rules" ref="form" label-width="220px" label-position="top">
+        <el-form
+          :model="form"
+          :rules="rules"
+          ref="form"
+          label-width="220px"
+          label-position="top"
+        >
           <el-form-item label="Title" prop="title">
             <el-input v-model="form.title"></el-input>
           </el-form-item>
@@ -14,15 +25,14 @@
               type="success"
               @click="submitForm('form')"
               :loading="isLoading"
-            >Submit Changes</el-button>
+              >Submit Changes</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
-      <el-button
-        slot="reference"
-        type="success"
-        icon="el-icon-check"
-      >Submit ({{unsubmittedChanges.length}})</el-button>
+      <el-button slot="reference" type="success" icon="el-icon-check"
+        >Submit ({{ unsubmittedChanges.length }})</el-button
+      >
     </el-popover>
   </div>
 </template>
@@ -36,45 +46,45 @@ export default {
     return {
       form: {
         title: '',
-        description: ''
+        description: '',
       },
       rules: {
         title: [
           {
             required: true,
             message: 'Please input Activity title',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         description: [
           {
             required: true,
             message: 'Please input Activity description',
-            trigger: 'blur'
-          }
-        ]
-      }
+            trigger: 'blur',
+          },
+        ],
+      },
     };
   },
   computed: {
     ...mapGetters({
       unsubmittedChanges: 'changes/unsubmittedChanges',
       hasUnsubmittedChanges: 'changes/hasUnsubmittedChanges',
-      isLoading: 'changeSets/isLoading'
-    })
+      isLoading: 'changeSets/isLoading',
+    }),
   },
   methods: {
     ...mapActions({
       submitNewChangeSet: 'changeSets/submitNewChangeSet',
-      clearUnsubmittedChanges: 'changes/clearUnsubmittedChanges'
+      clearUnsubmittedChanges: 'changes/clearUnsubmittedChanges',
     }),
     submitForm(formName) {
-      this.$refs[formName].validate(async valid => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const changeSet = {
             title: this.form.title,
             description: this.form.description,
-            changes: this.unsubmittedChanges
+            // changes: this.unsubmittedChanges
           };
           await this.submitNewChangeSet(changeSet);
           await this.clearUnsubmittedChanges();
@@ -82,8 +92,8 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

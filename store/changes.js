@@ -231,6 +231,8 @@ export const getters = {
     return state.unsubmittedChanges;
   },
   hasUnsubmittedChanges(state) {
-    return state.unsubmittedChanges.length > 0;
+    // return state.unsubmittedChanges.length > 0;
+    //TODO: figure out how to get unsubmittedChanges
+    return true;
   }
 };

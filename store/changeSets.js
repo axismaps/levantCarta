@@ -38,11 +38,12 @@ export const actions = {
     commit('LOADING_REQUEST');
     try {
       await changeSetsService.createChangeSet(changeSet);
-      await dispatch('changes/setUnsubmittedChanges', null, { root: true });
+      // await dispatch('changes/setUnsubmittedChanges', null, { root: true });
       Message.success('Change set submitted successfully.');
 
       commit('CREATE_CHANGE_SET_SUCCESS');
     } catch (error) {
+      console.log('error', error);
       //TODO: handle error
     }
   }
