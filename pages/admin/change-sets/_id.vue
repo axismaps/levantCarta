@@ -98,7 +98,7 @@ export default {
     ...mapActions({
       closeChangeSet: 'changeSets/closeChangeSet',
       approveChangeById: 'changeSets/approveChangeById',
-      revertChange: 'changes/revertChange',
+      revertChangeById: 'changeSets/revertChangeById',
       bulkApproveChanges: 'changes/bulkApproveChanges',
       bulkRevertChanges: 'changes/bulkRevertChanges',
     }),
@@ -113,7 +113,7 @@ export default {
       this.approveChangeById(tableData[index].newFeature.id);
     },
     handleRevertChange(index, tableData) {
-      this.revertChange(tableData[index].id);
+      this.revertChangeById(tableData[index].newFeature.id);
     },
     handleEditFeature(index) {
       console.log('edit-feature', index);

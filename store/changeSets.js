@@ -44,6 +44,24 @@ export const actions = {
       commit('GET_CHANGE_SETS_FAILURE');
     }
   },
+
+  async revertChangeById({ commit }, { changeId, changeSetId }) {
+    commit('LOADING_REQUEST');
+
+    try {
+      const changeSet = await changeSetService.updateChangeSet(changeSetId, [
+        {
+          id: changeId,
+          approve: false
+        }
+      ]);
+      console.log('changeSet', changeSet);
+      commit('GET_CHANGE_SET_SUCCESS', changeSet);
+    } catch (error) {
+      commit('GET_CHANGE_SETS_FAILURE');
+    }
+  },
+
   async closeChangeSet({ commit }, changeSetId) {
     // commit('LOADING_REQUEST');
     try {
