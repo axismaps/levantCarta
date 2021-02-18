@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pre>{{ change }}</pre>
+    <!-- <pre>{{ change }}</pre> -->
     <div style="margin-bottom: 20px">
       <admin-control-menu
         :isSingleChangeView="true"
