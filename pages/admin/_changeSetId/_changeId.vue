@@ -1,5 +1,6 @@
 <template>
   <div>
+    <pre>{{ change }}</pre>
     <div style="margin-bottom: 20px">
       <admin-control-menu
         :isSingleChangeView="true"
@@ -11,13 +12,11 @@
       />
     </div>
     <h2 style="margin: 14px 0px">{{ change.newFeature.properties.name }}</h2>
-    <p style="margin: 14px 0px">
-      Submitted by {{ change.submittedBy }} on {{ change.createAt }}
-    </p>
+    <p style="margin: 14px 0px">Submitted by {{ change.user.name }}</p>
     <div style="display: flex; margin: 14px 0px">
       <div style="display: flex; align-items: center">
         <font-awesome-icon :icon="['far', 'layer-group']" />
-        <p style="margin-left: 5px">{{ change.layer }}</p>
+        <p style="margin-left: 5px">{{ change.newFeature.layerName }}</p>
       </div>
       <div style="display: flex; align-items: center; margin-left: 10px">
         <font-awesome-icon :icon="['far', 'pencil']" />
@@ -40,11 +39,11 @@
       </div>
     </div>
     <hr style="margin: 20px 0px" />
-    <admin-change-diff
+    <!-- <admin-change-diff
       :editType="change.editType"
       :originalFeature="change.originalFeature"
       :newFeature="change.newFeature"
-    />
+    /> -->
     <div>
       <el-input
         style="margin-bottom: 28px"
@@ -95,27 +94,42 @@ export default {
     };
   },
   async fetch({ store, params }) {
-    //TODO: mudar isso para o change service
-    await store.dispatch('changes/setChangeById', params.id);
+    await store.dispatch('changeSets/setChangeById', params.changeId);
   },
   computed: {
     ...mapGetters({
-      change: 'changes/change',
-      isLoading: 'changes/isLoading',
+      change: 'changeSets/change',
+      isLoading: 'changeSets/isLoading',
     }),
   },
   methods: {
     ...mapActions({
-      approveChange: 'changes/approveChange',
-      revertChange: 'changes/revertChange',
+      approveChangeById: 'changeSets/approveChangeById',
+      revertChangeById: 'changeSets/revertChangeById',
     }),
-    handleApproveChange() {
-      const changeId = this.$route.params.id;
-      this.approveChange(changeId);
+    async handleApproveChange() {
+      const { changeSetId, changeId } = this.$route.params;
+      try {
+        await this.approveChangeById({
+          changeId: changeId,
+          changeSetId: changeSetId,
+        });
+        this.$router.push({
+          path: `/admin/change-sets/${changeSetId}`,
+        });
+      } catch (error) {}
     },
-    handleRevertChange() {
-      const changeId = this.$route.params.id;
-      this.revertChange(changeId);
+    async handleRevertChange() {
+      const { changeSetId, changeId } = this.$route.params;
+      try {
+        await this.revertChangeById({
+          changeId: changeId,
+          changeSetId: changeSetId,
+        });
+        this.$router.push({
+          path: `/admin/change-sets/${changeSetId}`,
+        });
+      } catch (error) {}
     },
     handleEditChange() {},
   },

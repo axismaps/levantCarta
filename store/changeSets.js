@@ -5,6 +5,7 @@ import { Message } from 'element-ui';
 export const state = {
   changeSets: [],
   changeSet: {},
+  change: {},
   isLoading: false
 };
 
@@ -28,6 +29,16 @@ export const actions = {
       commit('GET_CHANGE_SETS_FAILURE');
     }
   },
+  async setChangeById({ commit }, changeId) {
+    try {
+      const change = await changeSetsService.getChangeById(changeId);
+      commit('SET_CHANGE', change);
+      return change;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   async approveChangeById({ commit }, { changeId, changeSetId }) {
     try {
       const response = await changeSetsService.updateChangeSet(changeSetId, [
@@ -36,9 +47,8 @@ export const actions = {
           approve: true
         }
       ]);
-      console.log('res', response);
+      return response;
     } catch (error) {
-      // commit('GET_CHANGE_SETS_FAILURE');
       console.log('error', error);
     }
   },
@@ -115,6 +125,9 @@ export const mutations = {
     console.log('LOADING_REQUEST');
     state.isLoading = true;
   },
+  SET_CHANGE(state, change) {
+    state.change = change;
+  },
   GET_CHANGE_SETS_SUCCESS(state, changeSets) {
     state.isLoading = false;
     state.changeSets = changeSets;
@@ -150,5 +163,8 @@ export const getters = {
   },
   isLoading(state) {
     return state.isLoading;
+  },
+  change(state) {
+    return state.change;
   }
 };

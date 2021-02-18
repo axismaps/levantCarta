@@ -107,7 +107,9 @@ export default {
       this.closeChangeSet(this.changeSet.id);
     },
     handleViewFeature(index, tableData) {
-      this.$router.push({ path: `/admin/change/${tableData[index].id}` });
+      this.$router.push({
+        path: `/admin/${this.changeSet.id}/${tableData[index].newFeature.id}`,
+      });
     },
     handleApproveChange(index, tableData) {
       this.approveChangeById({

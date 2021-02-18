@@ -8,8 +8,23 @@ export const changeSetsService = {
   createChangeSet,
   getAllChangeSets,
   getChangeSetById,
-  updateChangeSet
+  updateChangeSet,
+  getChangeById
 };
+
+async function getChangeById(id) {
+  console.log('trying change', id);
+  try {
+    const {
+      data: { response }
+    } = await axios.get(`${API}/change/${id}`, {
+      withCredentials: true
+    });
+    return response;
+  } catch (error) {
+    console.log('errir', error);
+  }
+}
 
 async function createChangeSet(changeSet) {
   try {
