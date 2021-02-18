@@ -44,19 +44,16 @@ export const actions = {
   },
 
   async revertChangeById({ commit }, { changeId, changeSetId }) {
-    commit('LOADING_REQUEST');
-
     try {
-      const changeSet = await changeSetsService.updateChangeSet(changeSetId, [
+      const response = await changeSetsService.updateChangeSet(changeSetId, [
         {
           id: changeId,
           approve: false
         }
       ]);
-      console.log('changeSet', changeSet);
-      commit('GET_CHANGE_SET_SUCCESS', changeSet);
+      return response;
     } catch (error) {
-      commit('GET_CHANGE_SETS_FAILURE');
+      console.log(error);
     }
   },
 
@@ -73,7 +70,22 @@ export const actions = {
       console.log('response', response);
     } catch (error) {
       console.log('error', error);
-      // commit('GET_CHANGE_SETS_FAILURE');
+    }
+  },
+
+  async bulkRevertChanges({ commit }, { changes, changeSetId }) {
+    try {
+      const approvedChanges = changes.map(change => {
+        return { id: change, approve: false };
+      });
+
+      const response = await changeSetsService.updateChangeSet(
+        changeSetId,
+        approvedChanges
+      );
+      console.log('response', response);
+    } catch (error) {
+      console.log('error', error);
     }
   },
 
