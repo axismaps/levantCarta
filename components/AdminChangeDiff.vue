@@ -1,7 +1,12 @@
 <template>
   <div>
     <div
-      style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 0.3fr;column-gap: 25px;"
+      style="
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 0.3fr;
+        column-gap: 25px;
+      "
     >
       <div>
         <h3 style="margin: 14px 0px">Geography</h3>
@@ -11,11 +16,12 @@
             id="map-diff"
             class="map"
             :map-options="{
-            container: 'map-diff',
-        style: 'mapbox://styles/mapbox/satellite-v9',
-        accessToken: mapboxToken, 
-        center: [35.50411547, 33.89508665],
-        zoom: 14}"
+              container: 'map-diff',
+              style: 'mapbox://styles/mapbox/satellite-v9',
+              accessToken: mapboxToken,
+              center: [35.50411547, 33.89508665],
+              zoom: 12,
+            }"
             @map-init="handleMapInit"
             @map-load="addDiffGeometries"
           />
@@ -28,19 +34,34 @@
           <span class="div1 grid-table-name">From</span>
           <span class="div2">
             <tableField
-              :items="generateTag(originalFeature.properties.firstyear, newFeature.properties.firstyear)"
+              :items="
+                generateTag(
+                  originalFeature.properties.firstyear,
+                  newFeature.properties.firstyear
+                )
+              "
             />
           </span>
           <span class="div3 grid-table-name">To</span>
           <span class="div4">
             <tableField
-              :items="generateTag(originalFeature.properties.lastyear, newFeature.properties.lastyear)"
+              :items="
+                generateTag(
+                  originalFeature.properties.lastyear,
+                  newFeature.properties.lastyear
+                )
+              "
             />
           </span>
           <span class="div5 grid-table-name">Type</span>
           <span class="div6">
             <tableField
-              :items="generateTag(originalFeature.properties.type, newFeature.properties.type)"
+              :items="
+                generateTag(
+                  originalFeature.properties.type,
+                  newFeature.properties.type
+                )
+              "
             />
           </span>
           <span class="div7 grid-table-name">Tags</span>
@@ -52,14 +73,29 @@
             style="display: contents"
           >
             <span class="grid-table-name"></span>
-            <span style="border-right: 1px solid #ccd0d8; border-bottom: 1px solid #ccd0d8;">
+            <span
+              style="
+                border-right: 1px solid #ccd0d8;
+                border-bottom: 1px solid #ccd0d8;
+              "
+            >
               <tableField
-                :items="generateTag(originalFeature.properties.tags[index].name, tag.name)"
+                :items="
+                  generateTag(
+                    originalFeature.properties.tags[index].name,
+                    tag.name
+                  )
+                "
               />
             </span>
-            <span style="border-bottom: 1px solid #ccd0d8;">
+            <span style="border-bottom: 1px solid #ccd0d8">
               <tableField
-                :items="generateTag(originalFeature.properties.tags[index].value, tag.value)"
+                :items="
+                  generateTag(
+                    originalFeature.properties.tags[index].value,
+                    tag.value
+                  )
+                "
               />
             </span>
           </div>
@@ -73,32 +109,41 @@
 import AdminChangeDiffTags from '@/components/AdminChangeDiffTags';
 import AdminChangeDiffTableField from '@/components/AdminChangeDiffTableField.vue';
 import Mapbox from '@/components/Mapbox.vue';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 
 export default {
   components: {
     AdminChangeDiffTags,
     tableField: AdminChangeDiffTableField,
-    Mapbox
+    Mapbox,
   },
   data() {
     return {
       map: null,
-      editType: 'edit'
+      // editType: 'edit',
     };
   },
   props: {
-    _editType: {
-      type: String
-    },
-    originalFeature: {
-      type: Object
+    _originalFeature: {
+      type: Object,
     },
     newFeature: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   computed: {
+    editType() {
+      if (this._originalFeature && this.newFeature) {
+        return 'edit';
+      } else if (!this._originalFeature) {
+        return 'create';
+      }
+    },
+    originalFeature() {
+      console.log(this._originalFeature);
+      if (!this._originalFeature) {
+        return this.newFeature;
+      } else return this._originalFeature;
+    },
     geometryTags() {
       switch (this.editType) {
         case 'create':
@@ -127,7 +172,7 @@ export default {
     },
     mapboxToken() {
       return process.env.mapboxToken;
-    }
+    },
   },
   methods: {
     generateTag(originalValue, newValue) {
@@ -144,7 +189,7 @@ export default {
           } else if (newValue !== originalValue) {
             return [
               { type: 'original', value: originalValue },
-              { type: 'edited', value: newValue }
+              { type: 'edited', value: newValue },
             ];
           } else {
             return [{ type: 'unchanged', value: originalValue }];
@@ -163,18 +208,18 @@ export default {
         type: featureGeoType(this.originalFeature),
         source: {
           type: 'geojson',
-          data: this.originalFeature
+          data: this.originalFeature,
         },
-        paint: geoTypeToPaint(featureGeoType(this.newFeature), '#5A6FE3')
+        paint: geoTypeToPaint(featureGeoType(this.newFeature), '#5A6FE3'),
       };
       const newFeatureLayer = {
         id: 'newFeatureLayer',
         type: featureGeoType(this.newFeature),
         source: {
           type: 'geojson',
-          data: this.newFeature
+          data: this.newFeature,
         },
-        paint: geoTypeToPaint(featureGeoType(this.newFeature), '#2DB84B')
+        paint: geoTypeToPaint(featureGeoType(this.newFeature), '#2DB84B'),
       };
       this.map.addLayer(newFeatureLayer);
       this.map.addLayer(originalFeatureLayer);
@@ -189,11 +234,11 @@ export default {
       // this.map.fitBounds(bounds, {
       //   padding: 140
       // });
-    }
-  }
+    },
+  },
 };
 
-const featureGeoType = feature => {
+const featureGeoType = (feature) => {
   switch (feature.geometry.type) {
     case 'MultiLineString':
     case 'LineString':
@@ -210,14 +255,14 @@ const geoTypeToPaint = (type, color) => {
     case 'line':
       return {
         'line-color': color,
-        'line-width': 5
+        'line-width': 5,
       };
       break;
     case 'fill':
       return {
         'fill-color': color,
         'fill-outline-color': color,
-        'fill-opacity': 0.35
+        'fill-opacity': 0.35,
       };
     default:
       break;

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <pre>{{ change }}</pre> -->
     <div style="margin-bottom: 20px">
       <admin-control-menu
         :isSingleChangeView="true"
@@ -39,11 +38,11 @@
       </div>
     </div>
     <hr style="margin: 20px 0px" />
-    <!-- <admin-change-diff
+    <admin-change-diff
       :editType="change.editType"
-      :originalFeature="change.originalFeature"
+      :_originalFeature="change.originalFeature"
       :newFeature="change.newFeature"
-    /> -->
+    />
     <div>
       <el-input
         style="margin-bottom: 28px"
