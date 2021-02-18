@@ -29,19 +29,17 @@ export const actions = {
     }
   },
   async approveChangeById({ commit }, { changeId, changeSetId }) {
-    commit('LOADING_REQUEST');
-
     try {
-      const changeSet = await changeSetService.updateChangeSet(changeSetId, [
+      const response = await changeSetsService.updateChangeSet(changeSetId, [
         {
           id: changeId,
           approve: true
         }
       ]);
-      console.log('changeSet', changeSet);
-      commit('GET_CHANGE_SET_SUCCESS', changeSet);
+      console.log('res', response);
     } catch (error) {
-      commit('GET_CHANGE_SETS_FAILURE');
+      // commit('GET_CHANGE_SETS_FAILURE');
+      console.log('error', error);
     }
   },
 
@@ -49,7 +47,7 @@ export const actions = {
     commit('LOADING_REQUEST');
 
     try {
-      const changeSet = await changeSetService.updateChangeSet(changeSetId, [
+      const changeSet = await changeSetsService.updateChangeSet(changeSetId, [
         {
           id: changeId,
           approve: false
@@ -59,6 +57,23 @@ export const actions = {
       commit('GET_CHANGE_SET_SUCCESS', changeSet);
     } catch (error) {
       commit('GET_CHANGE_SETS_FAILURE');
+    }
+  },
+
+  async bulkApproveChanges({ commit }, { changes, changeSetId }) {
+    try {
+      const approvedChanges = changes.map(change => {
+        return { id: change, approve: true };
+      });
+
+      const response = await changeSetsService.updateChangeSet(
+        changeSetId,
+        approvedChanges
+      );
+      console.log('response', response);
+    } catch (error) {
+      console.log('error', error);
+      // commit('GET_CHANGE_SETS_FAILURE');
     }
   },
 

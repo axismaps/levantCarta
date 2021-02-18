@@ -56,7 +56,7 @@ async function updateChangeSet(id, changes) {
         withCredentials: true
       }
     );
-    console.log('response', response);
+    return response;
   } catch (error) {
     console.log(error);
     return Promise.reject(error);

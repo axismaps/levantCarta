@@ -99,8 +99,8 @@ export default {
       closeChangeSet: 'changeSets/closeChangeSet',
       approveChangeById: 'changeSets/approveChangeById',
       revertChangeById: 'changeSets/revertChangeById',
-      bulkApproveChanges: 'changes/bulkApproveChanges',
-      bulkRevertChanges: 'changes/bulkRevertChanges',
+      bulkApproveChanges: 'changeSets/bulkApproveChanges',
+      bulkRevertChanges: 'changeSets/bulkRevertChanges',
     }),
 
     handleCloseChangeSet() {
@@ -110,10 +110,16 @@ export default {
       this.$router.push({ path: `/admin/change/${tableData[index].id}` });
     },
     handleApproveChange(index, tableData) {
-      this.approveChangeById(tableData[index].newFeature.id);
+      this.approveChangeById({
+        changeId: tableData[index].newFeature.id,
+        changeSetId: this.changeSet.id,
+      });
     },
     handleRevertChange(index, tableData) {
-      this.revertChangeById(tableData[index].newFeature.id);
+      this.revertChangeById({
+        changeId: tableData[index].newFeature.id,
+        changeSetId: this.changeSet.id,
+      });
     },
     handleEditFeature(index) {
       console.log('edit-feature', index);
@@ -122,12 +128,23 @@ export default {
       this.multipleSelection = val;
     },
     handleRevertSelected() {
-      const changes = this.multipleSelection;
-      this.bulkApproveChanges(changes);
+      const changeIds = this.multipleSelection.map(
+        (change) => change.newFeature.id
+      );
+      this.bulkRevertChanges({
+        changes: changeIds,
+        changeSetId: this.changeSet.id,
+      });
     },
     handleApproveSelected() {
-      const changes = this.multipleSelection;
-      this.bulkRevertChanges(changes);
+      const changeIds = this.multipleSelection.map(
+        (change) => change.newFeature.id
+      );
+
+      this.bulkApproveChanges({
+        changes: changeIds,
+        changeSetId: this.changeSet.id,
+      });
     },
   },
 };
