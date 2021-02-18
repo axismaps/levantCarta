@@ -51,7 +51,7 @@ async function getChangeSetById(id) {
     } = await axios.get(`${API}/changeset/${id}`, {
       withCredentials: true
     });
-    return response;
+    return response[0];
   } catch (error) {
     return Promise.reject(error);
   }

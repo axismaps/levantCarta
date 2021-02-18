@@ -22,6 +22,7 @@ export const actions = {
     commit('LOADING_REQUEST');
     try {
       const changeSet = await changeSetsService.getChangeSetById(changeSetId);
+      console.log('changeSet', changeSet);
       commit('GET_CHANGE_SET_SUCCESS', changeSet);
     } catch (error) {
       commit('GET_CHANGE_SETS_FAILURE');
