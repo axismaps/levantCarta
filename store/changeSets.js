@@ -28,6 +28,22 @@ export const actions = {
       commit('GET_CHANGE_SETS_FAILURE');
     }
   },
+  async approveChangeById({ commit }, { changeId, changeSetId }) {
+    commit('LOADING_REQUEST');
+
+    try {
+      const changeSet = await changeSetService.updateChangeSet(changeSetId, [
+        {
+          id: changeId,
+          approve: true
+        }
+      ]);
+      console.log('changeSet', changeSet);
+      commit('GET_CHANGE_SET_SUCCESS', changeSet);
+    } catch (error) {
+      commit('GET_CHANGE_SETS_FAILURE');
+    }
+  },
   async closeChangeSet({ commit }, changeSetId) {
     // commit('LOADING_REQUEST');
     try {
@@ -39,7 +55,6 @@ export const actions = {
     commit('LOADING_REQUEST');
     try {
       await changeSetsService.createChangeSet(changeSet);
-      // await dispatch('changes/setUnsubmittedChanges', null, { root: true });
       Message.success('Change set submitted successfully.');
 
       commit('CREATE_CHANGE_SET_SUCCESS');

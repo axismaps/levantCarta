@@ -7,7 +7,8 @@ import uuidv4 from 'uuid/v4';
 export const changeSetsService = {
   createChangeSet,
   getAllChangeSets,
-  getChangeSetById
+  getChangeSetById,
+  updateChangeSet
 };
 
 async function createChangeSet(changeSet) {
@@ -38,6 +39,24 @@ async function getAllChangeSets() {
       withCredentials: true
     });
     return response;
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error);
+  }
+}
+
+async function updateChangeSet(id, changes) {
+  try {
+    const response = await axios.patch(
+      `${API}/changeset/${id}`,
+      {
+        changes: changes
+      },
+      {
+        withCredentials: true
+      }
+    );
+    console.log('response', response);
   } catch (error) {
     console.log(error);
     return Promise.reject(error);

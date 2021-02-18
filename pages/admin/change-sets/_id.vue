@@ -97,7 +97,7 @@ export default {
   methods: {
     ...mapActions({
       closeChangeSet: 'changeSets/closeChangeSet',
-      approveChange: 'changes/approveChange',
+      approveChangeById: 'changeSets/approveChangeById',
       revertChange: 'changes/revertChange',
       bulkApproveChanges: 'changes/bulkApproveChanges',
       bulkRevertChanges: 'changes/bulkRevertChanges',
@@ -110,7 +110,7 @@ export default {
       this.$router.push({ path: `/admin/change/${tableData[index].id}` });
     },
     handleApproveChange(index, tableData) {
-      // this.approveChange(tableData[index].id);
+      this.approveChangeById(tableData[index].newFeature.id);
     },
     handleRevertChange(index, tableData) {
       this.revertChange(tableData[index].id);
