@@ -31,8 +31,8 @@
         </el-form>
       </div>
       <el-button slot="reference" type="success" icon="el-icon-check"
-        >Submit ({{ unsubmittedChanges.length }})</el-button
-      >
+        >Submit
+      </el-button>
     </el-popover>
   </div>
 </template>
