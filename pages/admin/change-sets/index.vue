@@ -17,8 +17,8 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
-        </el-select>filtered by
+          ></el-option> </el-select
+        >filtered by
         <el-select
           style="width: 130px"
           class="change-set-filter"
@@ -31,8 +31,8 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
-        </el-select>done by
+          ></el-option> </el-select
+        >done by
         <el-select
           style="width: 100px"
           class="change-set-filter"
@@ -57,22 +57,31 @@
         shadow="never"
       >
         <div
-          style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+          "
         >
-          <div style="display: flex; align-items: center;">
+          <div style="display: flex; align-items: center">
             <font-awesome-icon :icon="['far', 'user-circle']" />
-            <P style="margin-left: 5px">Submitted by {{changeSet.user}} on {{changeSet.date}}</P>
+            <P style="margin-left: 5px"
+              >Submitted by {{ changeSet.user }} on {{ changeSet.date }}</P
+            >
           </div>
           <admin-situational-menu
             controls="change-sets"
             @close-change-set="handleCloseChangeSet(changeSet.id)"
-            @view-change-set="$router.push('/admin/change-sets/'+changeSet.id)"
+            @view-change-set="
+              $router.push('/admin/change-sets/' + changeSet.id)
+            "
           />
         </div>
         <div>
-          <h4 style="margin-bottom: 10px">{{changeSet.title}}</h4>
-          <p style="margin-bottom: 10px">{{changeSet.description}}</p>
-          <p style="font-size=7px;">changes {{changeSet.changes.length}}</p>
+          <h4 style="margin-bottom: 10px">{{ changeSet.title }}</h4>
+          <p style="margin-bottom: 10px">{{ changeSet.description }}</p>
+          <p style="font-size=7px;">changes {{ changeSet.changes.length }}</p>
         </div>
         <br />
       </el-card>
@@ -86,7 +95,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
-    AdminSituationalMenu
+    AdminSituationalMenu,
   },
   data() {
     return {
@@ -96,21 +105,17 @@ export default {
         open: [
           { value: true, label: 'Open Change Sets' },
           { value: false, label: 'Closed change sets' },
-          { value: null, label: 'All Change Sets' }
+          { value: null, label: 'All Change Sets' },
         ],
         date: [
           { value: null, label: 'All Time' },
           { value: 7, label: 'Past Week' },
           { value: 30, label: 'Past 30 days' },
           { value: 60, label: 'Past 60 days' },
-          { value: 90, label: 'Past 90 days' }
+          { value: 90, label: 'Past 90 days' },
         ],
-        user: [
-          { value: null, label: 'All Users' },
-          { value: 'Davi', label: 'Davi' },
-          { value: 'Pedro', label: 'Pedro' }
-        ]
-      }
+        user: [{ value: null, label: 'All Users' }],
+      },
       // changeSetsData: [
       //   {
       //     id: 1,
@@ -150,34 +155,34 @@ export default {
   },
   computed: {
     ...mapGetters({
-      changeSetsData: 'changeSets/changeSets'
+      changeSetsData: 'changeSets/changeSets',
     }),
     changeSets() {
       return this.changeSetsData; //FIXME: Fix filter
       const { open, date, user } = this.filters;
       const data = this.changeSetsData;
 
-      const byUser = data.filter(item => {
+      const byUser = data.filter((item) => {
         if (!user) return true;
         return item.user === user;
       });
 
-      const byOpen = byUser.filter(item => {
+      const byOpen = byUser.filter((item) => {
         if (!open) return true;
         return item.open === open;
       });
 
       return byOpen;
-    }
+    },
   },
   methods: {
     ...mapActions({
-      closeChangeSet: 'changeSets/closeChangeSet'
+      closeChangeSet: 'changeSets/closeChangeSet',
     }),
     async handleCloseChangeSet(changeSetId) {
       this.closeChangeSet(changeSetId);
-    }
-  }
+    },
+  },
 };
 </script>
 
