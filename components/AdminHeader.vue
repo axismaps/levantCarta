@@ -4,7 +4,7 @@
       <el-button class="font-awesome-icon bars" type="text" circle>
         <font-awesome-icon :icon="['far', 'bars']" />
       </el-button>
-      <p class="page-title">{{pageTitle}}</p>
+      <p class="page-title" @click="$router.push('/edit')">Back to Map</p>
     </div>
     <div class="section">
       <the-header-controls />
@@ -17,17 +17,17 @@ import TheHeaderControls from './TheHeaderControls.vue';
 
 export default {
   components: {
-    TheHeaderControls
+    TheHeaderControls,
   },
   props: {
     pageTitle: {
       type: String,
-      default: 'page title'
-    }
+      default: 'page title',
+    },
   },
   data() {
     return {};
-  }
+  },
 };
 </script>
 
@@ -64,5 +64,7 @@ export default {
 }
 .page-title {
   margin-left: 10px;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>
