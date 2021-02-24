@@ -386,16 +386,16 @@ export default {
       this.aplicationState = await transition(this, this.aplicationState);
     },
     createTooltip(options) {
-      if (this.tippy[0]) {
-        this.tippy[0].destroy();
-        this.tippy = [];
-      }
-      this.tippy = tippy('#map', {
-        ...options,
-        trigger: 'mouseenter focus click',
-        followCursor: true,
-        plugins: [followCursor],
-      });
+      // if (this.tippy[0]) {
+      //   this.tippy[0].destroy();
+      //   this.tippy = [];
+      // }
+      // this.tippy = tippy('#map', {
+      //   ...options,
+      //   trigger: 'mouseenter focus click',
+      //   followCursor: true,
+      //   plugins: [followCursor],
+      // });
     },
   },
 };
