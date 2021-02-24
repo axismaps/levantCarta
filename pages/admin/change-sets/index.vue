@@ -67,7 +67,8 @@
           <div style="display: flex; align-items: center">
             <font-awesome-icon :icon="['far', 'user-circle']" />
             <P style="margin-left: 5px"
-              >Submitted by {{ changeSet.user }} on {{ changeSet.date }}</P
+              >Submitted by {{ changeSet.changes[0].user.name }} on
+              {{ new Date(changeSet.createdAt).toDateString() }}</P
             >
           </div>
           <admin-situational-menu
@@ -116,41 +117,6 @@ export default {
         ],
         user: [{ value: null, label: 'All Users' }],
       },
-      // changeSetsData: [
-      //   {
-      //     id: 1,
-      //     open: true,
-      //     user: 'Davi',
-      //     date: '05/20/2020',
-      //     geometryType: 'roads',
-      //     title: 'Edits to roads in the Ain El Mreiseh neighborhood',
-      //     description:
-      //       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.',
-      //     changes: [1, 2, 3, 4, 5, 6]
-      //   },
-      //   {
-      //     id: 2,
-      //     open: false,
-      //     user: 'Davi',
-      //     date: '05/20/2020',
-      //     geometryType: 'roads',
-      //     title: 'Edits to roads in the Ain El Mreiseh neighborhood',
-      //     description:
-      //       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-      //     changes: [1, 2, 3, 4, 5, 6]
-      //   },
-      //   {
-      //     id: 3,
-      //     open: false,
-      //     user: 'Pedro',
-      //     date: '05/20/2020',
-      //     geometryType: 'roads',
-      //     title: 'Edits to roads in the Ain El Mreiseh neighborhood',
-      //     description:
-      //       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-      //     changes: [1, 2, 3, 4, 5, 6]
-      //   }
-      // ]
     };
   },
   computed: {
