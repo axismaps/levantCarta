@@ -80,7 +80,12 @@
           />
         </div>
         <div>
-          <h4 style="margin-bottom: 10px">{{ changeSet.title }}</h4>
+          <h4
+            style="margin-bottom: 10px; cursor: pointer"
+            @click="$router.push('/admin/change-sets/' + changeSet.id)"
+          >
+            {{ changeSet.title }}
+          </h4>
           <p style="margin-bottom: 10px">{{ changeSet.description }}</p>
           <p style="font-size=7px;">changes {{ changeSet.changes.length }}</p>
         </div>
